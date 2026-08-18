@@ -1,0 +1,68 @@
+# IT22638168 — line-ending and binary handling
+#
+# WHY THIS FILE EXISTS:
+# Git guesses whether a file is text by looking for NUL bytes in the first 8000.
+# IT22638168_Proposal_FINAL.pdf has none, so Git classified it as TEXT and would
+# have injected CR bytes into it on checkout — corrupting the submitted proposal.
+# Binary types are therefore declared explicitly below. Do not remove them.
+
+# Default: normalise text to LF inside the repository.
+# Working copies on Windows still check out with native endings.
+* text=auto eol=lf
+
+# ── Text formats ─────────────────────────────────────────────
+*.md        text eol=lf
+*.txt       text eol=lf
+*.py        text eol=lf
+*.json      text eol=lf
+*.csv       text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.gitignore text eol=lf
+
+# Notebooks are JSON. Pin to LF so diffs stay readable across machines.
+*.ipynb     text eol=lf
+
+# ── Documents — BINARY. Never line-ending convert. ───────────
+*.pdf       binary
+*.docx      binary
+*.doc       binary
+*.xlsx      binary
+*.xls       binary
+*.pptx      binary
+*.ppt       binary
+*.zip       binary
+*.7z        binary
+*.tar       binary
+*.gz        binary
+
+# ── Images — BINARY ──────────────────────────────────────────
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.bmp       binary
+*.ico       binary
+*.webp      binary
+
+# ── Model artifacts — BINARY (mostly gitignored, belt and braces)
+*.h5        binary
+*.hdf5      binary
+*.keras     binary
+*.pb        binary
+*.tflite    binary
+*.ckpt      binary
+*.pt        binary
+*.pth       binary
+*.onnx      binary
+*.npy       binary
+*.npz       binary
+
+# ── Fonts / media — BINARY ───────────────────────────────────
+*.ttf       binary
+*.otf       binary
+*.woff      binary
+*.woff2     binary
+*.mp3       binary
+*.mp4       binary
+*.wav       binary
