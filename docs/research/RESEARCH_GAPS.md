@@ -1,0 +1,18 @@
+# IT22638168 — Research Gap Matrix
+
+> **Markdown mirror.** Faithful mirror of `IT22638168_Research_Gap_Matrix_FINAL.xlsx`, which remains authoritative.
+
+## Sheet: Gap Matrix
+
+| ID | Gap Area | What Literature Says | Gap Status | Evidence | Implication for IT22638168 | Claim Boundary |
+|---|---|---|---|---|---|---|
+| G1 | Sri Lankan antenatal emotional need | Sri Lankan studies show meaningful antenatal depression/anxiety and gaps in routine antenatal mental-health support. | Strongly supported | M1–M6 | Build for Sri Lankan antenatal context; use local screening/self-report for validation. | Do not claim no support exists; claim digital/adaptive gap. |
+| G2 | Sinhala conversational/emotion support | Sinhala is low-resource; Sinhala-specific models/benchmarks are emerging, while pregnancy-domain sentiment resources remain limited. | Supported, but needs careful wording | S1–S5 | Use a pregnancy-domain Sinhala lexicon and validate locally. | Avoid claiming Sinhala NLP is absent. |
+| G3 | Pregnancy-specific conversational support | A pregnancy/postpartum chatbot exists (Moment for Parents), showing the area is active. | No longer a novelty by itself | C6 | Differentiate through multimodal mood inference, Sinhala/Sri Lanka context, adaptive response and integration. | Do not claim 'first pregnancy chatbot'. |
+| G4 | Multimodal face + text mood adaptation in pregnancy | MER literature supports multimodality, but the searched evidence did not show a directly matching Sri Lankan pregnancy system. | Promising candidate gap | MF1–MF4 + C6 | Fuse facial emotion with bilingual text sentiment and evaluate against self-report. | Needs systematic database search before 'novel' claim. |
+| G5 | Adaptive response driven by measured mood | Mental-health CA reviews show personalization/empathy are important moderators; empathic CA evaluation is inconsistent. | Strong design opportunity | C2–C4, AD1–AD4 | Condition response strategy on mood state and evaluate perceived appropriateness/tone. | Do not claim mood detection automatically improves outcomes. |
+| G6 | On-device FER for privacy | Mobile/edge and privacy literature supports minimizing raw sensitive-data transmission; FER faces real-world pose/bias challenges. | Supported engineering rationale | F5–F6, P1–P2 | Run FER on-device, discard raw frames, test pose/lighting/fairness. | Need local-device evaluation. |
+| G7 | Behavioural signal as core fusion input | Typing/response-delay literature shows signal exists, but mobile work emphasizes personalization and other work shows small effects/associations rather than a generic per-message classifier. | Evidence favors removing from core fusion | B1–B6 | Keep as optional telemetry/ablation if client still wants it observed. | Decision memo should be explicit. |
+| G8 | Therapeutic music trigger | Pregnancy music reviews show potential anxiety benefits, but evidence quality/heterogeneity varies. | Supported adjunct | T1–T3 | Use music as supportive content after distress threshold, not as treatment. | Avoid clinical 'therapy' claims. |
+| G9 | Clinical integration | Sri Lankan antenatal programs already use screening and referral; other MaternaLink components produce clinical risk information. | System-level opportunity | M6 + project architecture | Export mood history and consume approved risk context without diagnosing. | Define clear responsibility boundaries. |
+| G10 | Safety and human escalation | Mental-health CA literature stresses limitations of AI empathy and the need for human-centered evaluation. | Critical safety requirement | M4, C4, C3 | Define distress/safety handling and human-care escalation. | Do not position chatbot as therapist/diagnostician. |

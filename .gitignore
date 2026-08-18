@@ -1,0 +1,97 @@
+# IT22638168 — MaternaLink
+# Rule of thumb: RESEARCH EVIDENCE is tracked; BULK BINARIES are not.
+# Plots, run-metadata JSON and summaries stay in version control — they are the
+# reproducibility record (NFR-12). Datasets and model weights do not.
+
+# ─────────────────────────────────────────────────────────────
+# Datasets — FER-2013 is 35,887 files / ~54 MB. Never commit it.
+# Pattern note: we ignore the CONTENTS of data dirs, not the dirs themselves,
+# so the .gitkeep files survive and the folder structure stays in the repo.
+# ─────────────────────────────────────────────────────────────
+ml/*/data/raw/*
+ml/*/data/processed/*
+!ml/*/data/raw/.gitkeep
+!ml/*/data/processed/.gitkeep
+
+# Loose dataset archives anywhere
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.rar
+!docs/archive/*.zip
+
+# ─────────────────────────────────────────────────────────────
+# Model artifacts — weights and exports are rebuildable
+# ─────────────────────────────────────────────────────────────
+ml/*/models/*
+!ml/*/models/.gitkeep
+*.h5
+*.keras
+*.hdf5
+*.pb
+*.tflite
+*.ckpt
+*.pt
+*.pth
+*.onnx
+saved_model/
+checkpoints/
+
+# ─────────────────────────────────────────────────────────────
+# KEPT ON PURPOSE — do not add these to the ignore list
+#   ml/*/plots/*.png        research figures
+#   ml/*/outputs/*.json     run metadata, dataset summaries
+#   ml/*/outputs/*.csv      duplicate / corrupt-file lists
+#   experiments/results/    consolidated results
+#   experiments/reports/    written analysis
+# ─────────────────────────────────────────────────────────────
+
+# ─────────────────────────────────────────────────────────────
+# Python
+# ─────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# ─────────────────────────────────────────────────────────────
+# Node / application workspace (dev/ is empty scaffold for now)
+# ─────────────────────────────────────────────────────────────
+node_modules/
+dist/
+build/
+.expo/
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# ─────────────────────────────────────────────────────────────
+# Secrets — nothing credential-shaped may ever be committed
+# ─────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+credentials.json
+serviceAccount*.json
+
+# ─────────────────────────────────────────────────────────────
+# OS / editor / tooling
+# ─────────────────────────────────────────────────────────────
+Thumbs.db
+Desktop.ini
+.DS_Store
+.vscode/
+.idea/
+*.swp
+.claude/settings.local.json
