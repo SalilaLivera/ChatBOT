@@ -1,0 +1,171 @@
+{
+  "source_path": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\archive",
+  "destination_path": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\fer\\data\\raw",
+  "moved_at": "2026-08-19T02:54:46.377810+05:30",
+  "per_class": {
+    "train": {
+      "angry": {
+        "file_count": 3995,
+        "total_bytes": 6321271,
+        "prefix_counts": {
+          "Training_": 3995,
+          "PublicTest_": 0,
+          "PrivateTest_": 0,
+          "other": 0
+        }
+      },
+      "disgust": {
+        "file_count": 436,
+        "total_bytes": 670819,
+        "prefix_counts": {
+          "Training_": 436,
+          "PublicTest_": 0,
+          "PrivateTest_": 0,
+          "other": 0
+        }
+      },
+      "fear": {
+        "file_count": 4097,
+        "total_bytes": 6519944,
+        "prefix_counts": {
+          "Training_": 4097,
+          "PublicTest_": 0,
+          "PrivateTest_": 0,
+          "other": 0
+        }
+      },
+      "happy": {
+        "file_count": 7215,
+        "total_bytes": 11367819,
+        "prefix_counts": {
+          "Training_": 7215,
+          "PublicTest_": 0,
+          "PrivateTest_": 0,
+          "other": 0
+        }
+      },
+      "neutral": {
+        "file_count": 4965,
+        "total_bytes": 7703639,
+        "prefix_counts": {
+          "Training_": 4965,
+          "PublicTest_": 0,
+          "PrivateTest_": 0,
+          "other": 0
+        }
+      },
+      "sad": {
+        "file_count": 4830,
+        "total_bytes": 7470528,
+        "prefix_counts": {
+          "Training_": 4830,
+          "PublicTest_": 0,
+          "PrivateTest_": 0,
+          "other": 0
+        }
+      },
+      "surprise": {
+        "file_count": 3171,
+        "total_bytes": 5131849,
+        "prefix_counts": {
+          "Training_": 3171,
+          "PublicTest_": 0,
+          "PrivateTest_": 0,
+          "other": 0
+        }
+      }
+    },
+    "test": {
+      "angry": {
+        "file_count": 958,
+        "total_bytes": 1527154,
+        "prefix_counts": {
+          "Training_": 0,
+          "PublicTest_": 467,
+          "PrivateTest_": 491,
+          "other": 0
+        }
+      },
+      "disgust": {
+        "file_count": 111,
+        "total_bytes": 173241,
+        "prefix_counts": {
+          "Training_": 0,
+          "PublicTest_": 56,
+          "PrivateTest_": 55,
+          "other": 0
+        }
+      },
+      "fear": {
+        "file_count": 1024,
+        "total_bytes": 1638654,
+        "prefix_counts": {
+          "Training_": 0,
+          "PublicTest_": 496,
+          "PrivateTest_": 528,
+          "other": 0
+        }
+      },
+      "happy": {
+        "file_count": 1774,
+        "total_bytes": 2796486,
+        "prefix_counts": {
+          "Training_": 0,
+          "PublicTest_": 895,
+          "PrivateTest_": 879,
+          "other": 0
+        }
+      },
+      "neutral": {
+        "file_count": 1233,
+        "total_bytes": 1922864,
+        "prefix_counts": {
+          "Training_": 0,
+          "PublicTest_": 607,
+          "PrivateTest_": 626,
+          "other": 0
+        }
+      },
+      "sad": {
+        "file_count": 1247,
+        "total_bytes": 1928315,
+        "prefix_counts": {
+          "Training_": 0,
+          "PublicTest_": 653,
+          "PrivateTest_": 594,
+          "other": 0
+        }
+      },
+      "surprise": {
+        "file_count": 831,
+        "total_bytes": 1337606,
+        "prefix_counts": {
+          "Training_": 0,
+          "PublicTest_": 415,
+          "PrivateTest_": 416,
+          "other": 0
+        }
+      }
+    }
+  },
+  "totals": {
+    "train": {
+      "file_count": 28709,
+      "total_bytes": 45185869
+    },
+    "test": {
+      "file_count": 7178,
+      "total_bytes": 11324320
+    },
+    "overall": {
+      "file_count": 35887,
+      "total_bytes": 56510189
+    }
+  },
+  "non_jpg_count": 0,
+  "verification": {
+    "before_after_match": true,
+    "source_removed": true
+  },
+  "verified_by": "ml-developer, task A, relocation"
+}

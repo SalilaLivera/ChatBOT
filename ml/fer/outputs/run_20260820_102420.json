@@ -1,0 +1,41 @@
+{
+  "run_id": "run_20260820_102420",
+  "timestamp": "2026-08-20 10:24:20",
+  "notebook": "02_data_preparation",
+  "dataset": "FER-2013",
+  "dataset_path": "../data/raw",
+  "dataset_version": null,
+  "model_version": null,
+  "environment": "local",
+  "package_versions": {
+    "python": "3.10.20",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "Pillow": "12.3.0",
+    "matplotlib": "3.10.9",
+    "opencv": "5.0.0.93",
+    "mediapipe": "1.0.1"
+  },
+  "hyperparameters": {
+    "blazeface_backend": "tasks",
+    "blazeface_model_selection": 0,
+    "blazeface_upscale": 1,
+    "blazeface_calibration_detection_rate": 0.9996666666666667,
+    "blazeface_min_detection_confidence_used_for_measurement": 0.1
+  },
+  "random_seed": 42,
+  "metrics": {
+    "total_files": 35887,
+    "train_files_canonical": 28709,
+    "train_files_cleaned": 26900,
+    "val_files": 3589,
+    "test_files": 3589,
+    "repro_gate_ok": true,
+    "blazeface_backend": "tasks",
+    "blazeface_overall_detection_rate": 0.9994426951263689,
+    "canonical_train_imbalance_ratio": 16.548165137614678,
+    "cleaned_train_imbalance_ratio": 20.011396011396013,
+    "images_dropped_from_train": 1809
+  },
+  "notes": "Reproducibility gate: PASSED. BlazeFace backend: tasks. Winning config: model_selection=0, upscale=1."
+}

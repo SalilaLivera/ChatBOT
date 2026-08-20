@@ -1,0 +1,220 @@
+{
+  "dataset": "FER-2013",
+  "dataset_root": "C:/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/data/raw",
+  "class_names": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad",
+    "surprise"
+  ],
+  "totals": {
+    "overall_files": 35887,
+    "train_files": 28709,
+    "val_files": 3589,
+    "test_files": 3589
+  },
+  "per_class_counts": {
+    "train": {
+      "angry": 3995,
+      "disgust": 436,
+      "fear": 4097,
+      "happy": 7215,
+      "neutral": 4965,
+      "sad": 4830,
+      "surprise": 3171
+    },
+    "val": {
+      "angry": 467,
+      "disgust": 56,
+      "fear": 496,
+      "happy": 895,
+      "neutral": 607,
+      "sad": 653,
+      "surprise": 415
+    },
+    "test": {
+      "angry": 491,
+      "disgust": 55,
+      "fear": 528,
+      "happy": 879,
+      "neutral": 626,
+      "sad": 594,
+      "surprise": 416
+    }
+  },
+  "imbalance_ratio": {
+    "train_max_min": 16.548165137614678,
+    "test_max_min": 15.981981981981981
+  },
+  "prefix_census": {
+    "cross_tab": {
+      "test": {
+        "Training_": 0,
+        "PublicTest_": 3589,
+        "PrivateTest_": 3589,
+        "other": 0
+      },
+      "train": {
+        "Training_": 28709,
+        "PublicTest_": 0,
+        "PrivateTest_": 0,
+        "other": 0
+      }
+    },
+    "checks": {
+      "train/ contains ONLY Training_ files": true,
+      "test/ contains ONLY PublicTest_ and PrivateTest_ files": true,
+      "zero other-prefix files": true
+    },
+    "all_checks_passed": true
+  },
+  "dimensions": {
+    "unique_dimensions": [
+      {
+        "(width, height)": "(48, 48)",
+        "count": "35887"
+      }
+    ],
+    "uniform": true
+  },
+  "channels_modes": [
+    {
+      "mode": "L",
+      "count": "35887",
+      "bits_per_channel": "8"
+    }
+  ],
+  "corrupt_files": {
+    "count": 0,
+    "zero_byte_count": 0
+  },
+  "duplicates": {
+    "md5": {
+      "total_groups": 1516,
+      "total_files": 3369,
+      "within_train_groups": 936,
+      "within_val_groups": 16,
+      "within_test_groups": 7,
+      "cross_group_groups": 557,
+      "cross_group_files": 1323,
+      "cross_group_label_noise_groups": 26
+    },
+    "dhash": {
+      "total_groups": 1581,
+      "total_files": 3556,
+      "within_train_groups": 969,
+      "within_val_groups": 16,
+      "within_test_groups": 8,
+      "cross_group_groups": 588,
+      "cross_group_files": 1422,
+      "cross_group_label_noise_groups": 32
+    },
+    "near_duplicate": {
+      "total_groups": 2051,
+      "total_files": 5100,
+      "within_train_groups": 1215,
+      "within_val_groups": 19,
+      "within_test_groups": 10,
+      "cross_group_groups": 807,
+      "cross_group_files": 2311,
+      "cross_group_label_noise_groups": 93
+    }
+  },
+  "cross_group_leakage": {
+    "md5": 1323,
+    "dhash": 1422,
+    "near_duplicate": 2311
+  },
+  "pixel_stats": {
+    "overall": {
+      "mean": 129.38489987766383,
+      "std": 65.07548728871369,
+      "min": 0.0,
+      "max": 255.0,
+      "median": 134.0
+    },
+    "per_class": {
+      "angry": {
+        "mean": 126.53448509741571,
+        "std": 65.36064574614772,
+        "min": 0.0,
+        "max": 255.0,
+        "median": 130.0
+      },
+      "disgust": {
+        "mean": 135.10948687918952,
+        "std": 62.62968034734376,
+        "min": 0.0,
+        "max": 255.0,
+        "median": 140.0
+      },
+      "fear": {
+        "mean": 135.42590405926578,
+        "std": 65.12330078728755,
+        "min": 0.0,
+        "max": 255.0,
+        "median": 142.0
+      },
+      "happy": {
+        "mean": 129.08052864187403,
+        "std": 63.352391967164664,
+        "min": 0.0,
+        "max": 255.0,
+        "median": 134.0
+      },
+      "neutral": {
+        "mean": 123.88801670173622,
+        "std": 65.35769995664565,
+        "min": 0.0,
+        "max": 255.0,
+        "median": 126.0
+      },
+      "sad": {
+        "mean": 121.03576054636791,
+        "std": 64.75731623237539,
+        "min": 0.0,
+        "max": 255.0,
+        "median": 124.0
+      },
+      "surprise": {
+        "mean": 146.2749967247279,
+        "std": 65.01476874073856,
+        "min": 0.0,
+        "max": 255.0,
+        "median": 157.0
+      }
+    },
+    "per_split": {
+      "train": {
+        "mean": 129.4733339525739,
+        "std": 65.0447822940401,
+        "min": 0.0,
+        "max": 255.0,
+        "median": 134.0
+      },
+      "val": {
+        "mean": 128.98032580744405,
+        "std": 65.02475909744491,
+        "min": 0.0,
+        "max": 255.0,
+        "median": 134.0
+      },
+      "test": {
+        "mean": 129.082075269535,
+        "std": 65.36864885245963,
+        "min": 0.0,
+        "max": 255.0,
+        "median": 134.0
+      }
+    }
+  },
+  "quality_anomalies": {
+    "near_constant": 14,
+    "fully_black": 12,
+    "fully_white": 0,
+    "brightness_outliers": 67
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "run_id": "run_20260819_031400",
+  "timestamp": "2026-08-19 03:14:00",
+  "notebook": "01_dataset_exploration",
+  "dataset": "FER-2013",
+  "dataset_path": "C:/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/data/raw",
+  "dataset_version": null,
+  "model_version": null,
+  "environment": "local",
+  "package_versions": {
+    "python": "3.10.8",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "Pillow": "12.0.0",
+    "matplotlib": "3.10.9"
+  },
+  "hyperparameters": {},
+  "random_seed": 42,
+  "metrics": {
+    "total_files": 35887,
+    "train_files": 28709,
+    "val_files": 3589,
+    "test_files": 3589,
+    "train_imbalance_ratio": 16.548165137614678,
+    "test_imbalance_ratio": 15.981981981981981,
+    "corrupt_files": 0,
+    "md5_duplicate_groups": 1516,
+    "dhash_duplicate_groups": 1581,
+    "near_duplicate_groups": 2051,
+    "cross_group_leakage_files_md5": 1323,
+    "cross_group_leakage_files_dhash": 1422,
+    "cross_group_leakage_files_near": 2311
+  },
+  "notes": "SUPERVISOR VERIFICATION RUN - executed locally against ml/fer/data/raw/ by the ML supervisor to validate notebook 01 before Colab execution. Not the Colab run of record. Prefix census: ALL CHECKS PASSED (train/=28709 Training_; test/=3589 PublicTest_ + 3589 PrivateTest_; 0 other). Prefix census: ALL CHECKS PASSED. Checks: {'train/ contains ONLY Training_ files': True, 'test/ contains ONLY PublicTest_ and PrivateTest_ files': True, 'zero other-prefix files': True}."
+}

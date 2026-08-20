@@ -1,0 +1,87 @@
+{
+  "policy": {
+    "train_rules_applied": [
+      "cross_group_duplicate",
+      "within_train_duplicate_redundancy",
+      "anomaly_flagged",
+      "blazeface_undetected"
+    ],
+    "val_test_policy": "untouched (canonical) \u2014 see \u00a75 rationale"
+  },
+  "counts_removed_per_rule": {
+    "cross_group_duplicate": 703,
+    "within_train_duplicate_redundancy": 1064,
+    "anomaly_flagged": 53,
+    "blazeface_undetected": 17
+  },
+  "counts_removed_total_distinct": 1809,
+  "counts_removed_sum_with_double_counting": 1837,
+  "before_after_per_class_train": [
+    {
+      "class": "angry",
+      "count_canonical": 3995,
+      "count_cleaned": 3783,
+      "removed": 212
+    },
+    {
+      "class": "disgust",
+      "count_canonical": 436,
+      "count_cleaned": 351,
+      "removed": 85
+    },
+    {
+      "class": "fear",
+      "count_canonical": 4097,
+      "count_cleaned": 3803,
+      "removed": 294
+    },
+    {
+      "class": "happy",
+      "count_canonical": 7215,
+      "count_cleaned": 7024,
+      "removed": 191
+    },
+    {
+      "class": "neutral",
+      "count_canonical": 4965,
+      "count_cleaned": 4813,
+      "removed": 152
+    },
+    {
+      "class": "sad",
+      "count_canonical": 4830,
+      "count_cleaned": 4672,
+      "removed": 158
+    },
+    {
+      "class": "surprise",
+      "count_canonical": 3171,
+      "count_cleaned": 2454,
+      "removed": 717
+    }
+  ],
+  "imbalance_ratio_train": {
+    "canonical": 16.548165137614678,
+    "cleaned": 20.011396011396013
+  },
+  "blazeface": {
+    "backend": "tasks",
+    "winning_model_selection": 0,
+    "winning_upscale": 1,
+    "overall_detection_rate": 0.9994426951263689,
+    "full_run_elapsed_s": 85.23641729354858
+  },
+  "reproducibility_gate": {
+    "REPRO_OK": true,
+    "checks": {
+      "total_files": true,
+      "train_files": true,
+      "val_files": true,
+      "test_files": true,
+      "md5_duplicate_groups": true,
+      "md5_cross_group_groups": true,
+      "md5_cross_group_files": true,
+      "md5_cross_group_label_noise_groups": true
+    }
+  }
+}
