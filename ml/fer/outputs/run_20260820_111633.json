@@ -1,6 +1,6 @@
 {
-  "run_id": "run_20260820_102420",
-  "timestamp": "2026-08-20 10:24:20",
+  "run_id": "run_20260820_111633",
+  "timestamp": "2026-08-20 11:16:33",
   "notebook": "02_data_preparation",
   "dataset": "FER-2013",
   "dataset_path": "../data/raw",
@@ -27,7 +27,7 @@
   "metrics": {
     "total_files": 35887,
     "train_files_canonical": 28709,
-    "train_files_cleaned": 26900,
+    "train_files_cleaned": 26901,
     "val_files": 3589,
     "test_files": 3589,
     "repro_gate_ok": true,
@@ -35,7 +35,7 @@
     "blazeface_overall_detection_rate": 0.9994426951263689,
     "canonical_train_imbalance_ratio": 16.548165137614678,
     "cleaned_train_imbalance_ratio": 20.011396011396013,
-    "images_dropped_from_train": 1809
+    "images_dropped_from_train": 1808
   },
   "notes": "Reproducibility gate: PASSED. BlazeFace backend: tasks. Winning config: model_selection=0, upscale=1."
 }

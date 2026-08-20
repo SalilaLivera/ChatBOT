@@ -233,7 +233,11 @@ comparability with published FER-2013 benchmarks):
 2. within-TRAIN duplicate redundancy, keeping one representative — 1,064 files
 3. anomaly-flagged images — 53 files
 
-Train: **28,709 -> 26,900** (1,809 distinct images removed). No file is deleted from
+BlazeFace is **measured but not applied**: of the 17 images it alone would have removed,
+16 were already caught by the rules above, so it contributed exactly **one** unique image out
+of 28,709. It is recorded in `cleaning_report.json` under `rules_measured_but_not_applied`.
+
+Train: **28,709 -> 26,901** (1,808 distinct images removed). No file is deleted from
 `data/raw/`; cleaning is expressed as manifests (`splits_canonical.csv`,
 `splits_cleaned.csv`, `image_flags.csv`).
 
@@ -247,7 +251,7 @@ the minority classes:
 | fear | 4,097 | 3,803 | 294 (7.2%) |
 | angry | 3,995 | 3,783 | 212 (5.3%) |
 | sad | 4,830 | 4,672 | 158 (3.3%) |
-| neutral | 4,965 | 4,813 | 152 (3.1%) |
+| neutral | 4,965 | 4,814 | 151 (3.0%) |
 | happy | 7,215 | 7,024 | 191 (2.6%) |
 
 `happy`, already the largest class, lost the least; `disgust` now has 351 training images and
