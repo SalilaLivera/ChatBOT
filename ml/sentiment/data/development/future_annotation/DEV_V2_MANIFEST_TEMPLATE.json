@@ -1,0 +1,32 @@
+{
+  "dataset_version": "REQUIRES_APPROVAL",
+  "status": "TEMPLATE_ONLY_NOT_A_DATASET",
+  "language_scope": "REQUIRES_APPROVAL",
+  "source_record_ids": [],
+  "annotation_guideline_version": "2.1-draft",
+  "annotation_round_id": "REQUIRES_APPROVAL",
+  "annotation_date_range": "REQUIRES_APPROVAL",
+  "annotator_metadata_reference": "REQUIRES_SUPERVISOR_DECISION",
+  "context_policy": "target_message_only_default; expansion requires supervisor decision",
+  "exclusion_rules": [
+    "frozen_test_id_overlap",
+    "duplicate_id",
+    "exact_or_normalized_text_duplicate",
+    "near_duplicate_under_approved_method",
+    "missing_or_invalid_annotation",
+    "unresolved_adjudication",
+    "governance_or_deidentification_failure"
+  ],
+  "frozen_test_exclusion_status": "MUST_PASS_ID_MEMBERSHIP_CHECK",
+  "final_label_counts": {
+    "CALM": "NOT_YET_AVAILABLE",
+    "NEUTRAL": "NOT_YET_AVAILABLE",
+    "DISTRESSED": "NOT_YET_AVAILABLE",
+    "UNRESOLVED": "MUST_BE_ZERO_FOR_RELEASE"
+  },
+  "dataset_sha256": "NOT_YET_AVAILABLE",
+  "split_hash": "NOT_YET_AVAILABLE",
+  "created_utc": "NOT_YET_AVAILABLE",
+  "raw_text_in_manifest": false,
+  "notes": "Template only. Do not populate or use until the guideline, schema decisions, and data-collection methodology are approved."
+}

@@ -1,0 +1,24 @@
+{
+  "dataset": "PREGNANCY_FROZEN_TEST_SET.csv",
+  "n": 120,
+  "overall_accuracy": 0.3333333333333333,
+  "macro_precision": 0.3176202349664173,
+  "macro_recall": 0.3333333333333333,
+  "macro_f1": 0.29447094152976505,
+  "cohen_kappa": 0.0,
+  "mapping": {
+    "POSITIVE": "CALM",
+    "NEUTRAL": "NEUTRAL",
+    "NEGATIVE": "DISTRESSED"
+  },
+  "latency": {
+    "n": 120,
+    "mean_ms": 25.074282500221063,
+    "median_ms": 23.551550002594013,
+    "p95_ms": 34.15774000059173,
+    "min_ms": 12.27919999655569,
+    "max_ms": 173.57820000324864
+  },
+  "safety_relevant_errors": 40,
+  "high_confidence_errors": 0
+}

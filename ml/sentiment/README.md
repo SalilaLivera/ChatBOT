@@ -1,9 +1,47 @@
 # ml/sentiment/ — Bilingual Text Mood Model
 
-**Status:** Not started. Deferred to its designated phase (Build Plan, Phase 4).
+**Status:** Existing SinBERT baseline organized; no new experiment performed. Candidate comparison, domain adaptation, and final model selection remain future work in Phase 4.
 
-This folder is scaffolded so the structure exists. **Do not begin model work here while
-FER (Phase 2/3) is the active track.**
+The permanent candidate registry is [MODEL_BENCHMARK_CANDIDATES.md](C:\Users\Yasindu\Desktop\Chat_Research\chat\MODEL_BENCHMARK_CANDIDATES.md). The current source evidence identifies seven candidates, including the existing baseline; five requested registry slots remain explicitly unresolved until authoritative model identities are supplied.
+
+The folder contains the migrated historical baseline evidence and the future working structure. **Do not tune or select a final model from the frozen test set.**
+
+The Dev-v2 construction is documented in [`docs/DEV_V2_CONSTRUCTION_REPORT.md`](docs/DEV_V2_CONSTRUCTION_REPORT.md). The Experiment 02 design is documented in [`docs/EXPERIMENT_02_PLAN.md`](docs/EXPERIMENT_02_PLAN.md). Dev-v2 is validated, but Experiment 02 is **not ready to run** until the documented imbalance/readiness gate is accepted and explicit training authorization is given.
+
+Experiment 02 was completed once under the authorized plan. Findings are recorded in `outputs/development_v2/experiment_02/EXPERIMENT_02_FINDINGS.md`; this remains development/demo evidence only.
+
+## Current baseline
+
+The starting model is `sinhala-nlp/sinhala-sentiment-analysis-sinbert-small` at revision `7059f20a28a2b1e2ff2f45b13d6956435cdacb6a`. It is a three-class sentiment model, not an application mood classifier:
+
+```text
+LABEL_0 = NEUTRAL
+LABEL_1 = POSITIVE
+LABEL_2 = NEGATIVE
+```
+
+MaternaLink's application states are `CALM`, `NEUTRAL`, `DISTRESSED`, and `UNKNOWN`. Sentiment labels must not be renamed into those states. The historical evaluation used `POSITIVE → CALM`, `NEUTRAL → NEUTRAL`, `NEGATIVE → DISTRESSED` only as a diagnostic proxy.
+
+The actual frozen-set result was accuracy `0.3333`, macro-F1 `0.2945`, Sinhala macro-F1 `0.3000`, English macro-F1 `0.1667`, DISTRESSED recall `0.075`, mean latency `25.07 ms`, and 40 safety-relevant errors. These results do not justify treating SinBERT-small as the final mood model.
+
+Alternative models in the registry are future candidates. No alternative candidate has been evaluated on the MaternaLink pregnancy-domain dataset unless a future evidence record says so. Published model-card and paper metrics are not MaternaLink metrics.
+
+## Data and evidence
+
+- Frozen test set: `data\processed\PREGNANCY_FROZEN_TEST_SET.csv` — 120 records, 20 per mood for each language. **FROZEN — DO NOT TOUCH.**
+- Human ground truth: `data\processed\PREGNANCY_ANNOTATION_GROUND_TRUTH.csv` — human labels define ground truth.
+- Baseline outputs: `outputs\baseline\`.
+- Historical evaluation script: `scripts\evaluate_sinbert_historical.py`.
+- Repository-adapted, configurable copy: `scripts\evaluate_sinbert.py` (not run during migration).
+- Environment record: `ENVIRONMENT.md`.
+
+Never tune, select thresholds, select models, select mappings, or repeatedly evaluate for optimization on the frozen test. Future decisions require separate development evidence.
+
+The final selected model will receive one final frozen-test evaluation, unchanged and without tuning on that test set. No candidate notebooks have been created yet.
+
+## Reproduction
+
+See `ENVIRONMENT.md` and `scripts\evaluate_sinbert_historical.py`. The verified model is expected in the pinned local Hugging Face cache; model weights are not stored in Git. The repository-adapted script uses environment variables for dataset, model, and output paths, but was deliberately not executed during this migration.
 
 ## Purpose
 

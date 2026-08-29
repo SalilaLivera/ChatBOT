@@ -1,0 +1,75 @@
+{
+  "ground_truth": {
+    "n": 300,
+    "by_language": {
+      "EN": 150,
+      "SI": 150
+    },
+    "by_mood": {
+      "CALM": 57,
+      "DISTRESSED": 110,
+      "NEUTRAL": 133
+    },
+    "by_language_mood": {
+      "EN_CALM": 28,
+      "EN_DISTRESSED": 53,
+      "EN_NEUTRAL": 69,
+      "SI_CALM": 29,
+      "SI_DISTRESSED": 57,
+      "SI_NEUTRAL": 64
+    }
+  },
+  "frozen_test": {
+    "n": 120,
+    "by_language": {
+      "EN": 60,
+      "SI": 60
+    },
+    "by_mood": {
+      "CALM": 40,
+      "DISTRESSED": 40,
+      "NEUTRAL": 40
+    },
+    "by_language_mood": {
+      "EN_CALM": 20,
+      "EN_DISTRESSED": 20,
+      "EN_NEUTRAL": 20,
+      "SI_CALM": 20,
+      "SI_DISTRESSED": 20,
+      "SI_NEUTRAL": 20
+    }
+  },
+  "development_candidate_pool": {
+    "n": 180,
+    "by_language": {
+      "EN": 90,
+      "SI": 90
+    },
+    "by_mood": {
+      "CALM": 17,
+      "DISTRESSED": 70,
+      "NEUTRAL": 93
+    },
+    "by_language_mood": {
+      "EN_CALM": 8,
+      "EN_DISTRESSED": 33,
+      "EN_NEUTRAL": 49,
+      "SI_CALM": 9,
+      "SI_DISTRESSED": 37,
+      "SI_NEUTRAL": 44
+    }
+  },
+  "non_frozen_record_count": 180,
+  "id_duplicate_count_ground_truth": 0,
+  "exact_duplicate_text_count_development": 0,
+  "exact_duplicate_text_count_frozen": 0,
+  "frozen_development_id_overlap": 0,
+  "frozen_sha256": "d5ad1244d0c59b039d705a1876433b8493c7a36c92745e36fb429fa141b81f64",
+  "ground_truth_sha256": "80cdad6d8e01a11d8dbdcf2d27da7f5bd7a3e8f695463bda05adabed20d35e8e",
+  "annotation_agreement": {
+    "ground_truth_raw_percent": 0.9433333333333334,
+    "development_raw_percent": 0.9166666666666666,
+    "ground_truth_disagreements": 17,
+    "development_disagreements": 15
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "status": "EXPERIMENT_02_DEVELOPMENT_ONLY",
+  "dataset_path": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\sentiment\\outputs\\development_v2\\release\\maternalink_sinhala_dev_v2.csv",
+  "dataset_sha256": "bdf2df52913eb686bacbfbb481764d4d425b61207ad4506c9d8ef325b7c9f5aa",
+  "dataset_version": "maternalink_sinhala_dev_v2",
+  "split_path": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\sentiment\\outputs\\development_v2\\release\\maternalink_sinhala_dev_v2_split_membership.csv",
+  "split_sha256": "46b03fb9f4ecfeded82c7e4209767d567194250892fc4ac2efa93c7f74d2d81d",
+  "seed": 20260828,
+  "model_id": "sinhala-nlp/sinhala-sentiment-analysis-sinbert-small",
+  "model_revision": "7059f20a28a2b1e2ff2f45b13d6956435cdacb6a",
+  "tokenizer_class": "RobertaTokenizer",
+  "classification_head": "new RobertaClassificationHead with 3 outputs",
+  "label_order": [
+    "CALM",
+    "NEUTRAL",
+    "DISTRESSED"
+  ],
+  "device": "cpu",
+  "max_length": 512,
+  "batch_size": 8,
+  "epochs_requested": 5,
+  "epochs_completed": 5,
+  "optimizer": "AdamW",
+  "learning_rate": 2e-05,
+  "weight_decay": 0.01,
+  "warmup_ratio": 0.1,
+  "gradient_clipping": 1.0,
+  "loss": "CrossEntropyLoss with training-only class weights",
+  "class_weights_training_only": [
+    1.4294872283935547,
+    0.5425790548324585,
+    2.186274528503418
+  ],
+  "train_counts": {
+    "CALM": 52,
+    "NEUTRAL": 137,
+    "DISTRESSED": 34
+  },
+  "train_count": 223,
+  "validation_count": 76,
+  "primary_metric": "validation_macro_f1",
+  "best_epoch": 5,
+  "frozen_test_used": false,
+  "alternative_models_used": false,
+  "fer_fusion_used": false
+}

@@ -1,0 +1,10 @@
+{
+  "CALM": 0,
+  "NEUTRAL": 1,
+  "DISTRESSED": 2,
+  "score_order": [
+    "p_calm",
+    "p_neutral",
+    "p_distressed"
+  ]
+}

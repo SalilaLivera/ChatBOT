@@ -1,0 +1,58 @@
+{
+  "dataset_version": "maternalink_sinhala_dev_v2",
+  "status": "FROZEN_RELEASE",
+  "guideline_version": "2.1",
+  "source_files": [
+    "C:\\Users\\Yasindu\\Desktop\\maternalink_sinhala_demo_annotated_v1.csv",
+    "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\sentiment\\data\\processed\\PREGNANCY_ANNOTATION_GROUND_TRUTH.csv"
+  ],
+  "source_roles": {
+    "new_source": "240 supplied Sinhala records; 31 UNRESOLVED excluded without relabelling",
+    "existing_development": "90 non-frozen Experiment 01 development records"
+  },
+  "record_count": 299,
+  "existing_record_count": 90,
+  "new_record_count": 209,
+  "excluded_unresolved_count": 31,
+  "label_counts": {
+    "CALM": 70,
+    "NEUTRAL": 183,
+    "DISTRESSED": 46
+  },
+  "frozen_overlap_count": 0,
+  "dataset_sha256": "bdf2df52913eb686bacbfbb481764d4d425b61207ad4506c9d8ef325b7c9f5aa",
+  "split": {
+    "seed": 20260828,
+    "strategy": "stratified by adjudicated_label; 75/25 train/validation",
+    "train_count": 223,
+    "validation_count": 76,
+    "train_validation_overlap": 0,
+    "membership_csv": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\sentiment\\outputs\\development_v2\\release\\maternalink_sinhala_dev_v2_split_membership.csv",
+    "membership_sha256": "46b03fb9f4ecfeded82c7e4209767d567194250892fc4ac2efa93c7f74d2d81d",
+    "train_label_counts": {
+      "CALM": 52,
+      "NEUTRAL": 137,
+      "DISTRESSED": 34
+    },
+    "validation_label_counts": {
+      "CALM": 18,
+      "NEUTRAL": 46,
+      "DISTRESSED": 12
+    }
+  },
+  "contamination_checks": {
+    "ground_truth_id_overlap": 0,
+    "frozen_manifest_id_overlap": 0,
+    "experiment01_id_overlap": 0,
+    "normalized_text_overlap_with_existing_development": 0,
+    "normalized_text_overlap_within_final_release": 0
+  },
+  "raw_text_in_manifest": false,
+  "near_duplicate_check": "NOT PERFORMED — approved V2.1 near-duplicate method/threshold not specified",
+  "experiment02_readiness": "NOT_READY — class distribution is materially imbalanced; construction and validation are complete",
+  "notes": [
+    "No frozen-test text, labels, predictions, or metrics were loaded.",
+    "The 31 source UNRESOLVED records were excluded without relabelling.",
+    "The near-duplicate method/threshold remains unspecified in approved V2.1 and was not performed."
+  ]
+}

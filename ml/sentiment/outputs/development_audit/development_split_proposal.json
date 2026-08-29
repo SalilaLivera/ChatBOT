@@ -1,0 +1,44 @@
+{
+  "status": "PROPOSED_ONLY_NOT_CREATED",
+  "seed": 20260828,
+  "source": "non-frozen records from PREGNANCY_ANNOTATION_GROUND_TRUTH.csv",
+  "stratification": [
+    "language",
+    "adjudicated_label"
+  ],
+  "train_fraction": 0.8,
+  "validation_fraction": 0.2,
+  "note": "Human mood labels are not yet legitimate SinBERT sentiment training targets; do not train until a mapping/target decision is approved.",
+  "strata": {
+    "EN_CALM": {
+      "available": 8,
+      "proposed_train": 6,
+      "proposed_validation": 2
+    },
+    "EN_DISTRESSED": {
+      "available": 33,
+      "proposed_train": 26,
+      "proposed_validation": 7
+    },
+    "EN_NEUTRAL": {
+      "available": 49,
+      "proposed_train": 39,
+      "proposed_validation": 10
+    },
+    "SI_CALM": {
+      "available": 9,
+      "proposed_train": 7,
+      "proposed_validation": 2
+    },
+    "SI_DISTRESSED": {
+      "available": 37,
+      "proposed_train": 30,
+      "proposed_validation": 7
+    },
+    "SI_NEUTRAL": {
+      "available": 44,
+      "proposed_train": 35,
+      "proposed_validation": 9
+    }
+  }
+}

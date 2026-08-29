@@ -1,0 +1,81 @@
+﻿record_id,language,human_ground_truth,model_label,mapped_mood,model_confidence,latency_ms,error_type,text
+EN-AMBIG-004,EN,DISTRESSED,POSITIVE,CALM,0.525143563747406,21.000300002924632,distressed_to_positive,There are three more scans scheduled before delivery.
+EN-AMBIG-T04,EN,DISTRESSED,POSITIVE,CALM,0.5127280354499817,31.783999998879157,distressed_to_positive,There's too much conflicting information out there and it's honestly starting to overwhelm me.
+EN-ANXIETY-002,EN,DISTRESSED,POSITIVE,CALM,0.5463643074035645,29.782700003124774,distressed_to_positive,Every little twinge makes me panic that something's wrong with the baby.
+EN-ANXIETY-004,EN,DISTRESSED,POSITIVE,CALM,0.5652162432670593,24.795299999823328,distressed_to_positive,I get really nervous whenever I haven't felt the baby move in a while.
+EN-ANXIETY-010,EN,DISTRESSED,POSITIVE,CALM,0.5737367868423462,19.212300001527183,distressed_to_positive,I worry a lot about whether I'll be a good mother.
+EN-APPT-003,EN,DISTRESSED,POSITIVE,CALM,0.5014670491218567,23.45390000118641,distressed_to_positive,The clinic rescheduled my appointment again and it's frustrating.
+EN-APPT-005,EN,DISTRESSED,POSITIVE,CALM,0.5298089385032654,27.586299998802133,distressed_to_positive,"My appointment went well today, the doctor said everything looks good."
+EN-APPT-010,EN,DISTRESSED,POSITIVE,CALM,0.5209442377090454,22.239499994611837,distressed_to_positive,I dread every appointment because I'm always scared of bad news.
+EN-DISCOMFORT-005,EN,DISTRESSED,POSITIVE,CALM,0.577054500579834,20.33170000504469,distressed_to_positive,The heat this week has made the swelling so much worse.
+EN-FEAR-010,EN,DISTRESSED,POSITIVE,CALM,0.5650745630264282,26.068099999974947,distressed_to_positive,I'm scared of needles and the thought of the next blood test is stressing me out.
+EN-FETAL-003,EN,DISTRESSED,POSITIVE,CALM,0.5121626257896423,28.483399997639932,distressed_to_positive,I keep counting kicks obsessively because I'm scared something's off.
+EN-FETAL-005,EN,DISTRESSED,POSITIVE,CALM,0.5430298447608948,26.61880000232486,distressed_to_positive,I'm concerned my blood pressure readings have been a bit high lately.
+EN-REASSURE-005,EN,DISTRESSED,POSITIVE,CALM,0.5551666021347046,28.15209999971557,distressed_to_positive,Talking to other mothers about this made me feel much less alone with my worries.
+EN-REASSURE-T04,EN,DISTRESSED,POSITIVE,CALM,0.5370612144470215,33.58329999900889,distressed_to_positive,"Everyone keeps telling me not to worry, but their reassurance isn't really helping right now."
+EN-ROUTINE-003,EN,DISTRESSED,POSITIVE,CALM,0.5496618151664734,22.01989999593934,distressed_to_positive,How much water should I be drinking each day now?
+EN-SADNESS-006,EN,DISTRESSED,POSITIVE,CALM,0.5734336972236633,25.102899999183137,distressed_to_positive,I feel a bit sad that my partner can't be at every appointment with me.
+EN-SADNESS-009,EN,DISTRESSED,POSITIVE,CALM,0.5626280903816223,25.50509999855421,distressed_to_positive,I get teary thinking about how much my body has changed.
+EN-SADNESS-010,EN,DISTRESSED,POSITIVE,CALM,0.5494811534881592,27.283700001135003,distressed_to_positive,I feel sad that this pregnancy hasn't been the joyful experience people told me it would be.
+EN-SYMPTOM-010,EN,DISTRESSED,POSITIVE,CALM,0.5466148257255554,29.223199999250937,distressed_to_positive,"I had some cramping but the doctor said it's completely normal, so I feel better now."
+EN-UNCERT-007,EN,DISTRESSED,POSITIVE,CALM,0.5468834042549133,28.67980000155512,distressed_to_positive,I keep going back and forth on whether this is something serious.
+EN-AMBIG-005,EN,NEUTRAL,POSITIVE,CALM,0.5621776580810547,24.87999999721069,neutral_to_positive,The parking at the clinic can get busy on weekday mornings.
+EN-AMBIG-010,EN,NEUTRAL,POSITIVE,CALM,0.5779010653495789,27.5989000001573,neutral_to_positive,"I'm not sure if I'm more excited or anxious at this point, honestly both."
+EN-APPT-002,EN,NEUTRAL,POSITIVE,CALM,0.5681683421134949,16.810000000987202,neutral_to_positive,I have my glucose test coming up next week.
+EN-APPT-007,EN,NEUTRAL,POSITIVE,CALM,0.5585516691207886,23.55810000153724,neutral_to_positive,I have to switch clinics because of my new insurance.
+EN-DISCOMFORT-002,EN,NEUTRAL,POSITIVE,CALM,0.5094484090805054,26.477999999769963,neutral_to_positive,Sitting for long periods has become really uncomfortable now.
+EN-DISCOMFORT-007,EN,NEUTRAL,POSITIVE,CALM,0.5584620237350464,20.475099998293445,neutral_to_positive,My rib area feels tight and sore in the evenings.
+EN-DISCOMFORT-010,EN,NEUTRAL,POSITIVE,CALM,0.551651656627655,24.290300003485758,neutral_to_positive,"It's uncomfortable, but I know it's just part of this stage."
+EN-FEAR-001,EN,NEUTRAL,POSITIVE,CALM,0.5423213839530945,23.43510000355309,neutral_to_positive,I'm honestly scared something might be wrong with the baby.
+EN-FEAR-T02,EN,NEUTRAL,POSITIVE,CALM,0.515073299407959,42.692300005001016,neutral_to_positive,"The prenatal class covered common fears people have about delivery, just as general information."
+EN-FETAL-008,EN,NEUTRAL,POSITIVE,CALM,0.5076097846031189,28.96969999710564,neutral_to_positive,"The heartbeat sounded strong and steady at today's appointment, which was reassuring."
+EN-POSITIVE-004,EN,NEUTRAL,POSITIVE,CALM,0.52716064453125,24.447800002235454,neutral_to_positive,This has honestly been such a beautiful experience so far.
+EN-POSITIVE-006,EN,NEUTRAL,POSITIVE,CALM,0.5493167042732239,27.50940000260016,neutral_to_positive,I feel genuinely happy and excited every time I think about meeting the baby.
+EN-POSITIVE-T01,EN,NEUTRAL,POSITIVE,CALM,0.5285731554031372,27.786300001025666,neutral_to_positive,We're planning to announce the pregnancy at the family gathering next month.
+EN-ROUTINE-004,EN,NEUTRAL,POSITIVE,CALM,0.5727279782295227,19.572999997762963,neutral_to_positive,Can I dye my hair while I'm pregnant?
+EN-ROUTINE-005,EN,NEUTRAL,POSITIVE,CALM,0.5551936626434326,23.988999993889596,neutral_to_positive,What's a normal amount of weight gain by month five?
+EN-ROUTINE-010,EN,NEUTRAL,POSITIVE,CALM,0.5795711874961853,17.44499999767868,neutral_to_positive,Can I still fly for a short trip next month?
+EN-ROUTINE-T01,EN,NEUTRAL,POSITIVE,CALM,0.5452473163604736,50.45629999949597,neutral_to_positive,"I need to know right now if it's safe that I took a painkiller yesterday without checking first, I'm really worried I did something wrong."
+EN-SYMPTOM-009,EN,NEUTRAL,POSITIVE,CALM,0.5079106092453003,26.70360000047367,neutral_to_positive,"My appetite has changed completely, I crave weird things now."
+EN-UNCERT-004,EN,NEUTRAL,POSITIVE,CALM,0.5730501413345337,25.86489999521291,neutral_to_positive,I'm not sure whether to bring up this symptom with my doctor or just wait.
+EN-UNCERT-006,EN,NEUTRAL,POSITIVE,CALM,0.5293419361114502,21.28870000160532,neutral_to_positive,Not sure what week I officially start the third trimester.
+SI-AMBIG-003,SI,CALM,NEUTRAL,NEUTRAL,0.4588741660118103,19.06520000193268,calm_to_neutral,hospital bag checklist එකේ items විස්සක් විතර තියෙනවා.
+SI-APPT-008,SI,CALM,NEUTRAL,NEUTRAL,0.6197603940963745,24.84280000498984,calm_to_neutral,"අද checkup එකෙන් පස්සේ හරිම සැහැල්ලුයි, නිකන්නටම කනස්සල්ලෙන් හිටියේ."
+SI-FEAR-004,SI,CALM,NEGATIVE,DISTRESSED,0.4766756594181061,19.51089999784017,calm_to_negative,කලින් වෙච්ච දේ නිසා මේ pregnancy එකත් නැති වෙයිද කියලා බයයි.
+SI-FEAR-T04,SI,CALM,NEGATIVE,DISTRESSED,0.4335981905460357,25.038400002813432,calm_to_negative,"කලින් ඉඳිකටුවලට බයයි හිටියේ, ඒත් අද nurse හරිම ලේසියෙන් blood test එක කලා, දැනුනෙවත් නෑ."
+SI-FETAL-008,SI,CALM,NEUTRAL,NEUTRAL,0.4548202455043793,26.11569999862695,calm_to_neutral,"අද appointment එකේදි heart beat එක තදට හොඳින් ඇහුනා, ඒක හරිම සැහැල්ලුවක්."
+SI-REASSURE-002,SI,CALM,NEUTRAL,NEUTRAL,0.525013267993927,21.099799996591173,calm_to_neutral,scan එකෙන් පස්සේ බබාගේ වර්ධනය ගැන දැන් හිතට සැහැල්ලුයි.
+SI-REASSURE-005,SI,CALM,NEUTRAL,NEUTRAL,0.5503774881362915,15.420299998368137,calm_to_neutral,අනිත් අම්මලා එක්ක කතා කරහම මගේ කනස්සල්ල අඩු වුනා වගේ දැනුනා.
+SI-REASSURE-010,SI,CALM,NEUTRAL,NEUTRAL,0.4554083943367004,20.208900001307484,calm_to_neutral,සැමියාගේ support එකෙන් මේ ගැන ටිකක් සන්සුන් වෙන්න පුළුවන් වුනා.
+SI-REASSURE-T02,SI,CALM,NEUTRAL,NEUTRAL,0.5057269930839539,23.545000003650784,calm_to_neutral,hospital එකේ reassurance line එක සතියේ දවස්වල උදේ 9 ඉඳන් හවස 5 විවෘතයි.
+SI-ROUTINE-004,SI,CALM,NEUTRAL,NEUTRAL,0.5862348675727844,18.529799999669198,calm_to_neutral,ගර්භනී කාලෙදි කෙස් dye කරන්න පුළුවන්ද?
+SI-SADNESS-005,SI,CALM,NEUTRAL,NEUTRAL,0.5944969058036804,14.6041999978479,calm_to_neutral,මේ වෙනස්කම් වලට කලින් තිබ්බ මං කෙනා මිස් වෙනවා.
+SI-SADNESS-008,SI,CALM,NEGATIVE,DISTRESSED,0.6670859456062317,13.296999997692184,calm_to_negative,සමහර වෙලාවට කාටවත් සම්බන්ධ නැති බවක් දැනිලා දුකයි.
+SI-SADNESS-T04,SI,CALM,NEUTRAL,NEUTRAL,0.5993874073028564,22.32200000435114,calm_to_neutral,"pregnancy එකේ මුල් කාලෙදි ටිකක් දුකෙන් හිටියා, ඒත් දැන් emotional විදිහට හොඳටම හිතේ."
+SI-SYMPTOM-007,SI,CALM,NEUTRAL,NEUTRAL,0.4145124852657318,12.27919999655569,calm_to_neutral,සවසට කකුල් ටිකක් ඉදිමෙනවා.
+SI-UNCERT-T01,SI,CALM,NEUTRAL,NEUTRAL,0.5835905075073242,25.042600005690478,calm_to_neutral,"මේ trimester එකේදි මොකද වෙන්නෙ කියලා විශ්වාස නැතුව හිටියා, ඒත් දැන් ඒ ගැන කියවලා තියෙන නිසා හිත සන්සුන්."
+SI-UNCERT-T02,SI,CALM,NEUTRAL,NEUTRAL,0.5484659075737,28.703399999358226,calm_to_neutral,"ගන්න ඕන prenatal vitamin එක මොකක්ද කියලා විශ්වාස නැතුව හිටියා, ඒත් pharmacist කෙනා පැහැදිලි කරහම තෝරගන්න ලේසි වුනා."
+SI-AMBIG-002,SI,DISTRESSED,NEUTRAL,NEUTRAL,0.5498053431510925,18.30750000226544,distressed_to_neutral,මගේ due date එක ලබන මාසේ තුන්වෙනි සතියේ විතර.
+SI-AMBIG-T03,SI,DISTRESSED,NEUTRAL,NEUTRAL,0.4956646561622619,19.63110000360757,distressed_to_neutral,"schedule එක නිතරම මාරු වෙනවා, track කරගන්නවත් බෑ, ඒක stress එකක්."
+SI-AMBIG-T04,SI,DISTRESSED,NEUTRAL,NEUTRAL,0.4443725049495697,27.147600005264398,distressed_to_neutral,"පිට පිට contradictory information ගොඩක් තියෙනවා, ඒක දැන් ම overwhelmed කරනවා."
+SI-ANXIETY-002,SI,DISTRESSED,NEUTRAL,NEUTRAL,0.6069420576095581,19.284000001789536,distressed_to_neutral,පොඩි දෙයක් වුනත් බබාට මොකක් හරි වෙන්න ඇති කියලා බය හිතෙනවා.
+SI-ANXIETY-007,SI,DISTRESSED,NEUTRAL,NEUTRAL,0.4814980030059814,18.780500002321787,distressed_to_neutral,විශේෂ දෙයක් නැතත් සෑම වෙලාවෙම පොඩි කනස්සල්ලක් තියෙනවා.
+SI-ANXIETY-010,SI,DISTRESSED,POSITIVE,CALM,0.620560348033905,17.47310000064317,distressed_to_positive,මම හොඳ අම්මා කෙනෙක් වෙයිද කියලා ගොඩක් හිතෙනවා.
+SI-FEAR-010,SI,DISTRESSED,POSITIVE,CALM,0.4530797600746155,15.328200002841186,distressed_to_positive,"ඉඳිකටුවලට බයයි, ලබන blood test එක ගැන හිතෙන්නම stress එකක්."
+SI-FETAL-002,SI,DISTRESSED,NEUTRAL,NEUTRAL,0.4198555946350097,14.70619999599876,distressed_to_neutral,"අද මුල්වතාවට බබාගේ hiccup එක දැනුනා, හරිම හොඳ දැනීමක්."
+SI-FETAL-010,SI,DISTRESSED,NEUTRAL,NEUTRAL,0.5942329168319702,16.924800002016127,distressed_to_neutral,මම කන දේවල් බබාට හොඳ නැද්ද කියලා නිතරම හිතෙනවා.
+SI-POSITIVE-T03,SI,DISTRESSED,NEUTRAL,NEUTRAL,0.4983370304107666,28.49869999772636,distressed_to_neutral,"හැමෝම කියනවා මේ special කාලේ enjoy කරන්න කියලා, ඒත් සැබැවින්ම මට excited වෙන්නවත් බැරි තරම් කනස්සල්ලයි."
+SI-POSITIVE-T04,SI,DISTRESSED,POSITIVE,CALM,0.5314805507659912,23.72620000096504,distressed_to_positive,"මේක සතුටුදායක කාලයක් වෙන්න ඕන කියලා දන්නවා, ඒත් හැම දවසෙම overwhelmed වගේ දැනෙනවා."
+SI-REASSURE-001,SI,DISTRESSED,NEUTRAL,NEUTRAL,0.4731462299823761,20.366199998534285,distressed_to_neutral,"doctor කිව්වා හැමදේම සාමාන්‍ය විදිහට යනවා කියලා, දැන් හිතට සැහැල්ලුයි."
+SI-ROUTINE-002,SI,DISTRESSED,NEUTRAL,NEUTRAL,0.6725317239761353,13.774500002909916,distressed_to_neutral,සති 20 දී ටිකක් ඇවිදින්න යනවා නම් කමක් නැද්ද?
+SI-SADNESS-001,SI,DISTRESSED,POSITIVE,CALM,0.6675103306770325,15.932599999359809,distressed_to_positive,මේ pregnancy එක ගැන ගොඩක් කැමති වුනත් දැන් හිතට දුකයි.
+SI-SADNESS-002,SI,DISTRESSED,NEUTRAL,NEUTRAL,0.4874636530876159,17.6385999948252,distressed_to_neutral,හිතුවා වගේ මේ කාලේ enjoy කරගන්න බැරි වීම ගැන දුකයි.
+SI-SYMPTOM-003,SI,DISTRESSED,POSITIVE,CALM,0.685684084892273,19.492300001729745,distressed_to_positive,"අද ටිකක් bleeding වගේ දැක්කා, මට හරිම බයයි."
+SI-UNCERT-009,SI,DISTRESSED,NEUTRAL,NEUTRAL,0.4944093525409698,27.234499997575767,distressed_to_neutral,මේ කැක්කුම early labor ද නැත්නම් සාමාන්‍ය දෙයක්ද කියලා දන්නෙ නෑ.
+SI-AMBIG-008,SI,NEUTRAL,NEGATIVE,DISTRESSED,0.5421399474143982,17.520000001240987,neutral_to_negative,"දැන් හැමදේම mix එකක්, සමහර දවස් හොඳයි සමහර දවස් අමාරුයි."
+SI-ANXIETY-009,SI,NEUTRAL,NEGATIVE,DISTRESSED,0.5962227582931519,17.026400004397146,neutral_to_negative,සමහර වෙලාවට කනස්සල්ලෙන් රෑට නින්දත් යන්නෙ නෑ.
+SI-ANXIETY-T04,SI,NEUTRAL,POSITIVE,CALM,0.4800986349582672,21.125200000824407,neutral_to_positive,ටිකකට කනස්සල්ලෙන් හිටියත් midwife එක්ක කතා කරහම දැන් හිතට හරිම සැහැල්ලුයි.
+SI-DISCOMFORT-008,SI,NEUTRAL,NEGATIVE,DISTRESSED,0.5429137945175171,16.023999996832572,neutral_to_negative,දැන් පඩිපෙළ ටිකක් නැගුවත් හුස්ම හිරවෙනවා.
+SI-FEAR-005,SI,NEUTRAL,NEGATIVE,DISTRESSED,0.5424582362174988,18.79209999606246,neutral_to_negative,delivery කරන වෙලාවෙ මොකක් හරි වෙයිද කියන හිතුවෙම බය හිතෙනවා.
+SI-POSITIVE-004,SI,NEUTRAL,POSITIVE,CALM,0.7285448312759399,16.636600004858337,neutral_to_positive,දැනට මේක හරිම ලස්සන අත්දැකීමක් වෙලා තියෙන්නෙ.
+SI-UNCERT-002,SI,NEUTRAL,NEGATIVE,DISTRESSED,0.4641374051570892,22.768099996028468,neutral_to_negative,බබාගේ හැලීම මේ අවස්ථාවට සාමාන්‍යද කියලා විශ්වාස නෑ.
