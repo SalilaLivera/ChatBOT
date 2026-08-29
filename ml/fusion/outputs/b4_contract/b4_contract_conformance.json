@@ -1,0 +1,568 @@
+{
+  "artifact": "b4_contract_conformance.json",
+  "phase": "B4 mood fusion layer \u2014 contract conformance",
+  "generated_utc": "2026-08-29T16:54:40.967497+00:00",
+  "disclaimer": "The fusion parameters used here are PLACEHOLDERS FOR TESTING, not measured values. W_face, W_text and all thresholds remain [FUTURE-EXPERIMENTAL] pending the Phase 7 experiment.",
+  "not_validated": "Fusion was NOT validated. No dataset pairs a face image and a Sinhala message from the same person at the same moment with a ground-truth mood label, so no accuracy, macro-F1, or confusion matrix for fusion exists or is reported. F13 is a weight-sensitivity sweep on SYNTHETIC evidence, not a validation.",
+  "governing_spec": "docs/system/MOOD_STATE_SPEC.md Part A (A4-A7), frozen at Gate 1A",
+  "plan": "docs/plan/FUSION_B4_PLAN.md",
+  "library_under_test": "dev/fusion/fusion/",
+  "no_default_parameters": "FusionParameters.require() raises MissingParameterError naming the first absent symbol; fuse() raises InvalidParameterError unless given a FusionParameters instance. There is no 0.5/0.5 fallback anywhere.",
+  "checks": [
+    {
+      "id": "F1",
+      "description": "parameters absent -> construction fails with a typed error",
+      "verdict": "PASS",
+      "spec_clause": "FUSION_B4_PLAN.md section 2 / MOOD_STATE_SPEC.md A7 (no default weighting)",
+      "evidence": [
+        [
+          "no args -> MissingParameterError naming W_face",
+          "Fusion parameter 'W_face' was not supplied. It is a MOOD_STATE_SPEC.md B1 [FUTURE-EXPERIMENTAL] symbol, produced by the Phase 7 experiment. The fusion layer does not default it."
+        ],
+        [
+          "missing W_face -> MissingParameterError",
+          "Fusion parameter 'W_face' was not supplied. It is a MOOD_STATE_SPEC.md B1 [FUTURE-EXPERIMENTAL] symbol, produced by the Phase 7 experiment. The fusion layer does not default it."
+        ],
+        [
+          "missing W_text -> MissingParameterError",
+          "Fusion parameter 'W_text' was not supplied. It is a MOOD_STATE_SPEC.md B1 [FUTURE-EXPERIMENTAL] symbol, produced by the Phase 7 experiment. The fusion layer does not default it."
+        ],
+        [
+          "missing tau_face_min -> MissingParameterError",
+          "Fusion parameter 'tau_face_min' was not supplied. It is a MOOD_STATE_SPEC.md B1 [FUTURE-EXPERIMENTAL] symbol, produced by the Phase 7 experiment. The fusion layer does not default it."
+        ],
+        [
+          "missing tau_text_min -> MissingParameterError",
+          "Fusion parameter 'tau_text_min' was not supplied. It is a MOOD_STATE_SPEC.md B1 [FUTURE-EXPERIMENTAL] symbol, produced by the Phase 7 experiment. The fusion layer does not default it."
+        ],
+        [
+          "missing tau_fusion_min -> MissingParameterError",
+          "Fusion parameter 'tau_fusion_min' was not supplied. It is a MOOD_STATE_SPEC.md B1 [FUTURE-EXPERIMENTAL] symbol, produced by the Phase 7 experiment. The fusion layer does not default it."
+        ],
+        [
+          "missing tau_distress -> MissingParameterError",
+          "Fusion parameter 'tau_distress' was not supplied. It is a MOOD_STATE_SPEC.md B1 [FUTURE-EXPERIMENTAL] symbol, produced by the Phase 7 experiment. The fusion layer does not default it."
+        ],
+        [
+          "missing provenance -> MissingProvenanceError",
+          "Fusion parameters were supplied without a provenance statement."
+        ],
+        [
+          "dataclass with empty provenance -> MissingProvenanceError",
+          ""
+        ]
+      ]
+    },
+    {
+      "id": "F2",
+      "description": "W_face + W_text != 1 -> rejected",
+      "verdict": "PASS",
+      "spec_clause": "MOOD_STATE_SPEC.md A7: 'subject to W_face + W_text = 1'",
+      "evidence": [
+        [
+          "W_face=0.5, W_text=0.6 -> InvalidParameterError",
+          "W_face + W_text must equal 1 (MOOD_STATE_SPEC.md A7); got W_face=0.5 + W_text=0.6 = 1.1"
+        ],
+        [
+          "W_face=0.5, W_text=0.4 -> InvalidParameterError",
+          "W_face + W_text must equal 1 (MOOD_STATE_SPEC.md A7); got W_face=0.5 + W_text=0.4 = 0.9"
+        ],
+        [
+          "W_face=0.0, W_text=0.0 -> InvalidParameterError",
+          "W_face + W_text must equal 1 (MOOD_STATE_SPEC.md A7); got W_face=0.0 + W_text=0.0 = 0.0"
+        ],
+        [
+          "W_face=1.0, W_text=1.0 -> InvalidParameterError",
+          "W_face + W_text must equal 1 (MOOD_STATE_SPEC.md A7); got W_face=1.0 + W_text=1.0 = 2.0"
+        ],
+        [
+          "W_face=0.7, W_text=0.7 -> InvalidParameterError",
+          "W_face + W_text must equal 1 (MOOD_STATE_SPEC.md A7); got W_face=0.7 + W_text=0.7 = 1.4"
+        ],
+        [
+          "W_face=0.5, W_text=0.5 -> accepted",
+          ""
+        ]
+      ]
+    },
+    {
+      "id": "F3",
+      "description": "all four A6 rows: correct state and modalities_used",
+      "verdict": "PASS",
+      "spec_clause": "MOOD_STATE_SPEC.md A6 missing-modality table (all four rows)",
+      "evidence": [
+        [
+          "usable + usable",
+          "distressed",
+          [
+            "face",
+            "text"
+          ],
+          "fused"
+        ],
+        [
+          "unusable + usable",
+          "distressed",
+          [
+            "text"
+          ],
+          "text passthrough"
+        ],
+        [
+          "absent + usable",
+          "distressed",
+          [
+            "text"
+          ],
+          "text passthrough"
+        ],
+        [
+          "usable + unusable",
+          "distressed",
+          [
+            "face"
+          ],
+          "face passthrough"
+        ],
+        [
+          "usable + absent",
+          "distressed",
+          [
+            "face"
+          ],
+          "face passthrough"
+        ],
+        [
+          "unusable + unusable",
+          "unknown",
+          [],
+          "unknown"
+        ],
+        [
+          "absent + absent",
+          "unknown",
+          [],
+          "unknown"
+        ]
+      ]
+    },
+    {
+      "id": "F4",
+      "description": "single-modality passthrough is UNWEIGHTED",
+      "verdict": "PASS",
+      "spec_clause": "MOOD_STATE_SPEC.md A7: 'When only one modality is usable, that modality's scores pass through unchanged; the weights do not apply.'",
+      "evidence": [
+        [
+          "W_face=0.5: face-only & text-only scores byte-identical to input; conf unchanged",
+          ""
+        ],
+        [
+          "W_face=0.1: face-only & text-only scores byte-identical to input; conf unchanged",
+          ""
+        ],
+        [
+          "W_face=0.9: face-only & text-only scores byte-identical to input; conf unchanged",
+          ""
+        ],
+        [
+          "W_face=0.0: face-only & text-only scores byte-identical to input; conf unchanged",
+          ""
+        ],
+        [
+          "W_face=1.0: face-only & text-only scores byte-identical to input; conf unchanged",
+          ""
+        ]
+      ]
+    },
+    {
+      "id": "F5",
+      "description": "all four A5 unknown conditions produce 'unknown'",
+      "verdict": "PASS",
+      "spec_clause": "MOOD_STATE_SPEC.md A5: `unknown` when and only when no modality result is usable",
+      "evidence": [
+        [
+          "camera unavailable + text below tau",
+          "unknown"
+        ],
+        [
+          "both below tau",
+          "unknown"
+        ],
+        [
+          "both erroring/absent",
+          "unknown"
+        ],
+        [
+          "fused confidence below tau_fusion_min",
+          "unknown"
+        ]
+      ]
+    },
+    {
+      "id": "F6",
+      "description": "'unknown' never produced when any modality is usable",
+      "verdict": "PASS",
+      "spec_clause": "MOOD_STATE_SPEC.md A5: `unknown` produced when AND ONLY WHEN no modality is usable",
+      "evidence": [
+        [
+          "756 usable-modality combinations, none returned unknown",
+          ""
+        ]
+      ]
+    },
+    {
+      "id": "F7",
+      "description": "output matches A7 exactly",
+      "verdict": "PASS",
+      "spec_clause": "MOOD_STATE_SPEC.md A7 output contract: {state, confidence, modalities_used, fusion_version}",
+      "evidence": [
+        [
+          "{'state': 'unknown', 'modalities_used': []}",
+          ""
+        ],
+        [
+          "{'state': 'distressed', 'modalities_used': ['face']}",
+          ""
+        ],
+        [
+          "{'state': 'calm', 'modalities_used': ['text']}",
+          ""
+        ],
+        [
+          "{'state': 'unknown', 'modalities_used': []}",
+          ""
+        ],
+        [
+          "{'state': 'unknown', 'modalities_used': []}",
+          ""
+        ]
+      ]
+    },
+    {
+      "id": "F8",
+      "description": "score order is always calm, neutral, distressed",
+      "verdict": "PASS",
+      "spec_clause": "MOOD_STATE_SPEC.md A4: class order fixed as calm, neutral, distressed",
+      "evidence": [
+        [
+          "('calm', 'neutral', 'distressed')",
+          ""
+        ],
+        [
+          "('calm', 'neutral', 'distressed')",
+          ""
+        ],
+        [
+          "('calm', 'neutral', 'distressed')",
+          ""
+        ]
+      ]
+    },
+    {
+      "id": "F9",
+      "description": "fused scores sum to 1, each in [0,1]",
+      "verdict": "PASS",
+      "spec_clause": "MOOD_STATE_SPEC.md A4: scores are a probability-like vector over the three states",
+      "evidence": [
+        [
+          "336 fused vectors; max |sum-1| = 1.11e-16",
+          ""
+        ]
+      ]
+    },
+    {
+      "id": "F10",
+      "description": "predicted_state == argmax of fused scores",
+      "verdict": "PASS",
+      "spec_clause": "MOOD_STATE_SPEC.md A4: predicted_state is the argmax of scores",
+      "evidence": [
+        [
+          "189 fused vectors; state == argmax and confidence == top score",
+          ""
+        ]
+      ]
+    },
+    {
+      "id": "F11",
+      "description": "non-Sinhala language -> text unusable regardless of confidence",
+      "verdict": "PASS",
+      "spec_clause": "FUSION_B4_PLAN.md section 5.1 / B2-A section 4: if language is not Sinhala the text evidence is not usable regardless of confidence",
+      "evidence": [
+        [
+          "language='en', conf=0.66 -> text discarded (face-only / unknown)",
+          ""
+        ],
+        [
+          "language='en-US', conf=0.66 -> text discarded (face-only / unknown)",
+          ""
+        ],
+        [
+          "language='English', conf=0.66 -> text discarded (face-only / unknown)",
+          ""
+        ],
+        [
+          "language='ta', conf=0.66 -> text discarded (face-only / unknown)",
+          ""
+        ],
+        [
+          "language='hi', conf=0.66 -> text discarded (face-only / unknown)",
+          ""
+        ],
+        [
+          "control language='si', conf=0.66 -> text used",
+          ""
+        ]
+      ]
+    },
+    {
+      "id": "F12",
+      "description": "missing language on text evidence -> contract violation",
+      "verdict": "PASS",
+      "spec_clause": "MOOD_STATE_SPEC.md A4 (text carries `language`) / FUSION_B4_PLAN.md 5.1 (absent language must raise, never default to 'probably Sinhala')",
+      "evidence": [
+        [
+          "text dict missing 'language' key -> ContractViolationError",
+          "text evidence missing required A4 key(s): ['language']"
+        ],
+        [
+          "language=None -> ContractViolationError",
+          "text evidence 'language' must be a non-empty string (A4); it is never defaulted to Sinhala (FUSION_B4_PLAN.md 5.1)"
+        ],
+        [
+          "language=123 -> ContractViolationError",
+          "text evidence 'language' must be a non-empty string (A4); it is never defaulted to Sinhala (FUSION_B4_PLAN.md 5.1)"
+        ],
+        [
+          "language='' -> ContractViolationError",
+          "text evidence 'language' must be a non-empty string (A4); it is never defaulted to Sinhala (FUSION_B4_PLAN.md 5.1)"
+        ],
+        [
+          "language='   ' -> ContractViolationError",
+          "text evidence 'language' must be a non-empty string (A4); it is never defaulted to Sinhala (FUSION_B4_PLAN.md 5.1)"
+        ]
+      ]
+    }
+  ],
+  "f13_weight_sensitivity": {
+    "spec_clause": "FUSION_B4_PLAN.md section 6/7 (F13): sweep W_face 0->1, record where the fused state flips. This is planning input for Phase 7, NOT validation.",
+    "step": 0.05,
+    "w_values": [
+      0.0,
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.45,
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95,
+      1.0
+    ],
+    "synthetic_pairs": [
+      {
+        "name": "agree_distressed",
+        "face_scores": [
+          0.1,
+          0.2,
+          0.7
+        ],
+        "text_scores": [
+          0.15,
+          0.15,
+          0.7
+        ]
+      },
+      {
+        "name": "agree_calm",
+        "face_scores": [
+          0.7,
+          0.2,
+          0.1
+        ],
+        "text_scores": [
+          0.65,
+          0.25,
+          0.1
+        ]
+      },
+      {
+        "name": "conflict_face_distress_text_calm",
+        "face_scores": [
+          0.05,
+          0.15,
+          0.8
+        ],
+        "text_scores": [
+          0.8,
+          0.15,
+          0.05
+        ]
+      },
+      {
+        "name": "conflict_face_distress_text_neutral",
+        "face_scores": [
+          0.2,
+          0.2,
+          0.6
+        ],
+        "text_scores": [
+          0.2,
+          0.65,
+          0.15
+        ]
+      },
+      {
+        "name": "conflict_face_neutral_text_distress",
+        "face_scores": [
+          0.25,
+          0.55,
+          0.2
+        ],
+        "text_scores": [
+          0.15,
+          0.2,
+          0.65
+        ]
+      },
+      {
+        "name": "weak_face_strong_text_calm",
+        "face_scores": [
+          0.34,
+          0.33,
+          0.33
+        ],
+        "text_scores": [
+          0.75,
+          0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "strong_face_calm_weak_text",
+        "face_scores": [
+          0.75,
+          0.15,
+          0.1
+        ],
+        "text_scores": [
+          0.34,
+          0.33,
+          0.33
+        ]
+      },
+      {
+        "name": "face_calm_text_distress_symmetric",
+        "face_scores": [
+          0.6,
+          0.25,
+          0.15
+        ],
+        "text_scores": [
+          0.15,
+          0.25,
+          0.6
+        ]
+      }
+    ],
+    "flips": [
+      {
+        "pair": "agree_distressed",
+        "state_at_W_face_0": "distressed",
+        "state_at_W_face_1": "distressed",
+        "flip_points": [],
+        "n_flips": 0
+      },
+      {
+        "pair": "agree_calm",
+        "state_at_W_face_0": "calm",
+        "state_at_W_face_1": "calm",
+        "flip_points": [],
+        "n_flips": 0
+      },
+      {
+        "pair": "conflict_face_distress_text_calm",
+        "state_at_W_face_0": "calm",
+        "state_at_W_face_1": "distressed",
+        "flip_points": [
+          [
+            "calm",
+            "distressed",
+            0.55
+          ]
+        ],
+        "n_flips": 1
+      },
+      {
+        "pair": "conflict_face_distress_text_neutral",
+        "state_at_W_face_0": "neutral",
+        "state_at_W_face_1": "distressed",
+        "flip_points": [
+          [
+            "neutral",
+            "distressed",
+            0.6
+          ]
+        ],
+        "n_flips": 1
+      },
+      {
+        "pair": "conflict_face_neutral_text_distress",
+        "state_at_W_face_0": "distressed",
+        "state_at_W_face_1": "neutral",
+        "flip_points": [
+          [
+            "distressed",
+            "neutral",
+            0.6
+          ]
+        ],
+        "n_flips": 1
+      },
+      {
+        "pair": "weak_face_strong_text_calm",
+        "state_at_W_face_0": "calm",
+        "state_at_W_face_1": "calm",
+        "flip_points": [],
+        "n_flips": 0
+      },
+      {
+        "pair": "strong_face_calm_weak_text",
+        "state_at_W_face_0": "calm",
+        "state_at_W_face_1": "calm",
+        "flip_points": [],
+        "n_flips": 0
+      },
+      {
+        "pair": "face_calm_text_distress_symmetric",
+        "state_at_W_face_0": "distressed",
+        "state_at_W_face_1": "calm",
+        "flip_points": [
+          [
+            "distressed",
+            "calm",
+            0.5
+          ]
+        ],
+        "n_flips": 1
+      }
+    ],
+    "csv": "b4_weight_sensitivity.csv",
+    "plot": "plots/b4_weight_sensitivity.png"
+  },
+  "summary": {
+    "total": 12,
+    "passed": 12,
+    "failed": 0
+  }
+}
