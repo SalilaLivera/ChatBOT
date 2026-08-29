@@ -199,3 +199,117 @@ Any document, dissertation chapter, or presentation reproducing these results mu
 
 `τ_face_min`, `N_smooth`, temporal smoothing, the fusion weighting between FER and sentiment,
 the sentiment English-input hazard (B2-A §4), or any clinical interpretation. All remain open.
+
+---
+
+# AMENDMENT 1 — FER soft evidence for multimodal fusion
+
+**Status: APPROVED** · 2026-08-29 · Approved by the project owner (Tech Lead role)
+**Amends:** §A4 of `docs/system/MOOD_STATE_SPEC.md` (see A1.6)
+**Does NOT amend:** D-4, which remains FROZEN
+
+## A1.1 What is decided
+
+**D-4 (Rule A — argmax-then-map) REMAINS FROZEN.** It continues to define the **standalone FER
+3-state prediction**: the label FER reports as its own answer, and the label the final test
+scoring measured (macro-F1 0.7681, accuracy 0.7668).
+
+This amendment decides a question D-4 never addressed: **what three numbers represent a face
+when FER evidence is passed to fusion.**
+
+D-4 answered *"which state does FER choose?"*. Fusion asks *"how much does FER lean toward each
+state?"*, because `Fused(c) = W_face·Face(c) + W_text·Text(c)` multiplies a **number** by a
+weight. A label cannot be multiplied.
+
+## A1.2 The two quantities — distinct, and to be named distinctly
+
+| | **standalone FER state** | **FER fusion evidence** |
+|---|---|---|
+| what it is | one label | a 3-vector of soft scores |
+| derivation | **Rule A** — argmax of the 7, then map | **grouped sums** of the 7 calibrated probabilities |
+| governed by | **D-4, FROZEN** | this amendment |
+| used for | FER's own reported prediction; the test result | fusion arithmetic only |
+
+**Grouping:**
+`calm = p(happy)` · `neutral = p(neutral) + p(surprise)` ·
+`distressed = p(angry) + p(disgust) + p(fear) + p(sad)`
+
+**`predicted_state` on the evidence object is the Rule-A label**, NOT the argmax of the grouped
+scores. `confidence` is FER's argmax probability — the confidence in the Rule-A decision.
+
+**Worked example.** FER returns
+`angry .20, disgust .05, fear .15, happy .25, neutral .20, sad .10, surprise .05`:
+
+- Rule A → **CALM** (argmax `happy` = 0.25) → `predicted_state`
+- grouped → `{calm 0.25, neutral 0.25, distressed 0.50}` → `scores`
+- `confidence` = **0.25**
+
+The evidence states: *"my decision is CALM, but my probability mass leans DISTRESSED."* For a
+7-class model collapsed into 3 states, that is an accurate description, not a contradiction.
+
+## A1.3 Why grouped scores rather than one-hot
+
+Rule A deliberately discards the distribution **when choosing a label** — B3-A measured Rule B's
+DISTRESSED inflation as an artefact of temperature scaling (T = 5.727), not a property of the
+expression. But discarding it for the *label* does not make it worthless as *evidence*: the
+grouped vector was measured **well-calibrated** (ECE 0.0101–0.0166 against the 7-class 0.0126).
+
+One-hot scores would make the face an **absolute veto** whenever `W_face ≥ 0.5`, since
+`0.6 × 1.0` cannot be overcome by text's maximum `0.4`. That would nullify the mechanism B4
+identified as most important: **text is the only recovery path for FER's 24.3% distress miss
+rate.** The confidence gate would not compensate — nb05 measured FER's mean confidence at
+**0.929**, so its mistakes are confident ones and clear any plausible threshold.
+
+## A1.4 May the fused state differ from the standalone FER state?
+
+**Both modalities usable — YES. This is fusion working, not failing.**
+A fusion layer that could never contradict one modality would be pointless; text exists to change
+the answer when it disagrees. In the A1.2 example, with text at `distressed 0.70` and
+`W_face = 0.6`, the fused state is **DISTRESSED** while standalone FER says **CALM**. That is the
+intended behaviour and is how a missed distress is recovered.
+
+**Face-only (text unusable or absent) — NO. The output state MUST equal the Rule-A label.**
+With no second modality there is nothing to weigh against, so any divergence would be Rule A
+being silently overridden by arithmetic rather than by evidence. **This is an invariant.**
+
+## A1.5 Reporting consequence
+
+The standalone FER state and the fused state are **different quantities and must be labelled as
+such**. The measured 0.7681 macro-F1 describes the **standalone FER state only**. **No fused
+performance figure exists**, and none may be inferred from it. The fusion layer remains
+**unvalidated** — see `B4_FUSION_FINDINGS.md`.
+
+## A1.6 Spec amendment — §A4 exemption, recorded explicitly
+
+> **`MOOD_STATE_SPEC.md` §A4 states: "`predicted_state` is the argmax of `scores`." That
+> requirement is hereby AMENDED to EXEMPT face-modality evidence.**
+>
+> **Face evidence:** `predicted_state` is the **Rule-A label** and MAY differ from
+> `argmax(scores)`.
+> **Text evidence:** the §A4 requirement is UNCHANGED and remains enforced. The sentiment model
+> is natively 3-class, so no such gap exists on that side.
+
+The amended clause carries **[PROPOSED]** status in §A4, whereas D-4 is **FROZEN**. This
+amendment therefore relaxes the weaker of the two constraints.
+
+## A1.7 Residual tension — recorded, not concealed
+
+When both modalities are usable, the fused state is computed from grouped vectors, so **Rule B's
+arithmetic does re-enter through the fusion path.** The defence is that the fused state is a
+*fusion* decision while D-4 governs FER's *standalone* label. That is an interpretation, not
+something the spec settles, and it was approved with that understanding.
+
+## A1.8 Scope of the implementation this authorises
+
+Only the three changes in A1.9, plus conformance tests. **It introduces no weighting default, no
+threshold, and no Phase 7 parameter**, and makes **no claim that fusion is validated**.
+
+## A1.9 Required changes
+
+1. `dev/fusion/fusion/contract.py` — permit `predicted_state != argmax(scores)` for **face**
+   evidence; keep enforcing it for **text**.
+2. `dev/fusion/fusion/fusion.py` — single-modality passthrough must return the modality's
+   `predicted_state` instead of re-deriving it with `argmax_state(scores)`. `scores` still pass
+   through unchanged (§A6).
+3. `dev/fusion/tests/` — new conformance tests for the exemption, for text still being rejected
+   on divergence, and for the **A1.4 face-only invariant**.

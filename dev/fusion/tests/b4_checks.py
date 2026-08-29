@@ -30,6 +30,7 @@ from fusion import (  # noqa: E402
     MissingProvenanceError,
     argmax_state,
     fuse,
+    validate_modality_evidence,
 )
 
 # --------------------------------------------------------------------------
@@ -37,15 +38,27 @@ from fusion import (  # noqa: E402
 # --------------------------------------------------------------------------
 
 
-def face_evidence(calm, neutral, distressed, *, confidence=None, model_version="fer-test/0.0.0"):
+def face_evidence(
+    calm,
+    neutral,
+    distressed,
+    *,
+    confidence=None,
+    model_version="fer-test/0.0.0",
+    predicted_state=None,
+):
     """A synthetic A4 face-modality evidence object.
 
     Scores must sum to 1 (A4). ``confidence`` defaults to the top score.
+
+    ``predicted_state`` defaults to the argmax of ``scores``. Pass it explicitly to
+    build AMENDMENT 1 evidence, where the Rule-A label may DIFFER from the argmax of
+    the grouped scores — see FER_7TO3_MAPPING_DECISION.md A1.2.
     """
     scores = {"calm": calm, "neutral": neutral, "distressed": distressed}
     return {
         "scores": scores,
-        "predicted_state": argmax_state(scores),
+        "predicted_state": argmax_state(scores) if predicted_state is None else predicted_state,
         "confidence": max(scores.values()) if confidence is None else confidence,
         "model_version": model_version,
     }
@@ -578,6 +591,99 @@ def f13_weight_sensitivity_sweep(step=0.05):
 # --------------------------------------------------------------------------
 # registry
 # --------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# AMENDMENT 1 — FER soft evidence for fusion
+# docs/decisions/FER_7TO3_MAPPING_DECISION.md, approved 2026-08-29
+#
+# The worked example throughout: FER returns
+#   angry .20  disgust .05  fear .15  happy .25  neutral .20  sad .10  surprise .05
+# Rule A (D-4, FROZEN): argmax is `happy` -> CALM
+# grouped scores:       calm .25  neutral .25  distressed .50   -> argmax DISTRESSED
+# The two disagree. That is the case these tests exist for.
+# ---------------------------------------------------------------------------
+
+_AMD_SCORES = dict(calm=0.25, neutral=0.25, distressed=0.50)
+_AMD_RULE_A = "calm"          # what Rule A says
+_AMD_ARGMAX = "distressed"    # what argmax(scores) says
+_AMD_CONF = 0.25              # FER's 7-class argmax probability
+
+
+def f14_face_evidence_may_diverge():
+    """Face evidence whose predicted_state != argmax(scores) must be ACCEPTED."""
+    clause = ("FER_7TO3_MAPPING_DECISION.md AMENDMENT 1 A1.6: A4's "
+              "'predicted_state is the argmax of scores' is EXEMPTED for FACE evidence")
+    ev = face_evidence(**_AMD_SCORES, predicted_state=_AMD_RULE_A, confidence=_AMD_CONF)
+    assert ev["predicted_state"] != argmax_state(ev["scores"]), (
+        "test setup is wrong: the evidence does not actually diverge"
+    )
+    # Must not raise.
+    validate_modality_evidence(ev, modality="face")
+    detail = [(
+        f"face evidence accepted with predicted_state={_AMD_RULE_A!r} (Rule A) "
+        f"while argmax(scores)={_AMD_ARGMAX!r}",
+        "",
+    )]
+    return {"spec_clause": clause, "detail": detail}
+
+
+def f15_text_evidence_may_not_diverge():
+    """Text evidence whose predicted_state != argmax(scores) must still be REJECTED.
+
+    The exemption is face-only. The sentiment model is natively 3-class: its label
+    and its scores come from one softmax, so divergence there is a real defect.
+    """
+    clause = ("FER_7TO3_MAPPING_DECISION.md AMENDMENT 1 A1.6: text evidence is NOT "
+              "exempt; A4 remains enforced for the text modality")
+    ev = text_evidence(**_AMD_SCORES, language="si")
+    ev["predicted_state"] = _AMD_RULE_A  # force the same divergence as F14
+    assert ev["predicted_state"] != argmax_state(ev["scores"])
+    raised = False
+    try:
+        validate_modality_evidence(ev, modality="text")
+    except ContractViolationError:
+        raised = True
+    assert raised, (
+        "text evidence diverging from argmax(scores) was accepted; the AMENDMENT 1 "
+        "exemption must apply to FACE evidence only"
+    )
+    detail = [(
+        f"text evidence with predicted_state={_AMD_RULE_A!r} vs "
+        f"argmax(scores)={_AMD_ARGMAX!r} correctly raised ContractViolationError",
+        "",
+    )]
+    return {"spec_clause": clause, "detail": detail}
+
+
+def f16_face_only_is_rule_a_state():
+    """FACE-ONLY: the output state MUST be the Rule-A label, not argmax(scores).
+
+    A1.4 invariant. With no second modality there is nothing to weigh against, so
+    re-deriving the state from scores would override the FROZEN D-4 decision by
+    arithmetic rather than by evidence. This is the regression the amendment exists
+    to prevent: before the fix, this path returned `distressed`.
+    """
+    clause = ("FER_7TO3_MAPPING_DECISION.md AMENDMENT 1 A1.4: 'For face-only "
+              "operation, the output state MUST remain the Rule-A standalone FER state'")
+    face = face_evidence(**_AMD_SCORES, predicted_state=_AMD_RULE_A, confidence=_AMD_CONF)
+    detail = []
+    # Sweep the weights: face-only must be weight-invariant (A7 - the weights do not
+    # apply to the single-modality case), so every W_face must give the same answer.
+    for w_face in (0.0, 0.25, 0.5, 0.75, 1.0):
+        params = placeholder_params(W_face=w_face)
+        r = fuse(face, None, params)          # text absent -> face-only
+        assert r.modalities_used == ("face",), f"expected face-only, got {r.modalities_used}"
+        assert r.state == _AMD_RULE_A, (
+            f"W_face={w_face}: face-only state is {r.state!r}, expected the Rule-A "
+            f"label {_AMD_RULE_A!r}. Returning {_AMD_ARGMAX!r} means the state was "
+            f"re-derived from scores and D-4 was bypassed."
+        )
+        # A6: scores pass through UNCHANGED even though the state does not come from them.
+        assert r.scores == _AMD_SCORES, f"W_face={w_face}: scores were altered"
+        assert r.confidence == _AMD_CONF, f"W_face={w_face}: confidence was altered"
+        detail.append((f"W_face={w_face}: state={r.state!r} scores unchanged", ""))
+    return {"spec_clause": clause, "detail": detail}
+
+
 CHECKS = [
     ("F1", "parameters absent -> construction fails with a typed error", f1_parameters_absent_fails),
     ("F2", "W_face + W_text != 1 -> rejected", f2_weights_must_sum_to_one),
@@ -591,4 +697,7 @@ CHECKS = [
     ("F10", "predicted_state == argmax of fused scores", f10_state_is_argmax),
     ("F11", "non-Sinhala language -> text unusable regardless of confidence", f11_non_sinhala_text_unusable),
     ("F12", "missing language on text evidence -> contract violation", f12_missing_language_is_contract_violation),
+    ("F14", "AMENDMENT 1: face evidence may diverge from argmax(scores)", f14_face_evidence_may_diverge),
+    ("F15", "AMENDMENT 1: text evidence may NOT diverge from argmax(scores)", f15_text_evidence_may_not_diverge),
+    ("F16", "AMENDMENT 1 A1.4: face-only output state IS the Rule-A label", f16_face_only_is_rule_a_state),
 ]

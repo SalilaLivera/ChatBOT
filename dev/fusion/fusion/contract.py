@@ -213,14 +213,32 @@ def validate_modality_evidence(evidence: Any, *, modality: str) -> None:
                 f"class); got {predicted_state!r}"
             )
         )
-    expected = argmax_state(scores)
-    if predicted_state != expected:
-        raise ContractViolationError(
-            detail=(
-                f"{modality} evidence 'predicted_state' is {predicted_state!r} but "
-                f"the argmax of 'scores' is {expected!r} (A4)"
+    # AMENDMENT 1 (docs/decisions/FER_7TO3_MAPPING_DECISION.md, approved 2026-08-29):
+    # A4's "predicted_state is the argmax of scores" is EXEMPTED FOR FACE EVIDENCE.
+    #
+    # FER is a 7-class model collapsed into 3 states, so its label and its score
+    # vector come from two DIFFERENT computations and may legitimately disagree:
+    #   predicted_state = Rule A  -- argmax of the 7 classes, then mapped (D-4, FROZEN)
+    #   scores          = grouped sums of the 7 calibrated probabilities (soft evidence)
+    # e.g. happy .25 is the 7-class argmax (-> CALM) while the distressed group
+    # (angry+disgust+fear+sad) sums to .50. The evidence honestly says "my decision is
+    # CALM, my mass leans DISTRESSED". Rejecting that would force one-hot face scores,
+    # which makes the face an absolute veto whenever W_face >= 0.5 and removes text's
+    # ability to recover FER's measured 24.3% distress miss rate.
+    #
+    # TEXT evidence is NOT exempt: the sentiment model is natively 3-class, its label
+    # and scores come from one softmax, and divergence there is a real defect.
+    if modality != "face":
+        expected = argmax_state(scores)
+        if predicted_state != expected:
+            raise ContractViolationError(
+                detail=(
+                    f"{modality} evidence 'predicted_state' is {predicted_state!r} but "
+                    f"the argmax of 'scores' is {expected!r} (A4). Only FACE evidence is "
+                    f"exempt from this rule, per AMENDMENT 1 of "
+                    f"docs/decisions/FER_7TO3_MAPPING_DECISION.md"
+                )
             )
-        )
 
     # -- model_version -----------------------------------------------------
     if not isinstance(evidence["model_version"], str) or not evidence["model_version"]:

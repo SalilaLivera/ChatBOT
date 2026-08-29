@@ -1,7 +1,7 @@
 {
   "artifact": "b4_contract_conformance.json",
   "phase": "B4 mood fusion layer \u2014 contract conformance",
-  "generated_utc": "2026-08-29T16:54:40.967497+00:00",
+  "generated_utc": "2026-08-29T18:00:27.153568+00:00",
   "disclaimer": "The fusion parameters used here are PLACEHOLDERS FOR TESTING, not measured values. W_face, W_text and all thresholds remain [FUTURE-EXPERIMENTAL] pending the Phase 7 experiment.",
   "not_validated": "Fusion was NOT validated. No dataset pairs a face image and a Sinhala message from the same person at the same moment with a ground-truth mood label, so no accuracy, macro-F1, or confusion matrix for fusion exists or is reported. F13 is a weight-sensitivity sweep on SYNTHETIC evidence, not a validation.",
   "governing_spec": "docs/system/MOOD_STATE_SPEC.md Part A (A4-A7), frozen at Gate 1A",
@@ -341,6 +341,58 @@
           "text evidence 'language' must be a non-empty string (A4); it is never defaulted to Sinhala (FUSION_B4_PLAN.md 5.1)"
         ]
       ]
+    },
+    {
+      "id": "F14",
+      "description": "AMENDMENT 1: face evidence may diverge from argmax(scores)",
+      "verdict": "PASS",
+      "spec_clause": "FER_7TO3_MAPPING_DECISION.md AMENDMENT 1 A1.6: A4's 'predicted_state is the argmax of scores' is EXEMPTED for FACE evidence",
+      "evidence": [
+        [
+          "face evidence accepted with predicted_state='calm' (Rule A) while argmax(scores)='distressed'",
+          ""
+        ]
+      ]
+    },
+    {
+      "id": "F15",
+      "description": "AMENDMENT 1: text evidence may NOT diverge from argmax(scores)",
+      "verdict": "PASS",
+      "spec_clause": "FER_7TO3_MAPPING_DECISION.md AMENDMENT 1 A1.6: text evidence is NOT exempt; A4 remains enforced for the text modality",
+      "evidence": [
+        [
+          "text evidence with predicted_state='calm' vs argmax(scores)='distressed' correctly raised ContractViolationError",
+          ""
+        ]
+      ]
+    },
+    {
+      "id": "F16",
+      "description": "AMENDMENT 1 A1.4: face-only output state IS the Rule-A label",
+      "verdict": "PASS",
+      "spec_clause": "FER_7TO3_MAPPING_DECISION.md AMENDMENT 1 A1.4: 'For face-only operation, the output state MUST remain the Rule-A standalone FER state'",
+      "evidence": [
+        [
+          "W_face=0.0: state='calm' scores unchanged",
+          ""
+        ],
+        [
+          "W_face=0.25: state='calm' scores unchanged",
+          ""
+        ],
+        [
+          "W_face=0.5: state='calm' scores unchanged",
+          ""
+        ],
+        [
+          "W_face=0.75: state='calm' scores unchanged",
+          ""
+        ],
+        [
+          "W_face=1.0: state='calm' scores unchanged",
+          ""
+        ]
+      ]
     }
   ],
   "f13_weight_sensitivity": {
@@ -561,8 +613,8 @@
     "plot": "plots/b4_weight_sensitivity.png"
   },
   "summary": {
-    "total": 12,
-    "passed": 12,
+    "total": 15,
+    "passed": 15,
     "failed": 0
   }
 }

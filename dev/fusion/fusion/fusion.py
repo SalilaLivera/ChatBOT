@@ -146,8 +146,15 @@ def fuse(face_evidence, text_evidence, params: FusionParameters) -> FusionResult
         # A7: "the weights do not apply to the single-modality case."
         # A6: single-modality results are NOT down-weighted or penalised;
         #     reported with the surviving modality's OWN confidence.
+        #
+        # AMENDMENT 1 A1.4: passthrough returns the modality's OWN predicted_state
+        # rather than re-deriving it from scores. With no second modality there is
+        # nothing to weigh against, so re-argmaxing could only override the
+        # modality's own decision by arithmetic rather than by evidence.
+        # For text these are identical (A4 still enforced); the distinction is
+        # load-bearing for FACE, where predicted_state is the FROZEN Rule-A label.
         return FusionResult(
-            state=argmax_state(scores),
+            state=str(text_evidence["predicted_state"]),
             confidence=float(text_evidence["confidence"]),
             modalities_used=("text",),
             fusion_version=FUSION_VERSION,
@@ -160,8 +167,13 @@ def fuse(face_evidence, text_evidence, params: FusionParameters) -> FusionResult
     # -- A6 row 3: text unusable, face usable -> FACE SCORES UNCHANGED ---
     if face_usable and not text_usable:
         scores = {s: float(face_evidence["scores"][s]) for s in SUBSTANTIVE_STATES}
+        # AMENDMENT 1 A1.4 INVARIANT: "For face-only operation, the output state MUST
+        # remain the Rule-A standalone FER state." predicted_state IS that label.
+        # Re-deriving it with argmax_state(scores) would return the grouped-sum argmax
+        # (Rule B) and silently bypass the FROZEN D-4 decision in exactly the path
+        # where it is meant to be authoritative.
         return FusionResult(
-            state=argmax_state(scores),
+            state=str(face_evidence["predicted_state"]),
             confidence=float(face_evidence["confidence"]),
             modalities_used=("face",),
             fusion_version=FUSION_VERSION,
