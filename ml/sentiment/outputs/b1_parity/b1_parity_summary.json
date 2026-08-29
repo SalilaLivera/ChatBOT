@@ -1,0 +1,84 @@
+{
+  "b1_parity": true,
+  "verdict": "PASS",
+  "verdict_mode_a_batch_of_1": "PASS",
+  "verdict_mode_b_batch_of_8": "PASS",
+  "started_utc": "2026-08-29T12:06:54.032639+00:00",
+  "finished_utc": "2026-08-29T12:07:12.046526+00:00",
+  "reference": {
+    "predictions_csv": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\sentiment\\outputs\\development_v2\\experiment_02\\validation_predictions.csv",
+    "predictions_csv_sha256": "d5596892a2bb3ec80b3aa8b9d3ab49e8edff115a46ac80b79ecbdf78b47c3d02",
+    "texts_csv": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\sentiment\\outputs\\development_v2\\release\\maternalink_sinhala_dev_v2.csv",
+    "texts_csv_sha256": "bdf2df52913eb686bacbfbb481764d4d425b61207ad4506c9d8ef325b7c9f5aa",
+    "split_csv": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\sentiment\\outputs\\development_v2\\release\\maternalink_sinhala_dev_v2_split_membership.csv",
+    "split_csv_sha256": "46b03fb9f4ecfeded82c7e4209767d567194250892fc4ac2efa93c7f74d2d81d"
+  },
+  "checkpoint": {
+    "dir": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\sentiment\\outputs\\development_v2\\experiment_02\\best_checkpoint",
+    "model_safetensors_sha256": "624da0651206746aa211a9fe472280a488effb75f4ef230f933d565688a965b9",
+    "pinned_sha256": "624da0651206746aa211a9fe472280a488effb75f4ef230f933d565688a965b9",
+    "sha_match": true,
+    "label_order": [
+      "CALM",
+      "NEUTRAL",
+      "DISTRESSED"
+    ]
+  },
+  "guards": {
+    "denylist_checked_paths": [
+      "maternalink_sinhala_dev_v2.csv",
+      "maternalink_sinhala_dev_v2_split_membership.csv",
+      "validation_predictions.csv"
+    ],
+    "guard_1_validation_row_count": 76,
+    "guard_2_all_ids_in_reference": true,
+    "guard_5_record_count": 76,
+    "guard_5_sorted_record_id_sha256": "36640459b468785809101353f091d9ecb25df7dc410c639d1048c304a41ce37d",
+    "guard_5_sorted_record_id_sha256_no_trailing_newline": "55d9a06ba932fefae00542389c8492298f3807bd33dc8c33663ad3ab9a5f92d2"
+  },
+  "tolerances_as_applied": {
+    "max_abs_prob_diff": {
+      "expected": 1e-05,
+      "hard_gate": 0.0001
+    },
+    "mean_abs_prob_diff": {
+      "expected": 1e-06,
+      "hard_gate": 1e-05
+    },
+    "argmax_agreement": {
+      "required": 76
+    }
+  },
+  "mode_a_batch_of_1": {
+    "n_records": 76,
+    "n_prob_elements": 228,
+    "max_abs_prob_diff": 4.470348358154297e-07,
+    "mean_abs_prob_diff": 5.560976110420533e-08,
+    "argmax_agreement": 76,
+    "argmax_total": 76
+  },
+  "mode_b_batch_of_8": {
+    "n_records": 76,
+    "n_prob_elements": 228,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "mean_abs_prob_diff": 2.982507028872405e-17,
+    "argmax_agreement": 76,
+    "argmax_total": 76
+  },
+  "environment": {
+    "sys_executable": "C:\\Users\\Yasindu\\.conda\\envs\\sentiment-model\\python.exe",
+    "python_version": "3.11.15 | packaged by Anaconda, Inc. | (main, Jun 11 2026, 15:12:53) [MSC v.1942 64 bit (AMD64)]",
+    "python_version_short": "3.11.15",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "torch_version": "2.13.0+cpu",
+    "transformers_version": "5.15.1",
+    "tokenizers_version": "0.22.2",
+    "numpy_version": "2.4.6",
+    "pandas_version": "3.0.5",
+    "torch_num_threads": 10,
+    "torch_num_interop_threads": 10
+  },
+  "predicted_magnitude_note": "plan predicted <= ~1e-5 max abs prob diff from float32 accumulation through 6 transformer layers"
+}
