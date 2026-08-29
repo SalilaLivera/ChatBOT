@@ -1,0 +1,14 @@
+# B1 numerical constraint set — pip may NOT move these.
+#
+# Use with any install into the `sentiment-model` env:
+#     pip install -c b1-constraints.txt <packages>
+#
+# These are the exact versions B1 (2026-08-29) measured reproducing Experiment
+# 02's recorded validation probabilities. torch and pydantic BOTH depend on
+# typing-extensions, so an unconstrained service-layer install can move it —
+# and numpy — underneath the certified stack. This file makes that impossible:
+# pip fails loudly instead of resolving around it.
+torch==2.13.0
+transformers==5.15.1
+tokenizers==0.22.2
+numpy==2.4.6
