@@ -1,0 +1,675 @@
+{
+  "b2_service": true,
+  "scope": "B2-A only (Windows). B2-B (Linux/WSL) NOT attempted.",
+  "verdict": "PASS",
+  "per_test_verdict": {
+    "T1": "PASS",
+    "T2": "PASS",
+    "T3": "PASS",
+    "T4": "PASS",
+    "T5": "PASS",
+    "T7": "PASS",
+    "T8": "OBSERVED",
+    "T6": "PASS"
+  },
+  "started_utc": "2026-08-29T12:54:36.284530+00:00",
+  "finished_utc": "2026-08-29T12:54:57.067305+00:00",
+  "app": "dev/sentiment-service/app.py",
+  "verifier": "dev/sentiment-service/tools/verify_service.py",
+  "b1_certified_modules_unchanged_by_b2a": {
+    "preprocessing.py": "6ef0c080fca662f60cd22cd642a6d60cfeaa85c70f5ccf8c482ec62817856870",
+    "inference.py": "02f5a8af4e91afe6162563a595dde3533d1aa1dae83f6e3a3108f6923f58623d"
+  },
+  "b1_constraints_note": "The service layer was installed into the `sentiment-model` env under dev/sentiment-service/b1-constraints.txt, which pins torch / transformers / tokenizers / numpy so the resolver cannot move them. Any future install into this env MUST go through that constraint file. Recording this here per the owner's instruction; requirements.txt is deliberately NOT edited to say so (supervisor's call).",
+  "checkpoint": {
+    "dir": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\sentiment\\outputs\\development_v2\\experiment_02\\best_checkpoint",
+    "sha256": "624da0651206746aa211a9fe472280a488effb75f4ef230f933d565688a965b9",
+    "pinned_sha256": "624da0651206746aa211a9fe472280a488effb75f4ef230f933d565688a965b9",
+    "sha_match": true,
+    "label_order": [
+      "CALM",
+      "NEUTRAL",
+      "DISTRESSED"
+    ]
+  },
+  "reference_used_for_argmax_only": {
+    "predictions_csv": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\sentiment\\outputs\\development_v2\\experiment_02\\validation_predictions.csv",
+    "predictions_csv_sha256": "d5596892a2bb3ec80b3aa8b9d3ab49e8edff115a46ac80b79ecbdf78b47c3d02",
+    "texts_csv": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\sentiment\\outputs\\development_v2\\release\\maternalink_sinhala_dev_v2.csv",
+    "texts_csv_sha256": "bdf2df52913eb686bacbfbb481764d4d425b61207ad4506c9d8ef325b7c9f5aa",
+    "split_csv": "C:\\Users\\Yasindu\\Desktop\\Chat_Research\\IT22638168\\ml\\sentiment\\outputs\\development_v2\\release\\maternalink_sinhala_dev_v2_split_membership.csv",
+    "split_csv_sha256": "46b03fb9f4ecfeded82c7e4209767d567194250892fc4ac2efa93c7f74d2d81d"
+  },
+  "frozen_test_guards": {
+    "denylist_checked_paths": [
+      "maternalink_sinhala_dev_v2.csv",
+      "maternalink_sinhala_dev_v2_split_membership.csv",
+      "validation_predictions.csv"
+    ],
+    "guard_1_validation_row_count": 76,
+    "guard_2_all_ids_in_reference": true,
+    "guard_5_record_count": 76,
+    "guard_5_sorted_record_id_sha256": "36640459b468785809101353f091d9ecb25df7dc410c639d1048c304a41ce37d",
+    "guard_5_matches_b1": true
+  },
+  "t4_statistics": {
+    "verdict": "PASS",
+    "n_records": 76,
+    "n_prob_elements": 228,
+    "max_abs_prob_diff": 0.0,
+    "mean_abs_prob_diff": 0.0,
+    "argmax_agreement_http_vs_inprocess": "76/76",
+    "argmax_agreement_http_vs_b1_reference": "76/76",
+    "gate_max_abs_prob_diff": 1e-09,
+    "gate_argmax_required": 76
+  },
+  "tests": {
+    "T1": {
+      "verdict": "PASS",
+      "status_codes": {
+        "GET /health": 200,
+        "GET /contract": 200,
+        "POST /predict (valid)": 200,
+        "POST /predict (no body)": 400
+      },
+      "typed_error_survives_handler": true,
+      "no_body_error_body": {
+        "error": {
+          "code": "missing_text",
+          "message": "No text was provided in the request."
+        }
+      }
+    },
+    "T2": {
+      "verdict": "PASS",
+      "checks": {
+        "status_ok": true,
+        "checkpoint_sha256_matches_pin": true,
+        "checkpoint_sha256_matches_pin_flag": true,
+        "torch_num_threads_is_1": true,
+        "model_version_present": true,
+        "label_space_mood3": true,
+        "response_probabilities_rounded_false": true
+      },
+      "body": {
+        "status": "ok",
+        "model_version": "sinbert_small_maternalink_mood_exp02/0.1.0",
+        "checkpoint_sha256": "624da0651206746aa211a9fe472280a488effb75f4ef230f933d565688a965b9",
+        "label_space": "mood3",
+        "label_order": [
+          "CALM",
+          "NEUTRAL",
+          "DISTRESSED"
+        ],
+        "max_length": 512,
+        "device": "cpu",
+        "prediction_rule": "softmax then argmax",
+        "text_normalisation": "none",
+        "supported_language": "si",
+        "english_in_scope": false,
+        "performs_mood_fusion": false,
+        "performs_language_detection": false,
+        "checkpoint_sha256_matches_pin": true,
+        "torch_num_threads": 1,
+        "torch_num_interop_threads": 10,
+        "service_version": "0.1.0",
+        "response_probabilities_rounded": false
+      }
+    },
+    "T3": {
+      "verdict": "PASS",
+      "checks": {
+        "no_undocumented_top_level_fields": true,
+        "model_version": true,
+        "service_version": true,
+        "label_space": true,
+        "label_order": true,
+        "deployed_evidence_keys": true,
+        "input_endpoint": true,
+        "input_encoding_json": true,
+        "input_field_text": true,
+        "input_text_normalisation": true,
+        "input_max_length": true,
+        "input_truncation": true,
+        "output_rounding_none": true,
+        "prediction_rule": true,
+        "device": true,
+        "dtype": true,
+        "supported_language": true,
+        "english_in_scope": true,
+        "checkpoint_sha256": true,
+        "checkpoint_name": true,
+        "checkpoint_architecture": true,
+        "provenance_matches": true,
+        "measured_performance_matches": true,
+        "limitations_matches": true,
+        "out_of_scope_matches": true,
+        "error_codes_matches": true
+      },
+      "undocumented_fields": [],
+      "body": {
+        "model_version": "sinbert_small_maternalink_mood_exp02/0.1.0",
+        "service_version": "0.1.0",
+        "label_space": "mood3",
+        "label_order": [
+          "CALM",
+          "NEUTRAL",
+          "DISTRESSED"
+        ],
+        "deployed_evidence_keys": [
+          "calm",
+          "neutral",
+          "distressed"
+        ],
+        "input": {
+          "endpoint": "POST /predict",
+          "encoding": "application/json",
+          "field": "text",
+          "type": "string",
+          "text_normalisation": "none",
+          "max_length_tokens": 512,
+          "truncation": true
+        },
+        "output": {
+          "probabilities": "3 softmax probabilities keyed by label_order; unrounded float; sums to approximately 1.0",
+          "evidence": "the same 3 values keyed by deployed_evidence_keys",
+          "predicted_label": "argmax over label_order",
+          "predicted_label_id": "index of predicted_label in label_order",
+          "confidence": "probability of predicted_label",
+          "rounding": "none - full float precision is serialised"
+        },
+        "prediction_rule": "softmax then argmax",
+        "device": "cpu",
+        "dtype": "float32",
+        "supported_language": "si",
+        "english_in_scope": false,
+        "checkpoint": {
+          "name": "sinbert_small_maternalink_mood_exp02",
+          "sha256": "624da0651206746aa211a9fe472280a488effb75f4ef230f933d565688a965b9",
+          "architecture": "RobertaForSequenceClassification",
+          "base_model_id": "sinhala-nlp/sinhala-sentiment-analysis-sinbert-small",
+          "base_model_revision": "7059f20a28a2b1e2ff2f45b13d6956435cdacb6a"
+        },
+        "provenance": {
+          "base_model_id": "sinhala-nlp/sinhala-sentiment-analysis-sinbert-small",
+          "base_model_revision": "7059f20a28a2b1e2ff2f45b13d6956435cdacb6a",
+          "classification_head": "new RobertaClassificationHead with 3 outputs",
+          "training_notebook": "ml/sentiment/notebooks/04_sinbert_experiment_02.ipynb",
+          "training_run": "Experiment 02 (development only)",
+          "dev_v2_dataset_sha256": "bdf2df52913eb686bacbfbb481764d4d425b61207ad4506c9d8ef325b7c9f5aa",
+          "dev_v2_split_sha256": "46b03fb9f4ecfeded82c7e4209767d567194250892fc4ac2efa93c7f74d2d81d",
+          "encoder_layers": 6,
+          "attention_heads": 6,
+          "hidden_size": 768,
+          "vocab_size": 30000
+        },
+        "measured_performance": {
+          "dev_v2_validation": {
+            "n": 76,
+            "accuracy": 0.684211,
+            "macro_f1": 0.624851,
+            "weighted_f1": 0.684682,
+            "per_class_f1": {
+              "CALM": 0.516129,
+              "NEUTRAL": 0.777778,
+              "DISTRESSED": 0.580645
+            },
+            "note": "development/validation split, not held-out"
+          },
+          "frozen_test_one_time": {
+            "n": 120,
+            "accuracy": 0.375,
+            "macro_f1": 0.362024,
+            "weighted_f1": 0.362024,
+            "note": "one authorised held-out evaluation; CLOSED. 120 = 60 Sinhala + 60 English; the model predicted CALM for all 60 English records."
+          }
+        },
+        "limitations": [
+          "Development/demo Sinhala mood classifier. NOT a validated final model, NOT a clinical model, NOT a production sentiment API.",
+          "Frozen-test macro-F1 (0.362) is far below validation macro-F1 (0.625): weak generalisation from the Dev-v2 validation split to held-out data.",
+          "Sinhala only. English input is out of scope; the model collapses English to CALM.",
+          "Trained on 223 Sinhala records; validation on 76. Small data.",
+          "Output is an application 'dominant mood' estimate under Annotation Guideline V2.1. It is NOT generic sentiment, NOT medical severity, NOT diagnosis, and NOT clinical risk.",
+          "NEUTRAL-dominant training distribution (137/223); minority-class behaviour is unreliable."
+        ],
+        "out_of_scope": [
+          "any HTTP service layer (that is B2)",
+          "the FER 7-class -> 3-state mapping (that is B3)",
+          "FER / sentiment fusion or fusion weights (that is B4)",
+          "text-language detection or routing",
+          "text normalisation of any kind",
+          "threshold tuning or decision-boundary calibration",
+          "retraining, fine-tuning, or re-evaluation of the checkpoint",
+          "any storage of text or predictions"
+        ],
+        "error_codes": [
+          "contract_violation",
+          "empty_text",
+          "inference_failed",
+          "missing_text",
+          "model_load_failed",
+          "sentiment_error",
+          "text_too_long",
+          "tokenisation_failed"
+        ]
+      }
+    },
+    "T4": {
+      "verdict": "PASS",
+      "n_records": 76,
+      "n_prob_elements": 228,
+      "max_abs_prob_diff": 0.0,
+      "mean_abs_prob_diff": 0.0,
+      "argmax_agreement_http_vs_inprocess": "76/76",
+      "argmax_agreement_http_vs_b1_reference": "76/76",
+      "gate_max_abs_prob_diff": 1e-09,
+      "gate_argmax_required": 76
+    },
+    "T5": {
+      "verdict": "PASS",
+      "all_error_codes": [
+        "contract_violation",
+        "empty_text",
+        "inference_failed",
+        "missing_text",
+        "model_load_failed",
+        "sentiment_error",
+        "text_too_long",
+        "tokenisation_failed"
+      ],
+      "codes_covered": [
+        "contract_violation",
+        "empty_text",
+        "inference_failed",
+        "missing_text",
+        "model_load_failed",
+        "sentiment_error",
+        "text_too_long",
+        "tokenisation_failed"
+      ],
+      "all_codes_covered": true,
+      "rows": [
+        {
+          "trigger": "no 'text' key",
+          "how": "HTTP contract (real check_text path)",
+          "expected_code": "missing_text",
+          "actual_code": "missing_text",
+          "expected_status": 400,
+          "actual_status": 400,
+          "envelope_only_code_message": true,
+          "match": true
+        },
+        {
+          "trigger": "text is null",
+          "how": "HTTP contract (real check_text path)",
+          "expected_code": "missing_text",
+          "actual_code": "missing_text",
+          "expected_status": 400,
+          "actual_status": 400,
+          "envelope_only_code_message": true,
+          "match": true
+        },
+        {
+          "trigger": "text is int (non-str)",
+          "how": "HTTP contract (real check_text path)",
+          "expected_code": "missing_text",
+          "actual_code": "missing_text",
+          "expected_status": 400,
+          "actual_status": 400,
+          "envelope_only_code_message": true,
+          "match": true
+        },
+        {
+          "trigger": "empty string",
+          "how": "HTTP contract (real check_text path)",
+          "expected_code": "empty_text",
+          "actual_code": "empty_text",
+          "expected_status": 400,
+          "actual_status": 400,
+          "envelope_only_code_message": true,
+          "match": true
+        },
+        {
+          "trigger": "whitespace only",
+          "how": "HTTP contract (real check_text path)",
+          "expected_code": "empty_text",
+          "actual_code": "empty_text",
+          "expected_status": 400,
+          "actual_status": 400,
+          "envelope_only_code_message": true,
+          "match": true
+        },
+        {
+          "trigger": "predict() raises MissingTextError",
+          "how": "forced through the registered exception handler",
+          "expected_code": "missing_text",
+          "actual_code": "missing_text",
+          "expected_status": 400,
+          "actual_status": 400,
+          "envelope_only_code_message": true,
+          "match": true
+        },
+        {
+          "trigger": "predict() raises EmptyTextError",
+          "how": "forced through the registered exception handler",
+          "expected_code": "empty_text",
+          "actual_code": "empty_text",
+          "expected_status": 400,
+          "actual_status": 400,
+          "envelope_only_code_message": true,
+          "match": true
+        },
+        {
+          "trigger": "predict() raises TextTooLongError",
+          "how": "forced through the registered exception handler",
+          "expected_code": "text_too_long",
+          "actual_code": "text_too_long",
+          "expected_status": 413,
+          "actual_status": 413,
+          "envelope_only_code_message": true,
+          "match": true
+        },
+        {
+          "trigger": "predict() raises TokenisationError",
+          "how": "forced through the registered exception handler",
+          "expected_code": "tokenisation_failed",
+          "actual_code": "tokenisation_failed",
+          "expected_status": 500,
+          "actual_status": 500,
+          "envelope_only_code_message": true,
+          "match": true
+        },
+        {
+          "trigger": "predict() raises ModelLoadError",
+          "how": "forced through the registered exception handler",
+          "expected_code": "model_load_failed",
+          "actual_code": "model_load_failed",
+          "expected_status": 503,
+          "actual_status": 503,
+          "envelope_only_code_message": true,
+          "match": true
+        },
+        {
+          "trigger": "predict() raises InferenceError",
+          "how": "forced through the registered exception handler",
+          "expected_code": "inference_failed",
+          "actual_code": "inference_failed",
+          "expected_status": 500,
+          "actual_status": 500,
+          "envelope_only_code_message": true,
+          "match": true
+        },
+        {
+          "trigger": "predict() raises ContractViolationError",
+          "how": "forced through the registered exception handler",
+          "expected_code": "contract_violation",
+          "actual_code": "contract_violation",
+          "expected_status": 500,
+          "actual_status": 500,
+          "envelope_only_code_message": true,
+          "match": true
+        },
+        {
+          "trigger": "predict() raises SentimentServiceError",
+          "how": "forced through the registered exception handler",
+          "expected_code": "sentiment_error",
+          "actual_code": "sentiment_error",
+          "expected_status": 500,
+          "actual_status": 500,
+          "envelope_only_code_message": true,
+          "match": true
+        }
+      ]
+    },
+    "T7": {
+      "verdict": "PASS",
+      "rows": [
+        {
+          "probe_index": 0,
+          "status_code": 200,
+          "sent_utf8_len": 37,
+          "received_utf8_len": 37,
+          "sent_sha256": "1771a96742ee71500e97fe664d90171f45d335db2efa3bd5e83ae342041e2974",
+          "received_sha256": "1771a96742ee71500e97fe664d90171f45d335db2efa3bd5e83ae342041e2974",
+          "codepoints_sent": [
+            "U+0D85",
+            "U+0DB8",
+            "U+0DCA",
+            "U+0DB8",
+            "U+0DCF",
+            "U+0020",
+            "U+0DC3",
+            "U+0DD6",
+            "U+0DAF",
+            "U+0DCF",
+            "U+0DB1",
+            "U+0DB8",
+            "U+0DCA"
+          ],
+          "byte_identical": true,
+          "contains_zwj": false,
+          "contains_zwnj": false
+        },
+        {
+          "probe_index": 1,
+          "status_code": 200,
+          "sent_utf8_len": 21,
+          "received_utf8_len": 21,
+          "sent_sha256": "e485e1e396f3195dee132fd03ed27d5a5fd2a6c35c4294191cbc044ad691ddae",
+          "received_sha256": "e485e1e396f3195dee132fd03ed27d5a5fd2a6c35c4294191cbc044ad691ddae",
+          "codepoints_sent": [
+            "U+0D9A",
+            "U+0DCA",
+            "U+200D",
+            "U+0DBB",
+            "U+0DD2",
+            "U+0DBA",
+            "U+0DCF"
+          ],
+          "byte_identical": true,
+          "contains_zwj": true,
+          "contains_zwnj": false
+        },
+        {
+          "probe_index": 2,
+          "status_code": 200,
+          "sent_utf8_len": 21,
+          "received_utf8_len": 21,
+          "sent_sha256": "573d7466e91733fc0e013429d4d770ea2e27356fbe96eb08bb8709ba161a4c8b",
+          "received_sha256": "573d7466e91733fc0e013429d4d770ea2e27356fbe96eb08bb8709ba161a4c8b",
+          "codepoints_sent": [
+            "U+0D9A",
+            "U+0DCA",
+            "U+200C",
+            "U+0DBB",
+            "U+0DD2",
+            "U+0DBA",
+            "U+0DCF"
+          ],
+          "byte_identical": true,
+          "contains_zwj": false,
+          "contains_zwnj": true
+        },
+        {
+          "probe_index": 3,
+          "status_code": 200,
+          "sent_utf8_len": 28,
+          "received_utf8_len": 28,
+          "sent_sha256": "0d669ab9fc7354665a77585344eb364f03f1d04a2cb60565014cd26a0095b315",
+          "received_sha256": "0d669ab9fc7354665a77585344eb364f03f1d04a2cb60565014cd26a0095b315",
+          "codepoints_sent": [
+            "U+0DB8",
+            "U+0DA7",
+            "U+0020",
+            "U+0D9A",
+            "U+0DD0",
+            "U+0DB8",
+            "U+0DAD",
+            "U+0DD2",
+            "U+0DBA",
+            "U+0DD2"
+          ],
+          "byte_identical": true,
+          "contains_zwj": false,
+          "contains_zwnj": false
+        }
+      ]
+    },
+    "T8": {
+      "verdict": "OBSERVED",
+      "n_probes": 5,
+      "predicted_labels": [
+        "CALM",
+        "CALM",
+        "CALM",
+        "CALM",
+        "CALM"
+      ],
+      "all_calm": true,
+      "note": "English is OUT OF SCOPE (contract.ENGLISH_IN_SCOPE is False). The service applies no language gate and scores English through the same path as Sinhala. Recorded, not judged.",
+      "rows": [
+        {
+          "probe_index": 0,
+          "predicted_label": "CALM",
+          "predicted_label_id": 0,
+          "confidence": 0.6133013963699341,
+          "probabilities": {
+            "CALM": 0.6133013963699341,
+            "NEUTRAL": 0.2558952271938324,
+            "DISTRESSED": 0.1308034509420395
+          }
+        },
+        {
+          "probe_index": 1,
+          "predicted_label": "CALM",
+          "predicted_label_id": 0,
+          "confidence": 0.6404908895492554,
+          "probabilities": {
+            "CALM": 0.6404908895492554,
+            "NEUTRAL": 0.2302500605583191,
+            "DISTRESSED": 0.12925906479358673
+          }
+        },
+        {
+          "probe_index": 2,
+          "predicted_label": "CALM",
+          "predicted_label_id": 0,
+          "confidence": 0.6051303744316101,
+          "probabilities": {
+            "CALM": 0.6051303744316101,
+            "NEUTRAL": 0.2503008246421814,
+            "DISTRESSED": 0.14456875622272491
+          }
+        },
+        {
+          "probe_index": 3,
+          "predicted_label": "CALM",
+          "predicted_label_id": 0,
+          "confidence": 0.6565548181533813,
+          "probabilities": {
+            "CALM": 0.6565548181533813,
+            "NEUTRAL": 0.2192133665084839,
+            "DISTRESSED": 0.12423178553581238
+          }
+        },
+        {
+          "probe_index": 4,
+          "predicted_label": "CALM",
+          "predicted_label_id": 0,
+          "confidence": 0.5881772041320801,
+          "probabilities": {
+            "CALM": 0.5881772041320801,
+            "NEUTRAL": 0.2634258568286896,
+            "DISTRESSED": 0.14839692413806915
+          }
+        }
+      ]
+    },
+    "T6": {
+      "verdict": "PASS",
+      "how_proven": [
+        "root logger captured at DEBUG for the whole run (every handler)",
+        "warnings.showwarning intercepted for the whole run",
+        "stdout and stderr redirected to in-memory buffers for the whole run",
+        "filesystem snapshot after model-load vs after serving all requests, so checkpoint-cache files are excluded and only request-phase writes are judged",
+        "every new request-phase file stat'd and its bytes scanned for any request text",
+        "all 85 request texts (76 val + 4 Sinhala + 5 English) checked as full string and 12-char prefix against the concatenation of every sink",
+        "INCLUDE_ERROR_DETAIL asserted False; every error envelope asserted to contain exactly {code, message} (no detail, no echo)"
+      ],
+      "request_texts_leaked_into_log_or_stdio": [],
+      "request_phase_new_files": [
+        {
+          "path": "C:\\Users\\Yasindu\\AppData\\Local\\Temp\\1806cced-6959-4730-addc-d96ee284d5c3.tmp",
+          "size_bytes": 0,
+          "in_service_or_output_area": false,
+          "contains_request_text": false
+        },
+        {
+          "path": "C:\\Users\\Yasindu\\AppData\\Local\\Temp\\435526fe-d186-4912-ad67-feeb3e46f4ff.tmp",
+          "size_bytes": 0,
+          "in_service_or_output_area": false,
+          "contains_request_text": false
+        },
+        {
+          "path": "C:\\Users\\Yasindu\\AppData\\Local\\Temp\\65ca45b9-678c-478a-9c05-cc979cc64550.tmp",
+          "size_bytes": 0,
+          "in_service_or_output_area": false,
+          "contains_request_text": false
+        },
+        {
+          "path": "C:\\Users\\Yasindu\\AppData\\Local\\Temp\\963bfc0f-9bdd-4a3b-8b18-f6c2dad9e2b6.tmp",
+          "size_bytes": 0,
+          "in_service_or_output_area": false,
+          "contains_request_text": false
+        },
+        {
+          "path": "C:\\Users\\Yasindu\\AppData\\Local\\Temp\\edf4ffb1-1e70-4db2-8d23-d7f17b55785a.tmp",
+          "size_bytes": 0,
+          "in_service_or_output_area": false,
+          "contains_request_text": false
+        }
+      ],
+      "any_request_text_written_to_disk": false,
+      "any_write_into_service_or_output_area": false,
+      "new_files_whole_run_load_and_serve": [
+        "C:\\Users\\Yasindu\\AppData\\Local\\Temp\\1806cced-6959-4730-addc-d96ee284d5c3.tmp",
+        "C:\\Users\\Yasindu\\AppData\\Local\\Temp\\435526fe-d186-4912-ad67-feeb3e46f4ff.tmp",
+        "C:\\Users\\Yasindu\\AppData\\Local\\Temp\\65ca45b9-678c-478a-9c05-cc979cc64550.tmp",
+        "C:\\Users\\Yasindu\\AppData\\Local\\Temp\\963bfc0f-9bdd-4a3b-8b18-f6c2dad9e2b6.tmp",
+        "C:\\Users\\Yasindu\\AppData\\Local\\Temp\\edf4ffb1-1e70-4db2-8d23-d7f17b55785a.tmp"
+      ],
+      "n_log_records_captured": 179,
+      "n_warning_records_captured": 0,
+      "stdout_chars": 0,
+      "stderr_chars": 127,
+      "stderr_text": "\rLoading weights:   0%|          | 0/105 [00:00<?, ?it/s]\rLoading weights: 100%|##########| 105/105 [00:00<00:00, 6164.47it/s]\n",
+      "include_error_detail": false
+    }
+  },
+  "environment": {
+    "sys_executable": "C:\\Users\\Yasindu\\.conda\\envs\\sentiment-model\\python.exe",
+    "python_version": "3.11.15 | packaged by Anaconda, Inc. | (main, Jun 11 2026, 15:12:53) [MSC v.1942 64 bit (AMD64)]",
+    "python_version_short": "3.11.15",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "conda_env": "sentiment-model",
+    "numerical_stack_b1_pinned": {
+      "torch": "2.13.0+cpu",
+      "transformers": "5.15.1",
+      "tokenizers": "0.22.2",
+      "numpy": "2.4.6",
+      "pandas": "3.0.5"
+    },
+    "service_layer_installed_for_b2": {
+      "fastapi": "0.141.1",
+      "starlette": "1.6.0",
+      "pydantic": "2.13.5",
+      "pydantic_core": "2.46.5",
+      "uvicorn": "0.52.4",
+      "httpx": "0.28.1"
+    },
+    "torch_num_threads": 1,
+    "torch_num_interop_threads": 10
+  }
+}
