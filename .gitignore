@@ -38,6 +38,21 @@ ml/*/models/*
 saved_model/
 checkpoints/
 
+# Intermediate tensor dumps from verification runs (A1/A2). The CSV + JSON
+# summaries carry the result; the raw arrays are 22 MB each and rebuildable.
+*.npy
+*.npz
+
+# Transformer weights. NOTE: the sentiment Experiment 02 checkpoint lives under
+# ml/sentiment/outputs/, NOT ml/*/models/, so the rule above does not catch it —
+# and it is 254 MB, well over GitHub's 100 MB per-file limit. The small
+# config.json / tokenizer_config.json beside it stay tracked, so the architecture
+# and label mapping remain in version control.
+*.safetensors
+
+# Jupyter's virtual-documents scratch directory
+.virtual_documents/
+
 # ─────────────────────────────────────────────────────────────
 # KEPT ON PURPOSE — do not add these to the ignore list
 #   ml/*/plots/*.png        research figures
