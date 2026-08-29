@@ -1,2 +1,2 @@
 import { Redirect } from "expo-router";
-export default function Index() { return <Redirect href="/app/home" />; }
+export default function Index() { return <Redirect href="/app/chat?consent=1" />; }

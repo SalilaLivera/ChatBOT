@@ -96,7 +96,7 @@ export default function Chat() {
   return <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === "ios" ? "padding" : undefined}>
     <Screen>
       <View style={styles.headerBar}>
-        <Pressable accessibilityRole="button" accessibilityLabel="New chat" onPress={newChat} style={styles.newChatButton}><Ionicons name="add" size={26} color={colors.deepPink} /></Pressable>
+        <Pressable accessibilityRole="button" accessibilityLabel="New chat" onPress={newChat} style={({ pressed }) => [styles.newChatButton, pressed && styles.newChatButtonPressed]}><Ionicons name="add" size={26} color={colors.deepPink} /></Pressable>
         <Pressable accessibilityRole="button" accessibilityLabel={cameraEnabled ? i18n.t("disableCamera") : i18n.t("enableCamera")} onPress={() => useAppStore.getState().setCamera(!cameraEnabled)} style={[styles.cameraButton, !cameraEnabled && styles.cameraButtonOff]}><Ionicons name={cameraEnabled ? "videocam" : "videocam-off"} size={20} color={cameraEnabled ? colors.white : colors.muted} /></Pressable>
       </View>
       {showDev && <DevPanel />}
@@ -141,7 +141,8 @@ export default function Chat() {
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.paper },
   headerBar: { height: 72, marginTop: -spacing.xl, marginHorizontal: -spacing.lg, paddingHorizontal: spacing.lg, flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: colors.card, shadowColor: colors.primary, shadowOpacity: 0.08, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 2, zIndex: 2, boxShadow: "0 3px 8px rgba(217,108,138,.08)" as any },
-  newChatButton: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.lightPink, alignItems: "center", justifyContent: "center", borderWidth: 0, outlineStyle: "none" as any },
+  newChatButton: { width: 44, height: 44, borderRadius: 22, backgroundColor: "transparent", alignItems: "center", justifyContent: "center", borderWidth: 2.5, borderColor: colors.deepPink, outlineStyle: "none" as any },
+  newChatButtonPressed: { backgroundColor: colors.lightPink },
   cameraButton: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.deepPink, alignItems: "center", justifyContent: "center", borderWidth: 0, shadowOpacity: 0, elevation: 0, outlineStyle: "none" as any },
   cameraButtonOff: { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
   empty: { alignItems: "center", paddingVertical: 70, paddingHorizontal: spacing.lg },
