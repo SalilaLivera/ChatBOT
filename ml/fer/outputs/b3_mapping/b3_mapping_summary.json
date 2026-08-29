@@ -1,0 +1,1626 @@
+{
+  "M1": {
+    "A": {
+      "macro_f1": 0.7623910418646022,
+      "per_state": {
+        "CALM": {
+          "precision": 0.798941798941799,
+          "recall": 0.8435754189944135,
+          "f1": 0.8206521739130435,
+          "support": 895
+        },
+        "NEUTRAL": {
+          "precision": 0.6598322460391426,
+          "recall": 0.6927592954990215,
+          "f1": 0.6758949880668258,
+          "support": 1022
+        },
+        "DISTRESSED": {
+          "precision": 0.8160407383831955,
+          "recall": 0.7667464114832536,
+          "f1": 0.7906259636139377,
+          "support": 1672
+        }
+      },
+      "confusion_3x3": [
+        [
+          755,
+          82,
+          58
+        ],
+        [
+          83,
+          708,
+          231
+        ],
+        [
+          107,
+          283,
+          1282
+        ]
+      ],
+      "induced_pred_dist": {
+        "CALM": 0.2633045416550571,
+        "NEUTRAL": 0.29896907216494845,
+        "DISTRESSED": 0.43772638617999443
+      },
+      "true_state_dist": {
+        "CALM": 0.24937308442463083,
+        "NEUTRAL": 0.2847589857899136,
+        "DISTRESSED": 0.46586792978545555
+      },
+      "distressed_rate": 0.43772638617999443,
+      "degenerate_collapse": false,
+      "per_source_class_contribution": {
+        "angry": {
+          "CALM": 42,
+          "NEUTRAL": 65,
+          "DISTRESSED": 360
+        },
+        "disgust": {
+          "CALM": 4,
+          "NEUTRAL": 4,
+          "DISTRESSED": 48
+        },
+        "fear": {
+          "CALM": 19,
+          "NEUTRAL": 93,
+          "DISTRESSED": 384
+        },
+        "happy": {
+          "CALM": 755,
+          "NEUTRAL": 82,
+          "DISTRESSED": 58
+        },
+        "neutral": {
+          "CALM": 66,
+          "NEUTRAL": 373,
+          "DISTRESSED": 168
+        },
+        "sad": {
+          "CALM": 42,
+          "NEUTRAL": 121,
+          "DISTRESSED": 490
+        },
+        "surprise": {
+          "CALM": 17,
+          "NEUTRAL": 335,
+          "DISTRESSED": 63
+        }
+      }
+    },
+    "B": {
+      "macro_f1": 0.7614150296379276,
+      "per_state": {
+        "CALM": {
+          "precision": 0.8316268486916951,
+          "recall": 0.8167597765363128,
+          "f1": 0.8241262683201804,
+          "support": 895
+        },
+        "NEUTRAL": {
+          "precision": 0.6981339187705817,
+          "recall": 0.6223091976516634,
+          "f1": 0.6580444904293844,
+          "support": 1022
+        },
+        "DISTRESSED": {
+          "precision": 0.773763201778766,
+          "recall": 0.8325358851674641,
+          "f1": 0.8020743301642178,
+          "support": 1672
+        }
+      },
+      "confusion_3x3": [
+        [
+          731,
+          73,
+          91
+        ],
+        [
+          70,
+          636,
+          316
+        ],
+        [
+          78,
+          202,
+          1392
+        ]
+      ],
+      "induced_pred_dist": {
+        "CALM": 0.2449150181108944,
+        "NEUTRAL": 0.2538311507383672,
+        "DISTRESSED": 0.5012538311507384
+      },
+      "true_state_dist": {
+        "CALM": 0.24937308442463083,
+        "NEUTRAL": 0.2847589857899136,
+        "DISTRESSED": 0.46586792978545555
+      },
+      "distressed_rate": 0.5012538311507384,
+      "degenerate_collapse": false,
+      "per_source_class_contribution": {
+        "angry": {
+          "CALM": 32,
+          "NEUTRAL": 45,
+          "DISTRESSED": 390
+        },
+        "disgust": {
+          "CALM": 3,
+          "NEUTRAL": 2,
+          "DISTRESSED": 51
+        },
+        "fear": {
+          "CALM": 13,
+          "NEUTRAL": 67,
+          "DISTRESSED": 416
+        },
+        "happy": {
+          "CALM": 731,
+          "NEUTRAL": 73,
+          "DISTRESSED": 91
+        },
+        "neutral": {
+          "CALM": 54,
+          "NEUTRAL": 309,
+          "DISTRESSED": 244
+        },
+        "sad": {
+          "CALM": 30,
+          "NEUTRAL": 88,
+          "DISTRESSED": 535
+        },
+        "surprise": {
+          "CALM": 16,
+          "NEUTRAL": 327,
+          "DISTRESSED": 72
+        }
+      }
+    },
+    "error_decomposition_by_source": {
+      "angry": {
+        "n_errors_7class": 227,
+        "n_healed": 120,
+        "n_surviving": 107,
+        "heal_rate": 0.5286343612334802
+      },
+      "disgust": {
+        "n_errors_7class": 28,
+        "n_healed": 20,
+        "n_surviving": 8,
+        "heal_rate": 0.7142857142857143
+      },
+      "fear": {
+        "n_errors_7class": 254,
+        "n_healed": 142,
+        "n_surviving": 112,
+        "heal_rate": 0.5590551181102362
+      },
+      "happy": {
+        "n_errors_7class": 140,
+        "n_healed": 0,
+        "n_surviving": 140,
+        "heal_rate": 0.0
+      },
+      "neutral": {
+        "n_errors_7class": 248,
+        "n_healed": 14,
+        "n_surviving": 234,
+        "heal_rate": 0.056451612903225805
+      },
+      "sad": {
+        "n_errors_7class": 323,
+        "n_healed": 160,
+        "n_surviving": 163,
+        "heal_rate": 0.4953560371517028
+      },
+      "surprise": {
+        "n_errors_7class": 101,
+        "n_healed": 21,
+        "n_surviving": 80,
+        "heal_rate": 0.2079207920792079
+      },
+      "ALL": {
+        "n_errors_7class": 1321,
+        "n_healed": 477,
+        "n_surviving": 844,
+        "heal_rate": 0.36109008327024983
+      }
+    },
+    "surprise_isolated": {
+      "n_true_rows": 415,
+      "sevenclass_tp": 314,
+      "sevenclass_fn": 101,
+      "sevenclass_fp": 87,
+      "sevenclass_precision": 0.7830423940149626,
+      "sevenclass_recall": 0.7566265060240964,
+      "true_rows_landing_ruleA": {
+        "CALM": 17,
+        "NEUTRAL": 335,
+        "DISTRESSED": 63
+      },
+      "true_rows_landing_ruleB": {
+        "CALM": 16,
+        "NEUTRAL": 327,
+        "DISTRESSED": 72
+      },
+      "n_rows_with_class_as_7class_argmax": 401,
+      "argmax_rows_landing_ruleA": {
+        "CALM": 0,
+        "NEUTRAL": 401,
+        "DISTRESSED": 0
+      },
+      "argmax_rows_landing_ruleB": {
+        "CALM": 0,
+        "NEUTRAL": 380,
+        "DISTRESSED": 21
+      }
+    },
+    "disgust_isolated": {
+      "n_true_rows": 56,
+      "sevenclass_tp": 28,
+      "sevenclass_fn": 28,
+      "sevenclass_fp": 11,
+      "sevenclass_precision": 0.717948717948718,
+      "sevenclass_recall": 0.5,
+      "true_rows_landing_ruleA": {
+        "CALM": 4,
+        "NEUTRAL": 4,
+        "DISTRESSED": 48
+      },
+      "true_rows_landing_ruleB": {
+        "CALM": 3,
+        "NEUTRAL": 2,
+        "DISTRESSED": 51
+      },
+      "n_rows_with_class_as_7class_argmax": 39,
+      "argmax_rows_landing_ruleA": {
+        "CALM": 0,
+        "NEUTRAL": 0,
+        "DISTRESSED": 39
+      },
+      "argmax_rows_landing_ruleB": {
+        "CALM": 0,
+        "NEUTRAL": 0,
+        "DISTRESSED": 39
+      }
+    },
+    "ece_ruleB": 0.016628627626527757,
+    "ruleB_reliability": [
+      {
+        "bin": 1,
+        "range": [
+          0.0,
+          0.1
+        ],
+        "mean_conf": 0.0,
+        "emp_acc": 0.0,
+        "n": 0
+      },
+      {
+        "bin": 2,
+        "range": [
+          0.1,
+          0.2
+        ],
+        "mean_conf": 0.0,
+        "emp_acc": 0.0,
+        "n": 0
+      },
+      {
+        "bin": 3,
+        "range": [
+          0.2,
+          0.30000000000000004
+        ],
+        "mean_conf": 0.0,
+        "emp_acc": 0.0,
+        "n": 0
+      },
+      {
+        "bin": 4,
+        "range": [
+          0.30000000000000004,
+          0.4
+        ],
+        "mean_conf": 0.3812929075714119,
+        "emp_acc": 0.5925925925925926,
+        "n": 27
+      },
+      {
+        "bin": 5,
+        "range": [
+          0.4,
+          0.5
+        ],
+        "mean_conf": 0.4651035264809921,
+        "emp_acc": 0.39111111111111113,
+        "n": 225
+      },
+      {
+        "bin": 6,
+        "range": [
+          0.5,
+          0.6000000000000001
+        ],
+        "mean_conf": 0.5500655772585914,
+        "emp_acc": 0.5731462925851704,
+        "n": 499
+      },
+      {
+        "bin": 7,
+        "range": [
+          0.6000000000000001,
+          0.7000000000000001
+        ],
+        "mean_conf": 0.6511424987478168,
+        "emp_acc": 0.6597510373443983,
+        "n": 482
+      },
+      {
+        "bin": 8,
+        "range": [
+          0.7000000000000001,
+          0.8
+        ],
+        "mean_conf": 0.7515062211956169,
+        "emp_acc": 0.7407407407407407,
+        "n": 594
+      },
+      {
+        "bin": 9,
+        "range": [
+          0.8,
+          0.9
+        ],
+        "mean_conf": 0.8520396504306104,
+        "emp_acc": 0.8676880222841226,
+        "n": 718
+      },
+      {
+        "bin": 10,
+        "range": [
+          0.9,
+          1.0
+        ],
+        "mean_conf": 0.9425000568340234,
+        "emp_acc": 0.946360153256705,
+        "n": 1044
+      }
+    ],
+    "ruleB_distressed_rate_raw_sensitivity": 0.4405126776260797,
+    "mapping": {
+      "angry": "DISTRESSED",
+      "disgust": "DISTRESSED",
+      "fear": "DISTRESSED",
+      "happy": "CALM",
+      "neutral": "NEUTRAL",
+      "sad": "DISTRESSED",
+      "surprise": "NEUTRAL"
+    }
+  },
+  "M2": {
+    "A": {
+      "macro_f1": 0.7433401217521607,
+      "per_state": {
+        "CALM": {
+          "precision": 0.798941798941799,
+          "recall": 0.8435754189944135,
+          "f1": 0.8206521739130435,
+          "support": 895
+        },
+        "NEUTRAL": {
+          "precision": 0.5342261904761905,
+          "recall": 0.5914332784184514,
+          "f1": 0.5613760750586395,
+          "support": 607
+        },
+        "DISTRESSED": {
+          "precision": 0.8727180527383367,
+          "recall": 0.8246286535697173,
+          "f1": 0.8479921162847992,
+          "support": 2087
+        }
+      },
+      "confusion_3x3": [
+        [
+          755,
+          71,
+          69
+        ],
+        [
+          66,
+          359,
+          182
+        ],
+        [
+          124,
+          242,
+          1721
+        ]
+      ],
+      "induced_pred_dist": {
+        "CALM": 0.2633045416550571,
+        "NEUTRAL": 0.18723878517692952,
+        "DISTRESSED": 0.5494566731680134
+      },
+      "true_state_dist": {
+        "CALM": 0.24937308442463083,
+        "NEUTRAL": 0.1691278907773753,
+        "DISTRESSED": 0.5814990247979939
+      },
+      "distressed_rate": 0.5494566731680134,
+      "degenerate_collapse": false,
+      "per_source_class_contribution": {
+        "angry": {
+          "CALM": 42,
+          "NEUTRAL": 51,
+          "DISTRESSED": 374
+        },
+        "disgust": {
+          "CALM": 4,
+          "NEUTRAL": 3,
+          "DISTRESSED": 49
+        },
+        "fear": {
+          "CALM": 19,
+          "NEUTRAL": 58,
+          "DISTRESSED": 419
+        },
+        "happy": {
+          "CALM": 755,
+          "NEUTRAL": 71,
+          "DISTRESSED": 69
+        },
+        "neutral": {
+          "CALM": 66,
+          "NEUTRAL": 359,
+          "DISTRESSED": 182
+        },
+        "sad": {
+          "CALM": 42,
+          "NEUTRAL": 109,
+          "DISTRESSED": 502
+        },
+        "surprise": {
+          "CALM": 17,
+          "NEUTRAL": 21,
+          "DISTRESSED": 377
+        }
+      }
+    },
+    "B": {
+      "macro_f1": 0.7267460021992674,
+      "per_state": {
+        "CALM": {
+          "precision": 0.8375870069605569,
+          "recall": 0.8067039106145252,
+          "f1": 0.8218554354012522,
+          "support": 895
+        },
+        "NEUTRAL": {
+          "precision": 0.5838779956427015,
+          "recall": 0.4415156507413509,
+          "f1": 0.5028142589118199,
+          "support": 607
+        },
+        "DISTRESSED": {
+          "precision": 0.8214285714285714,
+          "recall": 0.8926689027311931,
+          "f1": 0.8555683122847302,
+          "support": 2087
+        }
+      },
+      "confusion_3x3": [
+        [
+          722,
+          54,
+          119
+        ],
+        [
+          53,
+          268,
+          286
+        ],
+        [
+          87,
+          137,
+          1863
+        ]
+      ],
+      "induced_pred_dist": {
+        "CALM": 0.24017832265254946,
+        "NEUTRAL": 0.12789077737531346,
+        "DISTRESSED": 0.6319308999721371
+      },
+      "true_state_dist": {
+        "CALM": 0.24937308442463083,
+        "NEUTRAL": 0.1691278907773753,
+        "DISTRESSED": 0.5814990247979939
+      },
+      "distressed_rate": 0.6319308999721371,
+      "degenerate_collapse": false,
+      "per_source_class_contribution": {
+        "angry": {
+          "CALM": 31,
+          "NEUTRAL": 28,
+          "DISTRESSED": 408
+        },
+        "disgust": {
+          "CALM": 3,
+          "NEUTRAL": 1,
+          "DISTRESSED": 52
+        },
+        "fear": {
+          "CALM": 12,
+          "NEUTRAL": 31,
+          "DISTRESSED": 453
+        },
+        "happy": {
+          "CALM": 722,
+          "NEUTRAL": 54,
+          "DISTRESSED": 119
+        },
+        "neutral": {
+          "CALM": 53,
+          "NEUTRAL": 268,
+          "DISTRESSED": 286
+        },
+        "sad": {
+          "CALM": 27,
+          "NEUTRAL": 64,
+          "DISTRESSED": 562
+        },
+        "surprise": {
+          "CALM": 14,
+          "NEUTRAL": 13,
+          "DISTRESSED": 388
+        }
+      }
+    },
+    "error_decomposition_by_source": {
+      "angry": {
+        "n_errors_7class": 227,
+        "n_healed": 134,
+        "n_surviving": 93,
+        "heal_rate": 0.5903083700440529
+      },
+      "disgust": {
+        "n_errors_7class": 28,
+        "n_healed": 21,
+        "n_surviving": 7,
+        "heal_rate": 0.75
+      },
+      "fear": {
+        "n_errors_7class": 254,
+        "n_healed": 177,
+        "n_surviving": 77,
+        "heal_rate": 0.6968503937007874
+      },
+      "happy": {
+        "n_errors_7class": 140,
+        "n_healed": 0,
+        "n_surviving": 140,
+        "heal_rate": 0.0
+      },
+      "neutral": {
+        "n_errors_7class": 248,
+        "n_healed": 0,
+        "n_surviving": 248,
+        "heal_rate": 0.0
+      },
+      "sad": {
+        "n_errors_7class": 323,
+        "n_healed": 172,
+        "n_surviving": 151,
+        "heal_rate": 0.5325077399380805
+      },
+      "surprise": {
+        "n_errors_7class": 101,
+        "n_healed": 63,
+        "n_surviving": 38,
+        "heal_rate": 0.6237623762376238
+      },
+      "ALL": {
+        "n_errors_7class": 1321,
+        "n_healed": 567,
+        "n_surviving": 754,
+        "heal_rate": 0.429220287660863
+      }
+    },
+    "surprise_isolated": {
+      "n_true_rows": 415,
+      "sevenclass_tp": 314,
+      "sevenclass_fn": 101,
+      "sevenclass_fp": 87,
+      "sevenclass_precision": 0.7830423940149626,
+      "sevenclass_recall": 0.7566265060240964,
+      "true_rows_landing_ruleA": {
+        "CALM": 17,
+        "NEUTRAL": 21,
+        "DISTRESSED": 377
+      },
+      "true_rows_landing_ruleB": {
+        "CALM": 14,
+        "NEUTRAL": 13,
+        "DISTRESSED": 388
+      },
+      "n_rows_with_class_as_7class_argmax": 401,
+      "argmax_rows_landing_ruleA": {
+        "CALM": 0,
+        "NEUTRAL": 0,
+        "DISTRESSED": 401
+      },
+      "argmax_rows_landing_ruleB": {
+        "CALM": 0,
+        "NEUTRAL": 0,
+        "DISTRESSED": 401
+      }
+    },
+    "disgust_isolated": {
+      "n_true_rows": 56,
+      "sevenclass_tp": 28,
+      "sevenclass_fn": 28,
+      "sevenclass_fp": 11,
+      "sevenclass_precision": 0.717948717948718,
+      "sevenclass_recall": 0.5,
+      "true_rows_landing_ruleA": {
+        "CALM": 4,
+        "NEUTRAL": 3,
+        "DISTRESSED": 49
+      },
+      "true_rows_landing_ruleB": {
+        "CALM": 3,
+        "NEUTRAL": 1,
+        "DISTRESSED": 52
+      },
+      "n_rows_with_class_as_7class_argmax": 39,
+      "argmax_rows_landing_ruleA": {
+        "CALM": 0,
+        "NEUTRAL": 0,
+        "DISTRESSED": 39
+      },
+      "argmax_rows_landing_ruleB": {
+        "CALM": 0,
+        "NEUTRAL": 0,
+        "DISTRESSED": 39
+      }
+    },
+    "ece_ruleB": 0.01256932170664847,
+    "ruleB_reliability": [
+      {
+        "bin": 1,
+        "range": [
+          0.0,
+          0.1
+        ],
+        "mean_conf": 0.0,
+        "emp_acc": 0.0,
+        "n": 0
+      },
+      {
+        "bin": 2,
+        "range": [
+          0.1,
+          0.2
+        ],
+        "mean_conf": 0.0,
+        "emp_acc": 0.0,
+        "n": 0
+      },
+      {
+        "bin": 3,
+        "range": [
+          0.2,
+          0.30000000000000004
+        ],
+        "mean_conf": 0.0,
+        "emp_acc": 0.0,
+        "n": 0
+      },
+      {
+        "bin": 4,
+        "range": [
+          0.30000000000000004,
+          0.4
+        ],
+        "mean_conf": 0.37381241395582454,
+        "emp_acc": 0.4444444444444444,
+        "n": 18
+      },
+      {
+        "bin": 5,
+        "range": [
+          0.4,
+          0.5
+        ],
+        "mean_conf": 0.46541607798775786,
+        "emp_acc": 0.38285714285714284,
+        "n": 175
+      },
+      {
+        "bin": 6,
+        "range": [
+          0.5,
+          0.6000000000000001
+        ],
+        "mean_conf": 0.5504333832481023,
+        "emp_acc": 0.5326876513317191,
+        "n": 413
+      },
+      {
+        "bin": 7,
+        "range": [
+          0.6000000000000001,
+          0.7000000000000001
+        ],
+        "mean_conf": 0.6518330851367127,
+        "emp_acc": 0.6524064171122995,
+        "n": 374
+      },
+      {
+        "bin": 8,
+        "range": [
+          0.7000000000000001,
+          0.8
+        ],
+        "mean_conf": 0.7520668877234651,
+        "emp_acc": 0.7295081967213115,
+        "n": 488
+      },
+      {
+        "bin": 9,
+        "range": [
+          0.8,
+          0.9
+        ],
+        "mean_conf": 0.853216465146004,
+        "emp_acc": 0.8609550561797753,
+        "n": 712
+      },
+      {
+        "bin": 10,
+        "range": [
+          0.9,
+          1.0
+        ],
+        "mean_conf": 0.9507947665414643,
+        "emp_acc": 0.9545777146912704,
+        "n": 1409
+      }
+    ],
+    "ruleB_distressed_rate_raw_sensitivity": 0.5530788520479242,
+    "mapping": {
+      "angry": "DISTRESSED",
+      "disgust": "DISTRESSED",
+      "fear": "DISTRESSED",
+      "happy": "CALM",
+      "neutral": "NEUTRAL",
+      "sad": "DISTRESSED",
+      "surprise": "DISTRESSED"
+    }
+  },
+  "M3": {
+    "A": {
+      "macro_f1": 0.7590616624610244,
+      "per_state": {
+        "CALM": {
+          "precision": 0.798941798941799,
+          "recall": 0.8435754189944135,
+          "f1": 0.8206521739130435,
+          "support": 895
+        },
+        "NEUTRAL": {
+          "precision": 0.6672661870503597,
+          "recall": 0.6883116883116883,
+          "f1": 0.6776255707762557,
+          "support": 1078
+        },
+        "DISTRESSED": {
+          "precision": 0.8002610966057441,
+          "recall": 0.7586633663366337,
+          "f1": 0.7789072426937739,
+          "support": 1616
+        }
+      },
+      "confusion_3x3": [
+        [
+          755,
+          83,
+          57
+        ],
+        [
+          87,
+          742,
+          249
+        ],
+        [
+          103,
+          287,
+          1226
+        ]
+      ],
+      "induced_pred_dist": {
+        "CALM": 0.2633045416550571,
+        "NEUTRAL": 0.309835608804681,
+        "DISTRESSED": 0.4268598495402619
+      },
+      "true_state_dist": {
+        "CALM": 0.24937308442463083,
+        "NEUTRAL": 0.30036221788799106,
+        "DISTRESSED": 0.4502646976873781
+      },
+      "distressed_rate": 0.4268598495402619,
+      "degenerate_collapse": false,
+      "per_source_class_contribution": {
+        "angry": {
+          "CALM": 42,
+          "NEUTRAL": 68,
+          "DISTRESSED": 357
+        },
+        "disgust": {
+          "CALM": 4,
+          "NEUTRAL": 32,
+          "DISTRESSED": 20
+        },
+        "fear": {
+          "CALM": 19,
+          "NEUTRAL": 97,
+          "DISTRESSED": 380
+        },
+        "happy": {
+          "CALM": 755,
+          "NEUTRAL": 83,
+          "DISTRESSED": 57
+        },
+        "neutral": {
+          "CALM": 66,
+          "NEUTRAL": 375,
+          "DISTRESSED": 166
+        },
+        "sad": {
+          "CALM": 42,
+          "NEUTRAL": 122,
+          "DISTRESSED": 489
+        },
+        "surprise": {
+          "CALM": 17,
+          "NEUTRAL": 335,
+          "DISTRESSED": 63
+        }
+      }
+    },
+    "B": {
+      "macro_f1": 0.7579421723437715,
+      "per_state": {
+        "CALM": {
+          "precision": 0.8295454545454546,
+          "recall": 0.8156424581005587,
+          "f1": 0.8225352112676056,
+          "support": 895
+        },
+        "NEUTRAL": {
+          "precision": 0.698249227600412,
+          "recall": 0.6289424860853432,
+          "f1": 0.6617862371888726,
+          "support": 1078
+        },
+        "DISTRESSED": {
+          "precision": 0.761795166858458,
+          "recall": 0.8193069306930693,
+          "f1": 0.789505068574836,
+          "support": 1616
+        }
+      },
+      "confusion_3x3": [
+        [
+          730,
+          78,
+          87
+        ],
+        [
+          73,
+          678,
+          327
+        ],
+        [
+          77,
+          215,
+          1324
+        ]
+      ],
+      "induced_pred_dist": {
+        "CALM": 0.24519364725550294,
+        "NEUTRAL": 0.2705488994148788,
+        "DISTRESSED": 0.4842574533296183
+      },
+      "true_state_dist": {
+        "CALM": 0.24937308442463083,
+        "NEUTRAL": 0.30036221788799106,
+        "DISTRESSED": 0.4502646976873781
+      },
+      "distressed_rate": 0.4842574533296183,
+      "degenerate_collapse": false,
+      "per_source_class_contribution": {
+        "angry": {
+          "CALM": 32,
+          "NEUTRAL": 48,
+          "DISTRESSED": 387
+        },
+        "disgust": {
+          "CALM": 3,
+          "NEUTRAL": 29,
+          "DISTRESSED": 24
+        },
+        "fear": {
+          "CALM": 14,
+          "NEUTRAL": 73,
+          "DISTRESSED": 409
+        },
+        "happy": {
+          "CALM": 730,
+          "NEUTRAL": 78,
+          "DISTRESSED": 87
+        },
+        "neutral": {
+          "CALM": 54,
+          "NEUTRAL": 320,
+          "DISTRESSED": 233
+        },
+        "sad": {
+          "CALM": 31,
+          "NEUTRAL": 94,
+          "DISTRESSED": 528
+        },
+        "surprise": {
+          "CALM": 16,
+          "NEUTRAL": 329,
+          "DISTRESSED": 70
+        }
+      }
+    },
+    "error_decomposition_by_source": {
+      "angry": {
+        "n_errors_7class": 227,
+        "n_healed": 117,
+        "n_surviving": 110,
+        "heal_rate": 0.5154185022026432
+      },
+      "disgust": {
+        "n_errors_7class": 28,
+        "n_healed": 4,
+        "n_surviving": 24,
+        "heal_rate": 0.14285714285714285
+      },
+      "fear": {
+        "n_errors_7class": 254,
+        "n_healed": 138,
+        "n_surviving": 116,
+        "heal_rate": 0.5433070866141733
+      },
+      "happy": {
+        "n_errors_7class": 140,
+        "n_healed": 0,
+        "n_surviving": 140,
+        "heal_rate": 0.0
+      },
+      "neutral": {
+        "n_errors_7class": 248,
+        "n_healed": 16,
+        "n_surviving": 232,
+        "heal_rate": 0.06451612903225806
+      },
+      "sad": {
+        "n_errors_7class": 323,
+        "n_healed": 159,
+        "n_surviving": 164,
+        "heal_rate": 0.49226006191950467
+      },
+      "surprise": {
+        "n_errors_7class": 101,
+        "n_healed": 21,
+        "n_surviving": 80,
+        "heal_rate": 0.2079207920792079
+      },
+      "ALL": {
+        "n_errors_7class": 1321,
+        "n_healed": 455,
+        "n_surviving": 866,
+        "heal_rate": 0.3444360333080999
+      }
+    },
+    "surprise_isolated": {
+      "n_true_rows": 415,
+      "sevenclass_tp": 314,
+      "sevenclass_fn": 101,
+      "sevenclass_fp": 87,
+      "sevenclass_precision": 0.7830423940149626,
+      "sevenclass_recall": 0.7566265060240964,
+      "true_rows_landing_ruleA": {
+        "CALM": 17,
+        "NEUTRAL": 335,
+        "DISTRESSED": 63
+      },
+      "true_rows_landing_ruleB": {
+        "CALM": 16,
+        "NEUTRAL": 329,
+        "DISTRESSED": 70
+      },
+      "n_rows_with_class_as_7class_argmax": 401,
+      "argmax_rows_landing_ruleA": {
+        "CALM": 0,
+        "NEUTRAL": 401,
+        "DISTRESSED": 0
+      },
+      "argmax_rows_landing_ruleB": {
+        "CALM": 0,
+        "NEUTRAL": 384,
+        "DISTRESSED": 17
+      }
+    },
+    "disgust_isolated": {
+      "n_true_rows": 56,
+      "sevenclass_tp": 28,
+      "sevenclass_fn": 28,
+      "sevenclass_fp": 11,
+      "sevenclass_precision": 0.717948717948718,
+      "sevenclass_recall": 0.5,
+      "true_rows_landing_ruleA": {
+        "CALM": 4,
+        "NEUTRAL": 32,
+        "DISTRESSED": 20
+      },
+      "true_rows_landing_ruleB": {
+        "CALM": 3,
+        "NEUTRAL": 29,
+        "DISTRESSED": 24
+      },
+      "n_rows_with_class_as_7class_argmax": 39,
+      "argmax_rows_landing_ruleA": {
+        "CALM": 0,
+        "NEUTRAL": 39,
+        "DISTRESSED": 0
+      },
+      "argmax_rows_landing_ruleB": {
+        "CALM": 0,
+        "NEUTRAL": 31,
+        "DISTRESSED": 8
+      }
+    },
+    "ece_ruleB": 0.011989662019388623,
+    "ruleB_reliability": [
+      {
+        "bin": 1,
+        "range": [
+          0.0,
+          0.1
+        ],
+        "mean_conf": 0.0,
+        "emp_acc": 0.0,
+        "n": 0
+      },
+      {
+        "bin": 2,
+        "range": [
+          0.1,
+          0.2
+        ],
+        "mean_conf": 0.0,
+        "emp_acc": 0.0,
+        "n": 0
+      },
+      {
+        "bin": 3,
+        "range": [
+          0.2,
+          0.30000000000000004
+        ],
+        "mean_conf": 0.0,
+        "emp_acc": 0.0,
+        "n": 0
+      },
+      {
+        "bin": 4,
+        "range": [
+          0.30000000000000004,
+          0.4
+        ],
+        "mean_conf": 0.38048378890515444,
+        "emp_acc": 0.4642857142857143,
+        "n": 28
+      },
+      {
+        "bin": 5,
+        "range": [
+          0.4,
+          0.5
+        ],
+        "mean_conf": 0.46242378488289015,
+        "emp_acc": 0.448559670781893,
+        "n": 243
+      },
+      {
+        "bin": 6,
+        "range": [
+          0.5,
+          0.6000000000000001
+        ],
+        "mean_conf": 0.5495151975648906,
+        "emp_acc": 0.5690298507462687,
+        "n": 536
+      },
+      {
+        "bin": 7,
+        "range": [
+          0.6000000000000001,
+          0.7000000000000001
+        ],
+        "mean_conf": 0.6504460649087127,
+        "emp_acc": 0.6660268714011516,
+        "n": 521
+      },
+      {
+        "bin": 8,
+        "range": [
+          0.7000000000000001,
+          0.8
+        ],
+        "mean_conf": 0.7505497713319222,
+        "emp_acc": 0.7480190174326465,
+        "n": 631
+      },
+      {
+        "bin": 9,
+        "range": [
+          0.8,
+          0.9
+        ],
+        "mean_conf": 0.852374008525757,
+        "emp_acc": 0.8642659279778393,
+        "n": 722
+      },
+      {
+        "bin": 10,
+        "range": [
+          0.9,
+          1.0
+        ],
+        "mean_conf": 0.9399172494407907,
+        "emp_acc": 0.9493392070484582,
+        "n": 908
+      }
+    ],
+    "ruleB_distressed_rate_raw_sensitivity": 0.4296461409863472,
+    "mapping": {
+      "angry": "DISTRESSED",
+      "disgust": "NEUTRAL",
+      "fear": "DISTRESSED",
+      "happy": "CALM",
+      "neutral": "NEUTRAL",
+      "sad": "DISTRESSED",
+      "surprise": "NEUTRAL"
+    }
+  },
+  "M4": {
+    "A": {
+      "macro_f1": 0.7260187518466822,
+      "per_state": {
+        "CALM": {
+          "precision": 0.8150074294205052,
+          "recall": 0.8374045801526717,
+          "f1": 0.8260542168674698,
+          "support": 1310
+        },
+        "NEUTRAL": {
+          "precision": 0.5342261904761905,
+          "recall": 0.5914332784184514,
+          "f1": 0.5613760750586395,
+          "support": 607
+        },
+        "DISTRESSED": {
+          "precision": 0.8160407383831955,
+          "recall": 0.7667464114832536,
+          "f1": 0.7906259636139377,
+          "support": 1672
+        }
+      },
+      "confusion_3x3": [
+        [
+          1097,
+          92,
+          121
+        ],
+        [
+          80,
+          359,
+          168
+        ],
+        [
+          169,
+          221,
+          1282
+        ]
+      ],
+      "induced_pred_dist": {
+        "CALM": 0.3750348286430761,
+        "NEUTRAL": 0.18723878517692952,
+        "DISTRESSED": 0.43772638617999443
+      },
+      "true_state_dist": {
+        "CALM": 0.3650041794371691,
+        "NEUTRAL": 0.1691278907773753,
+        "DISTRESSED": 0.46586792978545555
+      },
+      "distressed_rate": 0.43772638617999443,
+      "degenerate_collapse": false,
+      "per_source_class_contribution": {
+        "angry": {
+          "CALM": 56,
+          "NEUTRAL": 51,
+          "DISTRESSED": 360
+        },
+        "disgust": {
+          "CALM": 5,
+          "NEUTRAL": 3,
+          "DISTRESSED": 48
+        },
+        "fear": {
+          "CALM": 54,
+          "NEUTRAL": 58,
+          "DISTRESSED": 384
+        },
+        "happy": {
+          "CALM": 766,
+          "NEUTRAL": 71,
+          "DISTRESSED": 58
+        },
+        "neutral": {
+          "CALM": 80,
+          "NEUTRAL": 359,
+          "DISTRESSED": 168
+        },
+        "sad": {
+          "CALM": 54,
+          "NEUTRAL": 109,
+          "DISTRESSED": 490
+        },
+        "surprise": {
+          "CALM": 331,
+          "NEUTRAL": 21,
+          "DISTRESSED": 63
+        }
+      }
+    },
+    "B": {
+      "macro_f1": 0.7155540393432829,
+      "per_state": {
+        "CALM": {
+          "precision": 0.8395931142410016,
+          "recall": 0.8190839694656489,
+          "f1": 0.8292117465224111,
+          "support": 1310
+        },
+        "NEUTRAL": {
+          "precision": 0.5755102040816327,
+          "recall": 0.4645799011532125,
+          "f1": 0.5141294439380127,
+          "support": 607
+        },
+        "DISTRESSED": {
+          "precision": 0.7704557935200439,
+          "recall": 0.8391148325358851,
+          "f1": 0.8033209275694245,
+          "support": 1672
+        }
+      },
+      "confusion_3x3": [
+        [
+          1073,
+          71,
+          166
+        ],
+        [
+          73,
+          282,
+          252
+        ],
+        [
+          132,
+          137,
+          1403
+        ]
+      ],
+      "induced_pred_dist": {
+        "CALM": 0.3560880468096963,
+        "NEUTRAL": 0.13652828085817775,
+        "DISTRESSED": 0.5073836723321259
+      },
+      "true_state_dist": {
+        "CALM": 0.3650041794371691,
+        "NEUTRAL": 0.1691278907773753,
+        "DISTRESSED": 0.46586792978545555
+      },
+      "distressed_rate": 0.5073836723321259,
+      "degenerate_collapse": false,
+      "per_source_class_contribution": {
+        "angry": {
+          "CALM": 44,
+          "NEUTRAL": 31,
+          "DISTRESSED": 392
+        },
+        "disgust": {
+          "CALM": 3,
+          "NEUTRAL": 1,
+          "DISTRESSED": 52
+        },
+        "fear": {
+          "CALM": 44,
+          "NEUTRAL": 33,
+          "DISTRESSED": 419
+        },
+        "happy": {
+          "CALM": 750,
+          "NEUTRAL": 55,
+          "DISTRESSED": 90
+        },
+        "neutral": {
+          "CALM": 73,
+          "NEUTRAL": 282,
+          "DISTRESSED": 252
+        },
+        "sad": {
+          "CALM": 41,
+          "NEUTRAL": 72,
+          "DISTRESSED": 540
+        },
+        "surprise": {
+          "CALM": 323,
+          "NEUTRAL": 16,
+          "DISTRESSED": 76
+        }
+      }
+    },
+    "error_decomposition_by_source": {
+      "angry": {
+        "n_errors_7class": 227,
+        "n_healed": 120,
+        "n_surviving": 107,
+        "heal_rate": 0.5286343612334802
+      },
+      "disgust": {
+        "n_errors_7class": 28,
+        "n_healed": 20,
+        "n_surviving": 8,
+        "heal_rate": 0.7142857142857143
+      },
+      "fear": {
+        "n_errors_7class": 254,
+        "n_healed": 142,
+        "n_surviving": 112,
+        "heal_rate": 0.5590551181102362
+      },
+      "happy": {
+        "n_errors_7class": 140,
+        "n_healed": 11,
+        "n_surviving": 129,
+        "heal_rate": 0.07857142857142857
+      },
+      "neutral": {
+        "n_errors_7class": 248,
+        "n_healed": 0,
+        "n_surviving": 248,
+        "heal_rate": 0.0
+      },
+      "sad": {
+        "n_errors_7class": 323,
+        "n_healed": 160,
+        "n_surviving": 163,
+        "heal_rate": 0.4953560371517028
+      },
+      "surprise": {
+        "n_errors_7class": 101,
+        "n_healed": 17,
+        "n_surviving": 84,
+        "heal_rate": 0.16831683168316833
+      },
+      "ALL": {
+        "n_errors_7class": 1321,
+        "n_healed": 470,
+        "n_surviving": 851,
+        "heal_rate": 0.3557910673732021
+      }
+    },
+    "surprise_isolated": {
+      "n_true_rows": 415,
+      "sevenclass_tp": 314,
+      "sevenclass_fn": 101,
+      "sevenclass_fp": 87,
+      "sevenclass_precision": 0.7830423940149626,
+      "sevenclass_recall": 0.7566265060240964,
+      "true_rows_landing_ruleA": {
+        "CALM": 331,
+        "NEUTRAL": 21,
+        "DISTRESSED": 63
+      },
+      "true_rows_landing_ruleB": {
+        "CALM": 323,
+        "NEUTRAL": 16,
+        "DISTRESSED": 76
+      },
+      "n_rows_with_class_as_7class_argmax": 401,
+      "argmax_rows_landing_ruleA": {
+        "CALM": 401,
+        "NEUTRAL": 0,
+        "DISTRESSED": 0
+      },
+      "argmax_rows_landing_ruleB": {
+        "CALM": 380,
+        "NEUTRAL": 0,
+        "DISTRESSED": 21
+      }
+    },
+    "disgust_isolated": {
+      "n_true_rows": 56,
+      "sevenclass_tp": 28,
+      "sevenclass_fn": 28,
+      "sevenclass_fp": 11,
+      "sevenclass_precision": 0.717948717948718,
+      "sevenclass_recall": 0.5,
+      "true_rows_landing_ruleA": {
+        "CALM": 5,
+        "NEUTRAL": 3,
+        "DISTRESSED": 48
+      },
+      "true_rows_landing_ruleB": {
+        "CALM": 3,
+        "NEUTRAL": 1,
+        "DISTRESSED": 52
+      },
+      "n_rows_with_class_as_7class_argmax": 39,
+      "argmax_rows_landing_ruleA": {
+        "CALM": 0,
+        "NEUTRAL": 0,
+        "DISTRESSED": 39
+      },
+      "argmax_rows_landing_ruleB": {
+        "CALM": 0,
+        "NEUTRAL": 0,
+        "DISTRESSED": 39
+      }
+    },
+    "ece_ruleB": 0.010089173963443178,
+    "ruleB_reliability": [
+      {
+        "bin": 1,
+        "range": [
+          0.0,
+          0.1
+        ],
+        "mean_conf": 0.0,
+        "emp_acc": 0.0,
+        "n": 0
+      },
+      {
+        "bin": 2,
+        "range": [
+          0.1,
+          0.2
+        ],
+        "mean_conf": 0.0,
+        "emp_acc": 0.0,
+        "n": 0
+      },
+      {
+        "bin": 3,
+        "range": [
+          0.2,
+          0.30000000000000004
+        ],
+        "mean_conf": 0.0,
+        "emp_acc": 0.0,
+        "n": 0
+      },
+      {
+        "bin": 4,
+        "range": [
+          0.30000000000000004,
+          0.4
+        ],
+        "mean_conf": 0.3741502251768775,
+        "emp_acc": 0.4642857142857143,
+        "n": 28
+      },
+      {
+        "bin": 5,
+        "range": [
+          0.4,
+          0.5
+        ],
+        "mean_conf": 0.46281359501229613,
+        "emp_acc": 0.4015151515151515,
+        "n": 264
+      },
+      {
+        "bin": 6,
+        "range": [
+          0.5,
+          0.6000000000000001
+        ],
+        "mean_conf": 0.5504092439955047,
+        "emp_acc": 0.555793991416309,
+        "n": 466
+      },
+      {
+        "bin": 7,
+        "range": [
+          0.6000000000000001,
+          0.7000000000000001
+        ],
+        "mean_conf": 0.6515300276058275,
+        "emp_acc": 0.6613995485327314,
+        "n": 443
+      },
+      {
+        "bin": 8,
+        "range": [
+          0.7000000000000001,
+          0.8
+        ],
+        "mean_conf": 0.7512501959991155,
+        "emp_acc": 0.7534246575342466,
+        "n": 584
+      },
+      {
+        "bin": 9,
+        "range": [
+          0.8,
+          0.9
+        ],
+        "mean_conf": 0.8523579526422981,
+        "emp_acc": 0.8598901098901099,
+        "n": 728
+      },
+      {
+        "bin": 10,
+        "range": [
+          0.9,
+          1.0
+        ],
+        "mean_conf": 0.9452893341125771,
+        "emp_acc": 0.9488847583643123,
+        "n": 1076
+      }
+    ],
+    "ruleB_distressed_rate_raw_sensitivity": 0.44106993591529675,
+    "mapping": {
+      "angry": "DISTRESSED",
+      "disgust": "DISTRESSED",
+      "fear": "DISTRESSED",
+      "happy": "CALM",
+      "neutral": "NEUTRAL",
+      "sad": "DISTRESSED",
+      "surprise": "CALM"
+    }
+  },
+  "seven_class_macro_f1_val": 0.6120986924907751,
+  "T": 5.727,
+  "n_rows": 3589,
+  "generated_by": "ml/fer/scripts/b3_mapping_analysis.py",
+  "input_file": "/mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/nb04_val_probabilities.csv",
+  "states_order": [
+    "CALM",
+    "NEUTRAL",
+    "DISTRESSED"
+  ],
+  "seven_class_order": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad",
+    "surprise"
+  ],
+  "note": "B3-A consequence analysis, validation-only. Enumerates 4 candidate mappings; does NOT rank or select one."
+}

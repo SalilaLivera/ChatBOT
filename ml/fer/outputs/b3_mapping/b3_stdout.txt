@@ -1,0 +1,449 @@
+------------------------------------------------------------------------------
+GUARDS
+------------------------------------------------------------------------------
+guard 0 denylist       : PASS (path clear: nb04_val_probabilities.csv)
+guard 1 row count 3589 : PASS
+guard 2 split (PublicTest_ prefix on every basename) : PASS
+guard 3 true_class == 7 expected classes : PASS
+guard 4 probs in [0,1], rowsums ~1 (max dev 1.82e-07) : PASS
+
+------------------------------------------------------------------------------
+CALIBRATION
+------------------------------------------------------------------------------
+T = 5.727
+argmax(p_cal) vs argmax(p_raw) mismatches: 0 (expected 0)
+p_cal rowsum max dev: 4.44e-16
+
+------------------------------------------------------------------------------
+7-CLASS BASELINE CONTEXT (validation)
+------------------------------------------------------------------------------
+7-class macro-F1 (argmax predictions in file): 0.6121
+(all 3-state figures below are to be read against this number)
+
+------------------------------------------------------------------------------
+CANDIDATE M1   mapping: {'angry': 'DISTRESSED', 'disgust': 'DISTRESSED', 'fear': 'DISTRESSED', 'happy': 'CALM', 'neutral': 'NEUTRAL', 'sad': 'DISTRESSED', 'surprise': 'NEUTRAL'}
+------------------------------------------------------------------------------
+  Rule A
+  macro-F1 (3-state): 0.7624
+  confusion (rows=true, cols=pred):
+                    CALM     NEUTRAL  DISTRESSED
+CALM                 755          82          58
+NEUTRAL               83         708         231
+DISTRESSED           107         283        1282
+  per-state precision / recall / f1 / support:
+    CALM        p=0.7989 r=0.8436 f1=0.8207 support=895
+    NEUTRAL     p=0.6598 r=0.6928 f1=0.6759 support=1022
+    DISTRESSED  p=0.8160 r=0.7667 f1=0.7906 support=1672
+  induced predicted-state distribution:
+    CALM        0.2633
+    NEUTRAL     0.2990
+    DISTRESSED  0.4377
+  true-state distribution (this candidate):
+    CALM        0.2494
+    NEUTRAL     0.2848
+    DISTRESSED  0.4659
+  DISTRESSED rate: 0.4377
+  degenerate_collapse: False
+  per-source-class -> predicted state (counts):
+                    CALM     NEUTRAL  DISTRESSED
+    angry             42          65         360
+    disgust            4           4          48
+    fear              19          93         384
+    happy            755          82          58
+    neutral           66         373         168
+    sad               42         121         490
+    surprise          17         335          63
+
+  Rule B
+  macro-F1 (3-state): 0.7614
+  confusion (rows=true, cols=pred):
+                    CALM     NEUTRAL  DISTRESSED
+CALM                 731          73          91
+NEUTRAL               70         636         316
+DISTRESSED            78         202        1392
+  per-state precision / recall / f1 / support:
+    CALM        p=0.8316 r=0.8168 f1=0.8241 support=895
+    NEUTRAL     p=0.6981 r=0.6223 f1=0.6580 support=1022
+    DISTRESSED  p=0.7738 r=0.8325 f1=0.8021 support=1672
+  induced predicted-state distribution:
+    CALM        0.2449
+    NEUTRAL     0.2538
+    DISTRESSED  0.5013
+  true-state distribution (this candidate):
+    CALM        0.2494
+    NEUTRAL     0.2848
+    DISTRESSED  0.4659
+  DISTRESSED rate: 0.5013
+  degenerate_collapse: False
+  per-source-class -> predicted state (counts):
+                    CALM     NEUTRAL  DISTRESSED
+    angry             32          45         390
+    disgust            3           2          51
+    fear              13          67         416
+    happy            731          73          91
+    neutral           54         309         244
+    sad               30          88         535
+    surprise          16         327          72
+
+  ERROR DECOMPOSITION (7-class error -> HEALED / SURVIVING under merge):
+    source      n_err_7c   healed  surviving  heal_rate
+    angry            227      120        107     0.5286
+    disgust           28       20          8     0.7143
+    fear             254      142        112     0.5591
+    happy            140        0        140     0.0000
+    neutral          248       14        234     0.0565
+    sad              323      160        163     0.4954
+    surprise         101       21         80     0.2079
+    ALL             1321      477        844     0.3611
+
+  ISOLATED: surprise
+    n_true_rows=415  7-class tp=314 fn=101 fp=87  precision=0.7830 recall=0.7566
+    true rows land (counts CALM/NEUTRAL/DISTRESSED)  Rule A: [17, 335, 63]   Rule B: [16, 327, 72]
+    n rows with this class as 7-class argmax: 401
+    those argmax rows land (counts)  Rule A: [0, 401, 0]   Rule B: [0, 380, 21]
+
+  ISOLATED: disgust
+    n_true_rows=56  7-class tp=28 fn=28 fp=11  precision=0.7179 recall=0.5000
+    true rows land (counts CALM/NEUTRAL/DISTRESSED)  Rule A: [4, 4, 48]   Rule B: [3, 2, 51]
+    n rows with this class as 7-class argmax: 39
+    those argmax rows land (counts)  Rule A: [0, 0, 39]   Rule B: [0, 0, 39]
+
+  ECE (Rule B, p_cal, 10 equal-width bins): 0.0166
+    bin   range          mean_conf    emp_acc      n       
+    1     [0.00,0.10]     0.0000       0.0000       0       
+    2     [0.10,0.20]     0.0000       0.0000       0       
+    3     [0.20,0.30]     0.0000       0.0000       0       
+    4     [0.30,0.40]     0.3813       0.5926       27      
+    5     [0.40,0.50]     0.4651       0.3911       225     
+    6     [0.50,0.60]     0.5501       0.5731       499     
+    7     [0.60,0.70]     0.6511       0.6598       482     
+    8     [0.70,0.80]     0.7515       0.7407       594     
+    9     [0.80,0.90]     0.8520       0.8677       718     
+    10    [0.90,1.00]     0.9425       0.9464       1044    
+
+  SENSITIVITY (Rule B DISTRESSED rate on RAW/uncalibrated probs): 0.4405
+    (compare to calibrated Rule B DISTRESSED rate 0.5013 and Rule A 0.4377)
+
+------------------------------------------------------------------------------
+CANDIDATE M2   mapping: {'angry': 'DISTRESSED', 'disgust': 'DISTRESSED', 'fear': 'DISTRESSED', 'happy': 'CALM', 'neutral': 'NEUTRAL', 'sad': 'DISTRESSED', 'surprise': 'DISTRESSED'}
+------------------------------------------------------------------------------
+  Rule A
+  macro-F1 (3-state): 0.7433
+  confusion (rows=true, cols=pred):
+                    CALM     NEUTRAL  DISTRESSED
+CALM                 755          71          69
+NEUTRAL               66         359         182
+DISTRESSED           124         242        1721
+  per-state precision / recall / f1 / support:
+    CALM        p=0.7989 r=0.8436 f1=0.8207 support=895
+    NEUTRAL     p=0.5342 r=0.5914 f1=0.5614 support=607
+    DISTRESSED  p=0.8727 r=0.8246 f1=0.8480 support=2087
+  induced predicted-state distribution:
+    CALM        0.2633
+    NEUTRAL     0.1872
+    DISTRESSED  0.5495
+  true-state distribution (this candidate):
+    CALM        0.2494
+    NEUTRAL     0.1691
+    DISTRESSED  0.5815
+  DISTRESSED rate: 0.5495
+  degenerate_collapse: False
+  per-source-class -> predicted state (counts):
+                    CALM     NEUTRAL  DISTRESSED
+    angry             42          51         374
+    disgust            4           3          49
+    fear              19          58         419
+    happy            755          71          69
+    neutral           66         359         182
+    sad               42         109         502
+    surprise          17          21         377
+
+  Rule B
+  macro-F1 (3-state): 0.7267
+  confusion (rows=true, cols=pred):
+                    CALM     NEUTRAL  DISTRESSED
+CALM                 722          54         119
+NEUTRAL               53         268         286
+DISTRESSED            87         137        1863
+  per-state precision / recall / f1 / support:
+    CALM        p=0.8376 r=0.8067 f1=0.8219 support=895
+    NEUTRAL     p=0.5839 r=0.4415 f1=0.5028 support=607
+    DISTRESSED  p=0.8214 r=0.8927 f1=0.8556 support=2087
+  induced predicted-state distribution:
+    CALM        0.2402
+    NEUTRAL     0.1279
+    DISTRESSED  0.6319
+  true-state distribution (this candidate):
+    CALM        0.2494
+    NEUTRAL     0.1691
+    DISTRESSED  0.5815
+  DISTRESSED rate: 0.6319
+  degenerate_collapse: False
+  per-source-class -> predicted state (counts):
+                    CALM     NEUTRAL  DISTRESSED
+    angry             31          28         408
+    disgust            3           1          52
+    fear              12          31         453
+    happy            722          54         119
+    neutral           53         268         286
+    sad               27          64         562
+    surprise          14          13         388
+
+  ERROR DECOMPOSITION (7-class error -> HEALED / SURVIVING under merge):
+    source      n_err_7c   healed  surviving  heal_rate
+    angry            227      134         93     0.5903
+    disgust           28       21          7     0.7500
+    fear             254      177         77     0.6969
+    happy            140        0        140     0.0000
+    neutral          248        0        248     0.0000
+    sad              323      172        151     0.5325
+    surprise         101       63         38     0.6238
+    ALL             1321      567        754     0.4292
+
+  ISOLATED: surprise
+    n_true_rows=415  7-class tp=314 fn=101 fp=87  precision=0.7830 recall=0.7566
+    true rows land (counts CALM/NEUTRAL/DISTRESSED)  Rule A: [17, 21, 377]   Rule B: [14, 13, 388]
+    n rows with this class as 7-class argmax: 401
+    those argmax rows land (counts)  Rule A: [0, 0, 401]   Rule B: [0, 0, 401]
+
+  ISOLATED: disgust
+    n_true_rows=56  7-class tp=28 fn=28 fp=11  precision=0.7179 recall=0.5000
+    true rows land (counts CALM/NEUTRAL/DISTRESSED)  Rule A: [4, 3, 49]   Rule B: [3, 1, 52]
+    n rows with this class as 7-class argmax: 39
+    those argmax rows land (counts)  Rule A: [0, 0, 39]   Rule B: [0, 0, 39]
+
+  ECE (Rule B, p_cal, 10 equal-width bins): 0.0126
+    bin   range          mean_conf    emp_acc      n       
+    1     [0.00,0.10]     0.0000       0.0000       0       
+    2     [0.10,0.20]     0.0000       0.0000       0       
+    3     [0.20,0.30]     0.0000       0.0000       0       
+    4     [0.30,0.40]     0.3738       0.4444       18      
+    5     [0.40,0.50]     0.4654       0.3829       175     
+    6     [0.50,0.60]     0.5504       0.5327       413     
+    7     [0.60,0.70]     0.6518       0.6524       374     
+    8     [0.70,0.80]     0.7521       0.7295       488     
+    9     [0.80,0.90]     0.8532       0.8610       712     
+    10    [0.90,1.00]     0.9508       0.9546       1409    
+
+  SENSITIVITY (Rule B DISTRESSED rate on RAW/uncalibrated probs): 0.5531
+    (compare to calibrated Rule B DISTRESSED rate 0.6319 and Rule A 0.5495)
+
+------------------------------------------------------------------------------
+CANDIDATE M3   mapping: {'angry': 'DISTRESSED', 'disgust': 'NEUTRAL', 'fear': 'DISTRESSED', 'happy': 'CALM', 'neutral': 'NEUTRAL', 'sad': 'DISTRESSED', 'surprise': 'NEUTRAL'}
+------------------------------------------------------------------------------
+  Rule A
+  macro-F1 (3-state): 0.7591
+  confusion (rows=true, cols=pred):
+                    CALM     NEUTRAL  DISTRESSED
+CALM                 755          83          57
+NEUTRAL               87         742         249
+DISTRESSED           103         287        1226
+  per-state precision / recall / f1 / support:
+    CALM        p=0.7989 r=0.8436 f1=0.8207 support=895
+    NEUTRAL     p=0.6673 r=0.6883 f1=0.6776 support=1078
+    DISTRESSED  p=0.8003 r=0.7587 f1=0.7789 support=1616
+  induced predicted-state distribution:
+    CALM        0.2633
+    NEUTRAL     0.3098
+    DISTRESSED  0.4269
+  true-state distribution (this candidate):
+    CALM        0.2494
+    NEUTRAL     0.3004
+    DISTRESSED  0.4503
+  DISTRESSED rate: 0.4269
+  degenerate_collapse: False
+  per-source-class -> predicted state (counts):
+                    CALM     NEUTRAL  DISTRESSED
+    angry             42          68         357
+    disgust            4          32          20
+    fear              19          97         380
+    happy            755          83          57
+    neutral           66         375         166
+    sad               42         122         489
+    surprise          17         335          63
+
+  Rule B
+  macro-F1 (3-state): 0.7579
+  confusion (rows=true, cols=pred):
+                    CALM     NEUTRAL  DISTRESSED
+CALM                 730          78          87
+NEUTRAL               73         678         327
+DISTRESSED            77         215        1324
+  per-state precision / recall / f1 / support:
+    CALM        p=0.8295 r=0.8156 f1=0.8225 support=895
+    NEUTRAL     p=0.6982 r=0.6289 f1=0.6618 support=1078
+    DISTRESSED  p=0.7618 r=0.8193 f1=0.7895 support=1616
+  induced predicted-state distribution:
+    CALM        0.2452
+    NEUTRAL     0.2705
+    DISTRESSED  0.4843
+  true-state distribution (this candidate):
+    CALM        0.2494
+    NEUTRAL     0.3004
+    DISTRESSED  0.4503
+  DISTRESSED rate: 0.4843
+  degenerate_collapse: False
+  per-source-class -> predicted state (counts):
+                    CALM     NEUTRAL  DISTRESSED
+    angry             32          48         387
+    disgust            3          29          24
+    fear              14          73         409
+    happy            730          78          87
+    neutral           54         320         233
+    sad               31          94         528
+    surprise          16         329          70
+
+  ERROR DECOMPOSITION (7-class error -> HEALED / SURVIVING under merge):
+    source      n_err_7c   healed  surviving  heal_rate
+    angry            227      117        110     0.5154
+    disgust           28        4         24     0.1429
+    fear             254      138        116     0.5433
+    happy            140        0        140     0.0000
+    neutral          248       16        232     0.0645
+    sad              323      159        164     0.4923
+    surprise         101       21         80     0.2079
+    ALL             1321      455        866     0.3444
+
+  ISOLATED: surprise
+    n_true_rows=415  7-class tp=314 fn=101 fp=87  precision=0.7830 recall=0.7566
+    true rows land (counts CALM/NEUTRAL/DISTRESSED)  Rule A: [17, 335, 63]   Rule B: [16, 329, 70]
+    n rows with this class as 7-class argmax: 401
+    those argmax rows land (counts)  Rule A: [0, 401, 0]   Rule B: [0, 384, 17]
+
+  ISOLATED: disgust
+    n_true_rows=56  7-class tp=28 fn=28 fp=11  precision=0.7179 recall=0.5000
+    true rows land (counts CALM/NEUTRAL/DISTRESSED)  Rule A: [4, 32, 20]   Rule B: [3, 29, 24]
+    n rows with this class as 7-class argmax: 39
+    those argmax rows land (counts)  Rule A: [0, 39, 0]   Rule B: [0, 31, 8]
+
+  ECE (Rule B, p_cal, 10 equal-width bins): 0.0120
+    bin   range          mean_conf    emp_acc      n       
+    1     [0.00,0.10]     0.0000       0.0000       0       
+    2     [0.10,0.20]     0.0000       0.0000       0       
+    3     [0.20,0.30]     0.0000       0.0000       0       
+    4     [0.30,0.40]     0.3805       0.4643       28      
+    5     [0.40,0.50]     0.4624       0.4486       243     
+    6     [0.50,0.60]     0.5495       0.5690       536     
+    7     [0.60,0.70]     0.6504       0.6660       521     
+    8     [0.70,0.80]     0.7505       0.7480       631     
+    9     [0.80,0.90]     0.8524       0.8643       722     
+    10    [0.90,1.00]     0.9399       0.9493       908     
+
+  SENSITIVITY (Rule B DISTRESSED rate on RAW/uncalibrated probs): 0.4296
+    (compare to calibrated Rule B DISTRESSED rate 0.4843 and Rule A 0.4269)
+
+------------------------------------------------------------------------------
+CANDIDATE M4   mapping: {'angry': 'DISTRESSED', 'disgust': 'DISTRESSED', 'fear': 'DISTRESSED', 'happy': 'CALM', 'neutral': 'NEUTRAL', 'sad': 'DISTRESSED', 'surprise': 'CALM'}
+------------------------------------------------------------------------------
+  Rule A
+  macro-F1 (3-state): 0.7260
+  confusion (rows=true, cols=pred):
+                    CALM     NEUTRAL  DISTRESSED
+CALM                1097          92         121
+NEUTRAL               80         359         168
+DISTRESSED           169         221        1282
+  per-state precision / recall / f1 / support:
+    CALM        p=0.8150 r=0.8374 f1=0.8261 support=1310
+    NEUTRAL     p=0.5342 r=0.5914 f1=0.5614 support=607
+    DISTRESSED  p=0.8160 r=0.7667 f1=0.7906 support=1672
+  induced predicted-state distribution:
+    CALM        0.3750
+    NEUTRAL     0.1872
+    DISTRESSED  0.4377
+  true-state distribution (this candidate):
+    CALM        0.3650
+    NEUTRAL     0.1691
+    DISTRESSED  0.4659
+  DISTRESSED rate: 0.4377
+  degenerate_collapse: False
+  per-source-class -> predicted state (counts):
+                    CALM     NEUTRAL  DISTRESSED
+    angry             56          51         360
+    disgust            5           3          48
+    fear              54          58         384
+    happy            766          71          58
+    neutral           80         359         168
+    sad               54         109         490
+    surprise         331          21          63
+
+  Rule B
+  macro-F1 (3-state): 0.7156
+  confusion (rows=true, cols=pred):
+                    CALM     NEUTRAL  DISTRESSED
+CALM                1073          71         166
+NEUTRAL               73         282         252
+DISTRESSED           132         137        1403
+  per-state precision / recall / f1 / support:
+    CALM        p=0.8396 r=0.8191 f1=0.8292 support=1310
+    NEUTRAL     p=0.5755 r=0.4646 f1=0.5141 support=607
+    DISTRESSED  p=0.7705 r=0.8391 f1=0.8033 support=1672
+  induced predicted-state distribution:
+    CALM        0.3561
+    NEUTRAL     0.1365
+    DISTRESSED  0.5074
+  true-state distribution (this candidate):
+    CALM        0.3650
+    NEUTRAL     0.1691
+    DISTRESSED  0.4659
+  DISTRESSED rate: 0.5074
+  degenerate_collapse: False
+  per-source-class -> predicted state (counts):
+                    CALM     NEUTRAL  DISTRESSED
+    angry             44          31         392
+    disgust            3           1          52
+    fear              44          33         419
+    happy            750          55          90
+    neutral           73         282         252
+    sad               41          72         540
+    surprise         323          16          76
+
+  ERROR DECOMPOSITION (7-class error -> HEALED / SURVIVING under merge):
+    source      n_err_7c   healed  surviving  heal_rate
+    angry            227      120        107     0.5286
+    disgust           28       20          8     0.7143
+    fear             254      142        112     0.5591
+    happy            140       11        129     0.0786
+    neutral          248        0        248     0.0000
+    sad              323      160        163     0.4954
+    surprise         101       17         84     0.1683
+    ALL             1321      470        851     0.3558
+
+  ISOLATED: surprise
+    n_true_rows=415  7-class tp=314 fn=101 fp=87  precision=0.7830 recall=0.7566
+    true rows land (counts CALM/NEUTRAL/DISTRESSED)  Rule A: [331, 21, 63]   Rule B: [323, 16, 76]
+    n rows with this class as 7-class argmax: 401
+    those argmax rows land (counts)  Rule A: [401, 0, 0]   Rule B: [380, 0, 21]
+
+  ISOLATED: disgust
+    n_true_rows=56  7-class tp=28 fn=28 fp=11  precision=0.7179 recall=0.5000
+    true rows land (counts CALM/NEUTRAL/DISTRESSED)  Rule A: [5, 3, 48]   Rule B: [3, 1, 52]
+    n rows with this class as 7-class argmax: 39
+    those argmax rows land (counts)  Rule A: [0, 0, 39]   Rule B: [0, 0, 39]
+
+  ECE (Rule B, p_cal, 10 equal-width bins): 0.0101
+    bin   range          mean_conf    emp_acc      n       
+    1     [0.00,0.10]     0.0000       0.0000       0       
+    2     [0.10,0.20]     0.0000       0.0000       0       
+    3     [0.20,0.30]     0.0000       0.0000       0       
+    4     [0.30,0.40]     0.3742       0.4643       28      
+    5     [0.40,0.50]     0.4628       0.4015       264     
+    6     [0.50,0.60]     0.5504       0.5558       466     
+    7     [0.60,0.70]     0.6515       0.6614       443     
+    8     [0.70,0.80]     0.7513       0.7534       584     
+    9     [0.80,0.90]     0.8524       0.8599       728     
+    10    [0.90,1.00]     0.9453       0.9489       1076    
+
+  SENSITIVITY (Rule B DISTRESSED rate on RAW/uncalibrated probs): 0.4411
+    (compare to calibrated Rule B DISTRESSED rate 0.5074 and Rule A 0.4377)
+
+------------------------------------------------------------------------------
+ARTIFACTS WRITTEN
+------------------------------------------------------------------------------
+  /mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/b3_mapping/b3_mapping_summary.json
+  /mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/b3_mapping/b3_candidate_comparison.csv
+  /mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/b3_mapping/b3_error_decomposition.csv
+  /mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/b3_mapping/plots/induced_distribution_bars.png
+  /mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/b3_mapping/plots/distressed_rate_ruleA_vs_ruleB.png
+  /mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/b3_mapping/plots/confusion_3x3_grid.png
+
+Done. B3-A measured consequences of 4 candidate mappings. No mapping selected.
