@@ -1,0 +1,137 @@
+[
+  {
+    "fixture": "fer_face_48_jpeg.json",
+    "http_status": 200,
+    "bytes": 438
+  },
+  {
+    "fixture": "fer_face_64_png.json",
+    "http_status": 200,
+    "bytes": 438
+  },
+  {
+    "fixture": "fer_face_96_jpeg.json",
+    "http_status": 200,
+    "bytes": 438
+  },
+  {
+    "fixture": "fer_face_96_png.json",
+    "http_status": 200,
+    "bytes": 438
+  },
+  {
+    "fixture": "fer_face_128_bmp.json",
+    "http_status": 200,
+    "bytes": 438
+  },
+  {
+    "fixture": "fer_face_160_webp.json",
+    "http_status": 200,
+    "bytes": 436
+  },
+  {
+    "fixture": "fer_face_96_bmp.json",
+    "http_status": 200,
+    "bytes": 438
+  },
+  {
+    "fixture": "fer_face_72_png.json",
+    "http_status": 200,
+    "bytes": 438
+  },
+  {
+    "fixture": "fer_face_200_jpeg.json",
+    "http_status": 200,
+    "bytes": 436
+  },
+  {
+    "fixture": "fer_face_96_webp.json",
+    "http_status": 200,
+    "bytes": 438
+  },
+  {
+    "fixture": "fer_face_50_jpeg.json",
+    "http_status": 200,
+    "bytes": 438
+  },
+  {
+    "fixture": "fer_face_112_png.json",
+    "http_status": 200,
+    "bytes": 436
+  },
+  {
+    "fixture": "fer_face_96_jpeg_b.json",
+    "http_status": 200,
+    "bytes": 436
+  },
+  {
+    "fixture": "fer_face_96_jpeg_c.json",
+    "http_status": 200,
+    "bytes": 433
+  },
+  {
+    "fixture": "fer_face_36_png.json",
+    "http_status": 200,
+    "bytes": 437
+  },
+  {
+    "fixture": "fer_face_256_jpeg.json",
+    "http_status": 200,
+    "bytes": 436
+  },
+  {
+    "fixture": "fer_noise_96_png.json",
+    "http_status": 200,
+    "bytes": 438
+  },
+  {
+    "fixture": "fer_flat_gray_96_png.json",
+    "http_status": 200,
+    "bytes": 438
+  },
+  {
+    "fixture": "fer_gradient_96_jpeg.json",
+    "http_status": 200,
+    "bytes": 438
+  },
+  {
+    "fixture": "fer_edge_too_small_8px.json",
+    "http_status": 400,
+    "bytes": 97
+  },
+  {
+    "fixture": "fer_edge_too_small_12px.json",
+    "http_status": 400,
+    "bytes": 97
+  },
+  {
+    "fixture": "fer_edge_too_large_gt8mb.json",
+    "http_status": 413,
+    "bytes": 100
+  },
+  {
+    "fixture": "fer_edge_non_image_textfile.json",
+    "http_status": 415,
+    "bytes": 109
+  },
+  {
+    "fixture": "fer_edge_unsupported_gif.json",
+    "http_status": 415,
+    "bytes": 109
+  },
+  {
+    "fixture": "fer_edge_missing_image_field.json",
+    "http_status": 400,
+    "bytes": 84
+  },
+  {
+    "fixture": "fer_edge_empty_multipart.json",
+    "http_status": 400,
+    "bytes": 84
+  },
+  {
+    "fixture": "fer_edge_empty_image_bytes.json",
+    "http_status": 400,
+    "bytes": 84
+  }
+]
