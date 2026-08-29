@@ -1,0 +1,8 @@
+[
+  {
+    "fixture": "fer_edge_truncated_identifiable_jpeg.json",
+    "http_status": 400,
+    "bytes": 97,
+    "note": "C2 addition — the 8 C0 edge fixtures did not include an identifiable-but-corrupt case. Captured live from the C1 fer container: a real Pillow-generated JPEG truncated mid-scan-data, which Pillow can identify (magic bytes) but not .load(). Confirms invalid_image (400), per plan §6.1.1."
+  }
+]
