@@ -4,6 +4,8 @@ import {
   FER_MAPPED_CODES,
   SENTIMENT_ALL_ERROR_CODES,
   SENTIMENT_MAPPED_CODES,
+  FUSION_ALL_ERROR_CODES,
+  FUSION_MAPPED_CODES,
 } from '../../../src/errors/upstreamMap.js';
 
 describe('upstreamMap exhaustiveness (§6 — a code added upstream must fail a test, not fall through)', () => {
@@ -14,5 +16,9 @@ describe('upstreamMap exhaustiveness (§6 — a code added upstream must fail a 
   it('covers every sentiment errors.py ALL_ERROR_CODES entry, including the unreachable text_too_long', () => {
     expect(SENTIMENT_MAPPED_CODES).toEqual(SENTIMENT_ALL_ERROR_CODES);
     expect(SENTIMENT_MAPPED_CODES.has('text_too_long')).toBe(true);
+  });
+
+  it('covers every fusion errors.py ALL_ERROR_CODES entry', () => {
+    expect(FUSION_MAPPED_CODES).toEqual(FUSION_ALL_ERROR_CODES);
   });
 });

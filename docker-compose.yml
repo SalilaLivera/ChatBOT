@@ -1,11 +1,9 @@
-# MaternaLink — Phase C1 stack: backend + fer + sentiment + postgres.
-#
-# `fusion` is a commented-out placeholder ONLY — dev/fusion-service/ does not
-# exist yet, it is built in C4. A live entry here would break `docker compose
-# up`, which is itself a C1 exit criterion (C1_PLAN.md §3, deviation D-1).
+# MaternaLink — backend + fer + sentiment + fusion + postgres.
 #
 # All configuration comes from an untracked .env (see .env.example). No
-# secret and no fusion parameter appears in this file.
+# secret and no fusion parameter VALUE appears in this file — the fusion
+# parameters are injected at container start from .env (§7A.7); this file
+# only names the environment variable keys, never a literal value.
 
 services:
   backend:
@@ -19,6 +17,8 @@ services:
       fer:
         condition: service_healthy
       sentiment:
+        condition: service_healthy
+      fusion:
         condition: service_healthy
       postgres:
         condition: service_healthy
@@ -83,10 +83,24 @@ services:
     # No volume — C1 defines no persistence yet (migrations land in C7). No
     # bind mount or tmpfs anywhere a face image could be written (§7A.8).
 
-  # fusion:
-  #   Placeholder only. dev/fusion-service/ is built in C4 — the compose
-  #   service is added then, wrapping dev/fusion/ (the pure-Python library)
-  #   behind the HTTP contract described in BACKEND_IMPLEMENTATION_PLAN.md §4.
-  #   Fusion parameters (W_face, W_text, tau_*) are injected at container
-  #   start as environment variables, never baked into the image (§7A.7) —
-  #   this compose file will never contain a fusion parameter literal.
+  fusion:
+    build:
+      context: .
+      dockerfile: docker/fusion.Dockerfile
+    env_file: .env
+    environment:
+      FUSION_DEBUG: ${FUSION_DEBUG:-0}
+      NODE_ENV: ${NODE_ENV:-development}
+    ports:
+      - "9000:9000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:9000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      # Pure arithmetic, no model to load — cold start is expected to be
+      # near-instant, but this is an ESTIMATE, not measured (consistent with
+      # the other services' provisional grace periods; set for real in C8.3).
+      start_period: 10s
+    # No volume, bind mount or tmpfs anywhere (§7A.8) — nothing here ever
+    # touches a face image or message text; it only sees derived evidence.

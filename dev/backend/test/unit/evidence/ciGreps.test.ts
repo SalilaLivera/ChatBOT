@@ -9,7 +9,6 @@ import { describe, expect, it } from 'vitest';
 const toPosix = (p: string): string => p.replace(/\\/g, '/');
 const REPO_ROOT = toPosix(join(__dirname, '..', '..', '..', '..', '..'));
 const BACKEND_SRC = toPosix(join(__dirname, '..', '..', '..', 'src'));
-const BACKEND_TEST = toPosix(join(__dirname, '..', '..'));
 
 /**
  * §4 / Part D — the class->state mapping table must appear EXACTLY ONCE in
@@ -103,37 +102,12 @@ describe('⛔ no route may import faceEvidence.ts in this phase', () => {
   });
 });
 
-describe('⛔ no fusion parameter symbol anywhere in src/ or test/', () => {
-  // Symbols built by concatenation, not as literal substrings, so this
-  // file — which legitimately names them for the grep target — is not
-  // itself a false positive when the same grep is run over test/.
-  const FUSION_PARAM_SYMBOLS = [
-    ['W_', 'face'].join(''),
-    ['W_', 'text'].join(''),
-    ['tau_', 'face_min'].join(''),
-    ['tau_', 'text_min'].join(''),
-    ['tau_', 'fusion_min'].join(''),
-    ['tau_', 'distress'].join(''),
-  ];
-
-  it.each(FUSION_PARAM_SYMBOLS)('%s does not appear in dev/backend/src or dev/backend/test', (symbol) => {
-    let matched = false;
-    try {
-      execFileSync('grep', [
-        '-rln',
-        symbol,
-        '--include=*.ts',
-        '--exclude-dir=node_modules',
-        '--exclude-dir=dist',
-        '--exclude=ciGreps.test.ts',
-        BACKEND_SRC,
-        BACKEND_TEST,
-      ]);
-      matched = true;
-    } catch (err) {
-      const asExecError = err as { status?: number };
-      if (asExecError.status !== 1) throw err;
-    }
-    expect(matched).toBe(false);
-  });
-});
+// ⛔ Fusion parameter guard (O-7): superseded here by
+// test/unit/params/o7Guard.test.ts as of C4. C3's blanket "the six symbol
+// names may never appear in src/ or test/" guard was correct for C3, where
+// nothing legitimately named them — but C4's entire job is injecting these
+// symbols via env-var names (FUSION_W_FACE), REQUIRED_SYMBOLS, and prose
+// explaining the placeholder choice, which a blanket ban cannot tell apart
+// from an actual assigned value. The O-7 guard catches the assignment
+// specifically (`W_face = 0.5`, `"tau_distress": 0.6`) while permitting
+// mentions. See C4_PLAN.md §4.

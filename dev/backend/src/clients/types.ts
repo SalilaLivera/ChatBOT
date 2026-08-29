@@ -103,6 +103,47 @@ export interface SentimentPredictResponse {
 }
 
 // ---------------------------------------------------------------------------
+// Fusion
+// ---------------------------------------------------------------------------
+
+export const FUSION_CONTRACT = {
+  fusionVersion: 'fusion-v1',
+  substantiveStates: ['calm', 'neutral', 'distressed'] as const,
+  // The only language code this backend currently knows it will ever emit as
+  // "Sinhala" evidence — sentiment's own contract declares
+  // supported_language: "si" (SENTIMENT_CONTRACT.modelVersion's sibling
+  // constant). C5's detector does not exist yet; this asserts the ONE code
+  // we already depend on is accepted by fusion's live SINHALA_LANGUAGE_CODES,
+  // so a mismatch cannot later appear as silently discarded text evidence.
+  expectedLanguageVocabulary: ['si'] as const,
+} as const;
+
+/** Verbatim /fuse 200 body — result.to_contract(), exactly these four keys. */
+export interface FusionOutput {
+  state: 'calm' | 'neutral' | 'distressed' | 'unknown';
+  confidence: number;
+  modalities_used: string[];
+  fusion_version: string;
+}
+
+export interface FusionContractResponse {
+  fusion_version: string;
+  substantive_states: string[];
+  all_fusion_states: string[];
+  fusion_output_keys: string[];
+  sinhala_language_codes: string[];
+  required_symbols: string[];
+  error_codes: string[];
+}
+
+export interface FusionHealthResponse {
+  status: string;
+  fusion_version: string;
+  parameters_provenance: string;
+  parameters_are_placeholder: boolean;
+}
+
+// ---------------------------------------------------------------------------
 // Shared error envelope (both services serialise the same shape)
 // ---------------------------------------------------------------------------
 

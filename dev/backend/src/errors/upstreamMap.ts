@@ -106,6 +106,51 @@ export function mapSentimentError(code: string): MappedUpstreamError {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Fusion — dev/fusion/fusion/errors.py ALL_ERROR_CODES
+//
+// Every fusion code is a backend defect, never a caller fault: the evidence
+// fusion receives was built and validated by our own adapters (C3), and the
+// six parameters are validated once at the fusion service's own boot. A
+// contract_violation reaching Node therefore means OUR evidence was
+// malformed — it stays mapped to `unavailable` + alert, never laundered into
+// a 4xx that blames an end user (C4_PLAN.md §5).
+// ---------------------------------------------------------------------------
+
+export const FUSION_ALL_ERROR_CODES = new Set([
+  'missing_parameter',
+  'invalid_parameter',
+  'missing_provenance',
+  'contract_violation',
+  'fusion_error',
+]);
+
+const FUSION_MAP: Record<string, MappedUpstreamError> = {
+  // Cannot occur at request time if the fusion service booted correctly —
+  // its own startup refusal (§8.2 guard 1) already enforces this. Reaching
+  // here at all means the fusion service's own boot guard failed to catch it.
+  missing_parameter: { category: 'unavailable', httpStatus: 502, appCode: 'fusion_unavailable', retry: false, alert: true },
+  invalid_parameter: { category: 'unavailable', httpStatus: 502, appCode: 'fusion_unavailable', retry: false, alert: true },
+  missing_provenance: { category: 'unavailable', httpStatus: 502, appCode: 'fusion_unavailable', retry: false, alert: true },
+  // Our own adapter emitted malformed evidence — a backend bug, caught by
+  // C3's own tests first in the ordinary case. Stays a 500-class failure.
+  contract_violation: { category: 'unavailable', httpStatus: 502, appCode: 'fusion_unavailable', retry: false, alert: true },
+  fusion_error: { category: 'unavailable', httpStatus: 502, appCode: 'fusion_unavailable', retry: true, alert: false },
+};
+
+export function mapFusionError(code: string): MappedUpstreamError {
+  return (
+    FUSION_MAP[code] ?? {
+      category: 'unavailable',
+      httpStatus: 502,
+      appCode: 'fusion_unavailable',
+      retry: false,
+      alert: true,
+    }
+  );
+}
+
 /** Every mapping key file-local to this module — used by the exhaustiveness test. */
 export const FER_MAPPED_CODES = new Set(Object.keys(FER_MAP));
 export const SENTIMENT_MAPPED_CODES = new Set(Object.keys(SENTIMENT_MAP));
+export const FUSION_MAPPED_CODES = new Set(Object.keys(FUSION_MAP));

@@ -1,0 +1,4 @@
+# MaternaLink fusion HTTP wrapper — service layer only.
+# dev/fusion/ (the library this wraps) is pure stdlib Python, no pins to carry.
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
