@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Maathru Care",
+    "slug": "maathru-care",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "maathru-care",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#F6F8F4"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#F6F8F4"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-font"
+    ]
+  }
+}
