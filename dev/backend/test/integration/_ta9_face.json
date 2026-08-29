@@ -1,0 +1,1 @@
+{"scores":{"calm":0.25,"neutral":0.25,"distressed":0.5},"predicted_state":"calm","confidence":0.25,"model_version":"fer-mobilenetv2-96-float32/1.0.0"}
