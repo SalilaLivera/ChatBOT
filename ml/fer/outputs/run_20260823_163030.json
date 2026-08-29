@@ -1,0 +1,372 @@
+{
+  "run_id": "run_20260823_163030",
+  "timestamp": "2026-08-23 16:30:30",
+  "notebook": "04_mobilenetv2_fine_tuning",
+  "dataset": "FER-2013",
+  "dataset_path": "/home/yasinduslpredetor/fer/data/raw",
+  "dataset_root_source": "wsl-native",
+  "dataset_version": "splits_cleaned.csv@sha256:a75d460f35d14c14cba6830923e5e5483f6d5611e779a9252d0b57fd49325496",
+  "model_version": "fer_mobilenetv2_finetuned_96.keras",
+  "environment": "wsl2-gpu",
+  "gpu_device": "/physical_device:GPU:0",
+  "gpu_description": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+  "mixed_precision": true,
+  "package_versions": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "Pillow": "12.3.0",
+    "matplotlib": "3.11.1",
+    "scikit-learn": "1.9.0",
+    "tensorflow": "2.21.0",
+    "keras": "3.15.1"
+  },
+  "hyperparameters": {
+    "input_size": 96,
+    "channels": 3,
+    "preprocessing": "grayscale replicated to 3 channels, bilinear resize to 96x96, mobilenet_v2.preprocess_input",
+    "backbone": "MobileNetV2 alpha=1.0, imagenet weights, include_top=False, pooling=avg",
+    "head": "Dropout(0.2) -> Dense(7, softmax, dtype=float32)",
+    "dropout": 0.2,
+    "optimizer": "adam",
+    "learning_rate": 0.0001,
+    "loss": "sparse_categorical_crossentropy",
+    "batch_size": 64,
+    "max_epochs": 40,
+    "early_stopping": {
+      "monitor": "val_macro_f1",
+      "mode": "max",
+      "patience": 8,
+      "restore_best_weights": true
+    },
+    "reduce_lr": {
+      "monitor": "val_macro_f1",
+      "mode": "max",
+      "factor": 0.5,
+      "patience": 4
+    },
+    "mixed_precision": "mixed_float16 (final Dense forced to float32)",
+    "resampling": "none (prohibited); class WEIGHTING is the compared alternative",
+    "warm_start_source": "notebook03_frozen_model",
+    "augmentation_config": {
+      "horizontal_flip": {
+        "enabled": true,
+        "probability": 0.5,
+        "rationale": "faces are approximately left-right symmetric; a horizontally flipped face is still a valid, plausible face."
+      },
+      "vertical_flip": {
+        "enabled": false,
+        "rationale": "INAPPROPRIATE for faces - an upside-down face is not a realistic sample and would teach the model a physically impossible orientation."
+      },
+      "rotation": {
+        "enabled": true,
+        "max_degrees": 10,
+        "rationale": "small head-tilt variation; large rotations are unrealistic for a front-facing camera use case."
+      },
+      "zoom_translate": {
+        "enabled": true,
+        "zoom_range": [
+          0.9,
+          1.1
+        ],
+        "translate_frac": 0.05,
+        "rationale": "small crop/position jitter mimics face-detector bounding-box noise."
+      },
+      "brightness_contrast": {
+        "enabled": true,
+        "brightness_delta": 0.15,
+        "contrast_range": [
+          0.85,
+          1.15
+        ],
+        "rationale": "camera exposure and ambient lighting vary; the model should not overfit to a fixed brightness/contrast."
+      }
+    },
+    "class_weights_balanced": {
+      "0": 1.0158604282315622,
+      "1": 10.948717948717949,
+      "2": 1.010518012095714,
+      "3": 0.547124145785877,
+      "4": 0.7982966348151226,
+      "5": 0.8225599315068494,
+      "6": 1.5660146699266504
+    },
+    "unfreeze_modes_searched": [
+      "SHALLOW",
+      "DEEP"
+    ],
+    "bn_modes_searched": [
+      "bn_frozen",
+      "bn_trainable"
+    ],
+    "augmentation_searched": [
+      "off",
+      "on"
+    ],
+    "weightings_searched": [
+      "unweighted",
+      "balanced"
+    ],
+    "shallow_tail_layers": 20,
+    "deep_start_fraction": 0.6451612903225806,
+    "seeds": [
+      42,
+      1337,
+      2024
+    ],
+    "chosen_augmentation": "off",
+    "chosen_unfreeze": "DEEP",
+    "chosen_bn_mode": "bn_frozen",
+    "chosen_weighting": "unweighted",
+    "selection_criterion": "highest validation macro-F1",
+    "staged_design": "A: augmentation -> B: unfreeze depth -> C: BatchNorm -> D: class weighting -> E: seed repeat",
+    "saved_model_seed": 42,
+    "data_pipeline": "all TRAIN+VAL images decoded once into a uint8 (N,48,48) RAM array; tf.data from_tensor_slices; per-batch 3-channel expand, bilinear resize to 96x96, train-only augmentation, mobilenet_v2.preprocess_input"
+  },
+  "random_seed": 42,
+  "metrics": {
+    "n_train": 26901,
+    "n_val": 3589,
+    "val_accuracy": 0.6319308999721371,
+    "val_macro_f1": 0.6120986924907751,
+    "per_class": {
+      "angry": {
+        "precision": 0.5128205128205128,
+        "recall": 0.5139186295503212,
+        "f1": 0.5133689839572193,
+        "support": 467
+      },
+      "disgust": {
+        "precision": 0.717948717948718,
+        "recall": 0.5,
+        "f1": 0.5894736842105263,
+        "support": 56
+      },
+      "fear": {
+        "precision": 0.5138004246284501,
+        "recall": 0.4879032258064516,
+        "f1": 0.500517063081696,
+        "support": 496
+      },
+      "happy": {
+        "precision": 0.798941798941799,
+        "recall": 0.8435754189944135,
+        "f1": 0.8206521739130435,
+        "support": 895
+      },
+      "neutral": {
+        "precision": 0.5342261904761905,
+        "recall": 0.5914332784184514,
+        "f1": 0.5613760750586395,
+        "support": 607
+      },
+      "sad": {
+        "precision": 0.5564924114671164,
+        "recall": 0.5053598774885145,
+        "f1": 0.5296950240770465,
+        "support": 653
+      },
+      "surprise": {
+        "precision": 0.7830423940149626,
+        "recall": 0.7566265060240964,
+        "f1": 0.7696078431372549,
+        "support": 415
+      }
+    },
+    "stages": [
+      {
+        "tag": "A_aug-off_shallow_bn_frozen_unweighted_s42",
+        "stage": "A",
+        "augmentation": "off",
+        "unfreeze": "SHALLOW",
+        "bn_mode": "bn_frozen",
+        "weighting": "unweighted",
+        "seed": 42,
+        "best_epoch": 15,
+        "epochs_run": 23,
+        "val_accuracy": 0.5828921705210365,
+        "val_macro_f1": 0.5675033685030707,
+        "train_seconds": 354.1741952896118,
+        "trainable_params": 1050247,
+        "recall_disgust": 0.5,
+        "recall_fear": 0.40524193548387094
+      },
+      {
+        "tag": "A_aug-on_shallow_bn_frozen_unweighted_s42",
+        "stage": "A",
+        "augmentation": "on",
+        "unfreeze": "SHALLOW",
+        "bn_mode": "bn_frozen",
+        "weighting": "unweighted",
+        "seed": 42,
+        "best_epoch": 34,
+        "epochs_run": 40,
+        "val_accuracy": 0.5870716076901644,
+        "val_macro_f1": 0.5609580745898358,
+        "train_seconds": 600.310985326767,
+        "trainable_params": 1050247,
+        "recall_disgust": 0.375,
+        "recall_fear": 0.3870967741935484
+      },
+      {
+        "tag": "B_aug-off_deep_bn_frozen_unweighted_s42",
+        "stage": "B",
+        "augmentation": "off",
+        "unfreeze": "DEEP",
+        "bn_mode": "bn_frozen",
+        "weighting": "unweighted",
+        "seed": 42,
+        "best_epoch": 29,
+        "epochs_run": 37,
+        "val_accuracy": 0.6319308999721371,
+        "val_macro_f1": 0.6120986924907751,
+        "train_seconds": 487.35646986961365,
+        "trainable_params": 1848583,
+        "recall_disgust": 0.5,
+        "recall_fear": 0.4879032258064516
+      },
+      {
+        "tag": "C_aug-off_deep_bn_trainable_unweighted_s42",
+        "stage": "C",
+        "augmentation": "off",
+        "unfreeze": "DEEP",
+        "bn_mode": "bn_trainable",
+        "weighting": "unweighted",
+        "seed": 42,
+        "best_epoch": 35,
+        "epochs_run": 40,
+        "val_accuracy": 0.6046252438005015,
+        "val_macro_f1": 0.5839979557288363,
+        "train_seconds": 577.369542837143,
+        "trainable_params": 1870407,
+        "recall_disgust": 0.48214285714285715,
+        "recall_fear": 0.4737903225806452
+      },
+      {
+        "tag": "D_aug-off_deep_bn_frozen_balanced_s42",
+        "stage": "D",
+        "augmentation": "off",
+        "unfreeze": "DEEP",
+        "bn_mode": "bn_frozen",
+        "weighting": "balanced",
+        "seed": 42,
+        "best_epoch": 21,
+        "epochs_run": 29,
+        "val_accuracy": 0.619671217609362,
+        "val_macro_f1": 0.6004661579883797,
+        "train_seconds": 393.9619641304016,
+        "trainable_params": 1848583,
+        "recall_disgust": 0.5357142857142857,
+        "recall_fear": 0.4415322580645161
+      },
+      {
+        "tag": "E_aug-off_deep_bn_frozen_unweighted_s1337",
+        "stage": "E",
+        "augmentation": "off",
+        "unfreeze": "DEEP",
+        "bn_mode": "bn_frozen",
+        "weighting": "unweighted",
+        "seed": 1337,
+        "best_epoch": 35,
+        "epochs_run": 40,
+        "val_accuracy": 0.6291446085260518,
+        "val_macro_f1": 0.6014371066856282,
+        "train_seconds": 520.595894575119,
+        "trainable_params": 1848583,
+        "recall_disgust": 0.44642857142857145,
+        "recall_fear": 0.46774193548387094
+      },
+      {
+        "tag": "E_aug-off_deep_bn_frozen_unweighted_s2024",
+        "stage": "E",
+        "augmentation": "off",
+        "unfreeze": "DEEP",
+        "bn_mode": "bn_frozen",
+        "weighting": "unweighted",
+        "seed": 2024,
+        "best_epoch": 37,
+        "epochs_run": 40,
+        "val_accuracy": 0.6191139593201449,
+        "val_macro_f1": 0.605433926155804,
+        "train_seconds": 522.3873724937439,
+        "trainable_params": 1848583,
+        "recall_disgust": 0.48214285714285715,
+        "recall_fear": 0.46975806451612906
+      }
+    ],
+    "seed_variance": {
+      "seeds": [
+        42,
+        1337,
+        2024
+      ],
+      "n_seeds": 3,
+      "config": {
+        "augmentation": "off",
+        "unfreeze": "DEEP",
+        "bn_mode": "bn_frozen",
+        "weighting": "unweighted"
+      },
+      "val_macro_f1_mean": 0.6063232417774024,
+      "val_macro_f1_std": 0.005386140981838622,
+      "val_macro_f1_min": 0.6014371066856282,
+      "val_macro_f1_max": 0.6120986924907751,
+      "val_accuracy_mean": 0.6267298226061112,
+      "val_accuracy_std": 0.006741059649530632,
+      "val_accuracy_min": 0.6191139593201449,
+      "val_accuracy_max": 0.6319308999721371,
+      "per_seed": [
+        {
+          "seed": 42,
+          "val_macro_f1": 0.6120986924907751,
+          "val_accuracy": 0.6319308999721371,
+          "best_epoch": 29
+        },
+        {
+          "seed": 1337,
+          "val_macro_f1": 0.6014371066856282,
+          "val_accuracy": 0.6291446085260518,
+          "best_epoch": 35
+        },
+        {
+          "seed": 2024,
+          "val_macro_f1": 0.605433926155804,
+          "val_accuracy": 0.6191139593201449,
+          "best_epoch": 37
+        }
+      ]
+    },
+    "baseline_comparison": {
+      "baseline_source": "notebook 03, run_20260822_175944 (frozen backbone, 96x96)",
+      "baseline_macro_f1_mean": 0.4357,
+      "baseline_macro_f1_std": 0.0061,
+      "noise_floor_macro_f1": 0.0065,
+      "finetuned_macro_f1_mean": 0.6063232417774024,
+      "finetuned_macro_f1_std": 0.005386140981838622,
+      "delta_macro_f1": 0.1706232417774024,
+      "delta_in_noise_floor_units": 26.249729504215754,
+      "exceeds_1x_noise_floor": true,
+      "exceeds_3x_noise_floor": true,
+      "verdict": "fine_tuning_clears_3x_noise_floor"
+    },
+    "timing": {
+      "decode_seconds_train": 2.9607315063476562,
+      "decode_seconds_val": 0.34395933151245117,
+      "decode_seconds_total": 3.4731879234313965,
+      "cumulative_train_seconds": 3456.1564245224,
+      "n_runs": 7
+    },
+    "test_split_used": false,
+    "sanity_gates": {
+      "val_accuracy_beats_majority_class": true,
+      "val_macro_f1_beats_random": true,
+      "no_test_split_used": true,
+      "gpu_used": true,
+      "disgust_and_fear_recall_reported_for_all_runs": true
+    },
+    "majority_class_rate_val": 0.24937308442463083,
+    "macro_f1_floor": 0.14285714285714285,
+    "worst_class_by_recall": "fear"
+  },
+  "notes": "Notebook 04 fine-tunes the top of the ImageNet MobileNetV2 backbone that notebook 03 used frozen, and asks whether that beats the frozen baseline by more than seed noise. Four factors were decided sequentially on VALIDATION macro-F1, one factor per stage: A augmentation = off; B unfreeze depth = DEEP; C BatchNorm = bn_frozen; D class weighting = unweighted; E seed repeat over [42, 1337, 2024]. Fine-tuned val macro-F1 = 0.6063 +/- 0.0054 versus the notebook-03 frozen baseline 0.4357 +/- 0.0061 (measured in run_20260822_175944), a delta of +0.1706 macro-F1 = +26.25x the 0.0065 noise floor. Exceeds 1x noise floor: True. Exceeds 3x: True. Verdict: fine_tuning_clears_3x_noise_floor. Warm start: notebook03_frozen_model - fine-tuning was never begun from a randomly initialised head. The TEST/PrivateTest split was dropped from the manifest before any array was built and was never loaded, indexed or evaluated. No resampling (prohibited; class weighting was the tested alternative), no confidence threshold, no temporal smoothing, no 7->3 mood mapping, no quantization. nb04_val_probabilities.csv is raw unthresholded material for the later tau_face_min sweep, which this notebook does not perform. Environment: wsl2-gpu, NVIDIA GeForce RTX 3050 6GB Laptop GPU, mixed_float16 with a float32 output layer."
+}

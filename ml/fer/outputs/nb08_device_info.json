@@ -1,0 +1,9 @@
+{
+  "mode": "B",
+  "reason": "adb not on PATH",
+  "adb_found": false,
+  "benchmark_binary": null,
+  "device": null,
+  "measured_on_device": false,
+  "timestamp": "2026-08-28 18:18:16"
+}

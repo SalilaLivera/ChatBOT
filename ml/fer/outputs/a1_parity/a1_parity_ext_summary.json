@@ -1,0 +1,50 @@
+{
+  "argmax_agreement_pil_vs_tf": 0.8174979102814154,
+  "blocking": false,
+  "cannot_pass_or_fail": true,
+  "comparison1_tensor": {
+    "count_gt_0.001": 83962929,
+    "count_gt_0.004": 61181871,
+    "count_gt_0.01": 33923580,
+    "count_gt_0.02": 16327854,
+    "frac_gt_0.01": 0.3418727603247578,
+    "max": 0.2607842683792114,
+    "mean": 0.010763008620012367,
+    "median": 0.005882382392883301,
+    "n": 99228672,
+    "p95": 0.03823530673980713,
+    "p99": 0.06323528289794922
+  },
+  "comparison2_probability": {
+    "count_gt_0.001": 20605,
+    "count_gt_0.004": 17543,
+    "count_gt_0.01": 14113,
+    "count_gt_0.02": 10832,
+    "frac_gt_0.01": 0.561756159694304,
+    "max": 0.6517526507377625,
+    "mean": 0.03836018431458381,
+    "median": 0.01417648047208786,
+    "n": 25123,
+    "p95": 0.15941618531942361,
+    "p99": 0.287699769735335
+  },
+  "environment": {
+    "keras": "3.15.1",
+    "numpy": "2.4.6",
+    "pillow": "12.3.0",
+    "pillow_jpeg_library_version": "6.2",
+    "pillow_libjpeg_turbo": true,
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "python": "3.11.15 (main, Jun 11 2026, 15:20:16) [GCC 14.3.0]",
+    "sys_executable": "/home/yasinduslpredetor/miniconda3/envs/maternalink-fer-gpu/bin/python",
+    "tensorflow": "2.21.0",
+    "tflite_runtime": "tensorflow.lite",
+    "timestamp_utc": "2026-08-28T22:39:27.605231+00:00"
+  },
+  "n_images": 3589,
+  "note": "Each VAL image was upscaled 48 -> 96 once (PIL.Image.BICUBIC) before BOTH pipelines, making step 2 a genuine downscale \u2014 the regime where PIL antialiases and TF (antialias=False) does not. No ground truth exists for a 96x96 source; the model was never fed one during training. This reports an effect size for OPEN-5 / proposal P-1, nothing more.",
+  "timestamp_utc": "2026-08-28T22:40:14.131991+00:00",
+  "upscale_method": "PIL.Image.BICUBIC",
+  "upscale_source_size": 96,
+  "verdict": "NO VERDICT \u2014 characterisation only"
+}

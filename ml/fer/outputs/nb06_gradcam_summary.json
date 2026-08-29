@@ -1,0 +1,54 @@
+{
+  "per_class_sample_counts": {
+    "angry": 100,
+    "disgust": 28,
+    "fear": 100,
+    "happy": 100,
+    "neutral": 100,
+    "sad": 100,
+    "surprise": 100
+  },
+  "correct_vs_incorrect": {
+    "n_correct_used": 150,
+    "n_incorrect_used": 150
+  },
+  "fear_vs_sad": {
+    "n_fear_correct_used": 100,
+    "n_sad_correct_used": 100,
+    "n_fear_as_sad_used": 84,
+    "small_sample_caveat": false
+  },
+  "calibration": {
+    "ece": 0.30064260575926444,
+    "n_bins": 10
+  },
+  "brightness_confound": {
+    "n_misclassified": 1332,
+    "fraction_closer_to_predicted_class_brightness": 0.515015015015015,
+    "null_expectation": 0.5,
+    "delta_vs_null": 0.01501501501501501,
+    "method": "compare |intensity - mean_intensity[predicted_class]| vs |intensity - mean_intensity[true_class]| for misclassified TEST samples",
+    "limitation": "correlational, not causal; small per-class sample sizes among misclassifications; brightness is confounded with expression content in the source photography"
+  },
+  "blazeface_confidence_stratification": {
+    "n_bins_actual": 10,
+    "spearman_rho_confidence_vs_correct": NaN,
+    "spearman_p_value": NaN
+  },
+  "intensity_stratification": {
+    "n_bins_actual": 10,
+    "spearman_rho_intensity_vs_correct": 0.06809071379233679,
+    "spearman_p_value": 4.455113531939398e-05
+  },
+  "gradcam_last_conv_layer": {
+    "name": "out_relu",
+    "output_shape": [
+      null,
+      3,
+      3,
+      1280
+    ],
+    "mode": "nested_two_stage"
+  },
+  "val_accuracy_this_run": 0.6319308999721371
+}

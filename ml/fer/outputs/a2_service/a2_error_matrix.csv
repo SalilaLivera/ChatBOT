@@ -1,0 +1,7 @@
+trigger,expected_code,actual_code,expected_status,actual_status,match
+missing_image,missing_image,missing_image,400,400,True
+gif,unsupported_format,unsupported_format,415,415,True
+random_bytes,unsupported_format,unsupported_format,415,415,True
+truncated_jpeg,invalid_image,invalid_image,400,400,True
+over_8mb,image_too_large,image_too_large,413,413,True
+8x8,image_too_small,image_too_small,400,400,True

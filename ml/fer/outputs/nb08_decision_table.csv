@@ -1,0 +1,5 @@
+variant,size_mb,macro_f1_val,macro_f1_delta_vs_keras,within_noise_floor,argmax_agreement_vs_keras_pct,ece_val,device_median_latency_ms,device_p95_latency_ms,rejected,recommended
+float32,8.5419,0.6122,0.0005,True,99.5,0.0099,UNMEASURED,UNMEASURED,False,False
+float16,4.3662,0.609,-0.0027,True,99.0,0.0135,UNMEASURED,UNMEASURED,False,True
+dynint8,2.453,0.6071,-0.0046,True,91.5,0.0103,UNMEASURED,UNMEASURED,False,False
+fullint8,2.6474,0.4929,-0.1188,False,74.5,0.1443,UNMEASURED,UNMEASURED,True,False

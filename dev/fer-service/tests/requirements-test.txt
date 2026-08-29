@@ -1,0 +1,5 @@
+# A2 local-service verification harness — test-only deps.
+# Installed into the `maternalink-fer-service` conda env ONLY, alongside
+# requirements.txt. Never into `maternalink-fer-gpu`.
+pytest>=8,<10
+httpx>=0.27,<1

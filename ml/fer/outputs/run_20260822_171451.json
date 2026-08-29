@@ -1,0 +1,157 @@
+{
+  "run_id": "run_20260822_171451",
+  "timestamp": "2026-08-22 17:14:51",
+  "notebook": "03_mobilenetv2_transfer_learning",
+  "dataset": "FER-2013",
+  "dataset_path": "../data/raw",
+  "dataset_version": "splits_cleaned.csv@sha256:a75d460f35d14c14cba6830923e5e5483f6d5611e779a9252d0b57fd49325496",
+  "model_version": "fer_mobilenetv2_frozen_96.keras",
+  "environment": "local",
+  "package_versions": {
+    "python": "3.10.20",
+    "numpy": "2.1.3",
+    "pandas": "2.3.3",
+    "Pillow": "12.3.0",
+    "matplotlib": "3.10.9",
+    "opencv": "5.0.0.93",
+    "scikit-learn": "1.7.2",
+    "tensorflow": "2.19.0"
+  },
+  "hyperparameters": {
+    "architecture": "Input(1280) -> Dropout(0.2) -> Dense(n_classes, softmax)",
+    "dropout": 0.2,
+    "optimizer": "adam",
+    "learning_rate": 0.001,
+    "loss": "sparse_categorical_crossentropy",
+    "batch_size": 256,
+    "max_epochs": 100,
+    "early_stopping": {
+      "monitor": "val_macro_f1",
+      "mode": "max",
+      "patience": 10,
+      "restore_best_weights": true
+    },
+    "backbone": "MobileNetV2 alpha=1.0, imagenet weights, include_top=False, pooling=avg, FROZEN",
+    "augmentation": "none (impossible with a cached frozen-backbone embedding; see notebook 04)",
+    "resampling": "none (prohibited); class WEIGHTING is the compared alternative",
+    "resolutions_searched": [
+      96,
+      128
+    ],
+    "weightings_searched": [
+      "unweighted",
+      "balanced"
+    ],
+    "class_weights_balanced": {
+      "0": 1.0158604282315622,
+      "1": 10.948717948717949,
+      "2": 1.010518012095714,
+      "3": 0.547124145785877,
+      "4": 0.7982966348151226,
+      "5": 0.8225599315068494,
+      "6": 1.5660146699266504
+    },
+    "chosen_resolution": 96,
+    "chosen_weighting": "unweighted",
+    "selection_criterion": "highest validation macro-F1",
+    "feature_cache_dtype": "float16 (cast to float32 for training)",
+    "extraction_batch_size": 64
+  },
+  "random_seed": 42,
+  "metrics": {
+    "n_train": 26901,
+    "n_val": 3589,
+    "val_accuracy": 0.47784898300362216,
+    "val_macro_f1": 0.4402953892437185,
+    "per_class": {
+      "angry": {
+        "precision": 0.3795620437956204,
+        "recall": 0.3340471092077088,
+        "f1": 0.3553530751708428,
+        "support": 467
+      },
+      "disgust": {
+        "precision": 0.48,
+        "recall": 0.21428571428571427,
+        "f1": 0.2962962962962963,
+        "support": 56
+      },
+      "fear": {
+        "precision": 0.36156351791530944,
+        "recall": 0.22379032258064516,
+        "f1": 0.2764632627646326,
+        "support": 496
+      },
+      "happy": {
+        "precision": 0.6388888888888888,
+        "recall": 0.6167597765363129,
+        "f1": 0.6276293348493462,
+        "support": 895
+      },
+      "neutral": {
+        "precision": 0.3834254143646409,
+        "recall": 0.57166392092257,
+        "f1": 0.458994708994709,
+        "support": 607
+      },
+      "sad": {
+        "precision": 0.3915574963609898,
+        "recall": 0.4119448698315467,
+        "f1": 0.4014925373134328,
+        "support": 653
+      },
+      "surprise": {
+        "precision": 0.6871794871794872,
+        "recall": 0.6457831325301204,
+        "f1": 0.6658385093167701,
+        "support": 415
+      }
+    },
+    "grid": [
+      {
+        "resolution": 96,
+        "weighting": "unweighted",
+        "best_epoch": 34,
+        "val_accuracy": 0.47784898300362216,
+        "val_macro_f1": 0.4402953892437185
+      },
+      {
+        "resolution": 96,
+        "weighting": "balanced",
+        "best_epoch": 32,
+        "val_accuracy": 0.46447478406241294,
+        "val_macro_f1": 0.42355117058183067
+      },
+      {
+        "resolution": 128,
+        "weighting": "unweighted",
+        "best_epoch": 20,
+        "val_accuracy": 0.4931735859570911,
+        "val_macro_f1": 0.4356092313317452
+      },
+      {
+        "resolution": 128,
+        "weighting": "balanced",
+        "best_epoch": 26,
+        "val_accuracy": 0.46001671774867653,
+        "val_macro_f1": 0.41090786485349934
+      }
+    ],
+    "feature_extraction_seconds": {
+      "res96_train": 65.88485026359558,
+      "res96_val": 8.869128465652466,
+      "res128_train": 124.06685662269592,
+      "res128_val": 15.87594747543335
+    },
+    "test_split_used": false,
+    "sanity_gates": {
+      "val_accuracy_beats_majority_class": true,
+      "val_macro_f1_beats_random": true,
+      "disgust_recall_reported_for_all_configs": true,
+      "no_test_split_used": true
+    },
+    "majority_class_rate_val": 0.24937308442463083,
+    "macro_f1_floor": 0.14285714285714285
+  },
+  "notes": "Two decisions were taken in this notebook, both by measurement on VALIDATION data only; the TEST/PrivateTest split was dropped from the manifest before any array was built and was never loaded, indexed, or evaluated. DECISION 1 - input resolution = 96: chosen because it gave the higher mean validation macro-F1 across both weighting arms (spread between the two resolutions = 0.0087 macro-F1). DECISION 2 - class weighting = unweighted: chosen because it gave the higher mean validation macro-F1 across both resolutions (spread between the two weightings = 0.0207 macro-F1); mean disgust recall was 0.1696 unweighted vs 0.6161 balanced. Winner res96_unweighted beat the runner-up res128_unweighted by +0.0047 macro-F1. Backbone frozen throughout; no augmentation (incompatible with the cached-embedding design - see notebook 04), no resampling, no confidence threshold, no temporal smoothing, no 7->3 mood mapping, no quantization. nb03_val_probabilities.csv is raw unthresholded material for the later tau_face_min sweep, which this notebook does not perform."
+}

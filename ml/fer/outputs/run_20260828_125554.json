@@ -1,0 +1,79 @@
+{
+  "run_id": "run_20260828_125554",
+  "timestamp": "2026-08-28 12:55:54",
+  "notebook": "06_error_analysis_gradcam",
+  "dataset": "FER-2013",
+  "dataset_path": "/home/yasinduslpredetor/fer/data/raw",
+  "dataset_root_source": "wsl-native",
+  "dataset_version": "splits_cleaned.csv@sha256:a75d460f35d14c14cba6830923e5e5483f6d5611e779a9252d0b57fd49325496",
+  "model_version": "fer_mobilenetv2_finetuned_96.keras",
+  "environment": "wsl2-gpu",
+  "gpu_device": "/physical_device:GPU:0",
+  "gpu_description": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+  "package_versions": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "Pillow": "12.3.0",
+    "matplotlib": "3.11.1",
+    "seaborn": "0.13.2",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.17.1",
+    "tensorflow": "2.21.0",
+    "keras": "3.15.1"
+  },
+  "hyperparameters": {
+    "input_size": 96,
+    "channels": 3,
+    "preprocessing": "grayscale replicated to 3 channels, bilinear resize to 96x96, mobilenet_v2.preprocess_input",
+    "class_names": [
+      "angry",
+      "disgust",
+      "fear",
+      "happy",
+      "neutral",
+      "sad",
+      "surprise"
+    ],
+    "n_gradcam_samples_per_class_requested": 100,
+    "n_gradcam_samples_group_requested": 150,
+    "n_calibration_bins": 10,
+    "n_blazeface_bins_requested": 10,
+    "n_intensity_bins_requested": 10,
+    "test_set_touch_count": 0,
+    "test_set_note": "test-set results read from nb05_test_probabilities_finetuned.csv only; pixel-level brightness stats read raw TEST pixels (no model inference)",
+    "val_set_inference_count": 1,
+    "threshold_applied": false
+  },
+  "random_seed": 42,
+  "metrics": {
+    "n_test_predictions_loaded": 3589,
+    "n_val_used_for_gradcam": 3589,
+    "test_overall_accuracy_recomputed": 0.6288659793814433,
+    "ece": 0.30064260575926444,
+    "blazeface_confidence_spearman_rho": NaN,
+    "intensity_spearman_rho": 0.06809071379233679,
+    "brightness_confound_fraction_closer_to_predicted": 0.515015015015015,
+    "brightness_confound_delta_vs_null": 0.01501501501501501,
+    "gradcam_per_class_sample_counts": {
+      "angry": 100,
+      "disgust": 28,
+      "fear": 100,
+      "happy": 100,
+      "neutral": 100,
+      "sad": 100,
+      "surprise": 100
+    },
+    "gradcam_correct_vs_incorrect_counts": {
+      "correct": 150,
+      "incorrect": 150
+    },
+    "gradcam_fear_vs_sad_counts": {
+      "fear_correct": 100,
+      "sad_correct": 100,
+      "fear_as_sad": 84
+    },
+    "val_accuracy_this_run": 0.6319308999721371
+  },
+  "notes": "Notebook 06 characterises the fine-tuned model's TEST errors by reading nb05_test_probabilities_finetuned.csv (no re-inference on TEST anywhere in this notebook), joined to image_flags.csv on basename (join verified exact and complete: 3589/3589 rows matched). BlazeFace-confidence stratification used 10 bins (Spearman rho=nan vs correctness); pixel-intensity stratification (read directly from raw TEST pixels, not a model inference) used 10 bins (Spearman rho=0.0681). Brightness-confound check on 1332 misclassified TEST samples: 0.5150 fraction closer to the predicted class's brightness profile than the true class's (delta vs 0.5 null: +0.0150); this is correlational only, not causal, and confounded with expression content in the source photography. Calibration: ECE=0.3006 over 10 bins, no threshold selected. Grad-CAM (the only re-inference in this notebook, run on VALIDATION only, never TEST) located the last conv layer at runtime ('out_relu'), averaged heatmaps per class (up to 100 correctly-classified VAL samples/class), correct-vs-incorrect (pooled), and the fear/sad confusion triad (fear-as-sad n=84, small-sample caveat=False). Two review_-prefixed plots with identifiable faces were produced for supervisor review only and are not for git. FER-2013 carries no demographic labels; no demographic attribute was inferred anywhere in this notebook - this is documented as an unresolvable external-validity constraint for Sri Lankan deployment (see docs/ml/01_dataset_exploration_findings.md)."
+}

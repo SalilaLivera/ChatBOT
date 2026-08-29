@@ -1,0 +1,74 @@
+{
+  "run_id": "run_20260828_181803",
+  "timestamp": "2026-08-28 18:18:03",
+  "notebook": "08_mobile_benchmark",
+  "dataset_version": null,
+  "model_version": "fer_mobilenetv2_96_{float32,float16,dynint8,fullint8}.tflite",
+  "hyperparameters": {
+    "variants": [
+      "float32",
+      "float16",
+      "dynint8",
+      "fullint8"
+    ],
+    "rejected_variants": [
+      "fullint8"
+    ],
+    "benchmark_matrix": {
+      "num_threads": [
+        1,
+        2,
+        4
+      ],
+      "use_xnnpack": [
+        true,
+        false
+      ],
+      "warmup_runs": 50,
+      "num_runs": 200,
+      "thermal_batches": 5
+    },
+    "benchmark_binary_url": "https://storage.googleapis.com/tensorflow-nightly-public/prod/tensorflow/release/lite/tools/nightly/latest/android_aarch64_benchmark_model",
+    "noise_floor_macro_f1": 0.0065,
+    "reads_labelled_images": false,
+    "test_set_touch_count": 0
+  },
+  "random_seed": 42,
+  "metrics": {
+    "mode": "B",
+    "mode_reason": "adb not on PATH",
+    "test_set_touch_count": 0,
+    "param_count_all_variants": 2266951,
+    "param_count_source": "fer_mobilenetv2_finetuned_96.keras (loaded)",
+    "param_count_trainable": 1848583,
+    "flops_estimate": null,
+    "p12_file_size_bytes": {
+      "float32": 8956864,
+      "float16": 4578244,
+      "dynint8": 2572184,
+      "fullint8": 2776016
+    },
+    "p12_size_mb": {
+      "float32": 8.5419,
+      "float16": 4.3662,
+      "dynint8": 2.453,
+      "fullint8": 2.6474
+    },
+    "interpreter_tensor_buffer_bytes": {
+      "float32": 14044404,
+      "float16": 18475976,
+      "dynint8": 7848204,
+      "fullint8": 3672923
+    },
+    "p02_device_latency_measured": false,
+    "recommended_variant": "float16",
+    "recommended_is_freeze": false,
+    "carried_from_nb07": {
+      "test_macro_f1": 0.6036,
+      "test_accuracy": 0.6289,
+      "calibration_T": 5.727,
+      "noise_floor": 0.0065
+    }
+  },
+  "notes": "Notebook 08 is a MODEL-level benchmark. Ran in MODE B (adb not on PATH). P-12 (TFLite file size on disk) recorded for all 4 variants and cross-checked against nb07_tflite_comparison.csv. On-device latency (P-02) NOT measured \u2014 no physical device / benchmark binary. P-02 remains OPEN, Phase-3 exit blocked on it; a device-benchmark protocol (.md + .sh) was emitted. No x86 numbers substituted. P-01/P-03/P-04/P-14 require the Android application (does not exist yet) and are out of scope here. Recommended variant: float16 (mirrors nb07) \u2014 a RECOMMENDATION, NOT a freeze; the variant freeze is a Tech Lead decision. The Proposal's 3-second target is a design target, not reported as measured. TEST split untouched (test_set_touch_count = 0)."
+}

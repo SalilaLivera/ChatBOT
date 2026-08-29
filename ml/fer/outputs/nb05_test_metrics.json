@@ -1,0 +1,141 @@
+{
+  "n_test": 3589,
+  "class_names": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad",
+    "surprise"
+  ],
+  "models": {
+    "finetuned": {
+      "model_file": "fer_mobilenetv2_finetuned_96.keras",
+      "file_size_mb": 24.464001,
+      "total_params": 2266951,
+      "trainable_params": 1848583,
+      "canonical": {
+        "accuracy": 0.6288659793814433,
+        "macro_f1": 0.603557951083015,
+        "weighted_f1": 0.6262253505809533
+      },
+      "sensitivity_filtered_excluding_quality_anomalies": {
+        "n_excluded": 8,
+        "n_kept": 3581,
+        "accuracy": 0.6297123708461324,
+        "macro_f1": 0.6043254894506063
+      },
+      "validation_baseline": {
+        "source_run_id": "run_20260823_163030",
+        "source_path": "/mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/run_20260823_163030.json",
+        "val_accuracy": 0.6319308999721371,
+        "val_macro_f1": 0.6120986924907751
+      },
+      "generalisation_gap": {
+        "accuracy_gap_test_minus_val": -0.0030649205906938537,
+        "macro_f1_gap_test_minus_val": -0.008540741407760066
+      }
+    },
+    "frozen": {
+      "model_file": "fer_mobilenetv2_frozen_96.keras",
+      "file_size_mb": 9.730709,
+      "total_params": 2266951,
+      "trainable_params": 8967,
+      "canonical": {
+        "accuracy": 0.47952075787127335,
+        "macro_f1": 0.41375024097986307,
+        "weighted_f1": 0.4704091446321074
+      },
+      "sensitivity_filtered_excluding_quality_anomalies": {
+        "n_excluded": 8,
+        "n_kept": 3581,
+        "accuracy": 0.48031276179838034,
+        "macro_f1": 0.41458451311296207
+      },
+      "validation_baseline": {
+        "source_run_id": "run_20260822_175944",
+        "source_path": "/mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/run_20260822_175944.json",
+        "val_accuracy": 0.47784898300362216,
+        "val_macro_f1": 0.4402953892437185
+      },
+      "generalisation_gap": {
+        "accuracy_gap_test_minus_val": 0.0016717748676511879,
+        "macro_f1_gap_test_minus_val": -0.026545148263855456
+      }
+    }
+  },
+  "confidence_summary_finetuned": {
+    "mean": 0.9292333722114563,
+    "median": 0.9981122016906738,
+    "std": 0.1331823468208313,
+    "min": 0.3047727346420288,
+    "max": 1.0
+  },
+  "top_off_diagonal_confusions": {
+    "finetuned": [
+      {
+        "true_class": "sad",
+        "predicted_class": "neutral",
+        "count": 115,
+        "pct_of_test": 3.2042351629980494
+      },
+      {
+        "true_class": "fear",
+        "predicted_class": "sad",
+        "count": 94,
+        "pct_of_test": 2.6191139593201447
+      },
+      {
+        "true_class": "sad",
+        "predicted_class": "fear",
+        "count": 92,
+        "pct_of_test": 2.56338813039844
+      },
+      {
+        "true_class": "neutral",
+        "predicted_class": "sad",
+        "count": 77,
+        "pct_of_test": 2.1454444134856505
+      },
+      {
+        "true_class": "angry",
+        "predicted_class": "fear",
+        "count": 71,
+        "pct_of_test": 1.978266926720535
+      }
+    ],
+    "frozen": [
+      {
+        "true_class": "sad",
+        "predicted_class": "neutral",
+        "count": 156,
+        "pct_of_test": 4.346614655893006
+      },
+      {
+        "true_class": "fear",
+        "predicted_class": "sad",
+        "count": 128,
+        "pct_of_test": 3.5664530509891335
+      },
+      {
+        "true_class": "angry",
+        "predicted_class": "neutral",
+        "count": 110,
+        "pct_of_test": 3.0649205906937866
+      },
+      {
+        "true_class": "happy",
+        "predicted_class": "neutral",
+        "count": 109,
+        "pct_of_test": 3.037057676232934
+      },
+      {
+        "true_class": "fear",
+        "predicted_class": "neutral",
+        "count": 97,
+        "pct_of_test": 2.7027027027027026
+      }
+    ]
+  }
+}

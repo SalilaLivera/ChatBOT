@@ -1,0 +1,246 @@
+{
+  "blocking": true,
+  "check1_ran": true,
+  "comparison1_tensor": {
+    "statistics": {
+      "count_gt_0.001": 0,
+      "count_gt_0.004": 0,
+      "count_gt_0.01": 0,
+      "count_gt_0.02": 0,
+      "frac_gt_0.01": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "median": 0.0,
+      "n": 99228672,
+      "p95": 0.0,
+      "p99": 0.0
+    },
+    "verdict": "PASS",
+    "within_expected_band": true,
+    "within_hard_gate": true
+  },
+  "comparison2_probability": {
+    "argmax_agree_count": 3589,
+    "argmax_agreement": 1.0,
+    "statistics": {
+      "count_gt_0.001": 0,
+      "count_gt_0.004": 0,
+      "count_gt_0.01": 0,
+      "count_gt_0.02": 0,
+      "frac_gt_0.01": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "median": 0.0,
+      "n": 25123,
+      "p95": 0.0,
+      "p99": 0.0
+    },
+    "verdict": "PASS",
+    "within_expected_band": true,
+    "within_hard_gate": true
+  },
+  "comparison3_vs_nb04": {
+    "argmax_agree_count": 3582,
+    "argmax_agreement": 0.9980495959877403,
+    "note": "coarse end-to-end sanity only; conflates TFLite quantisation, preprocessing and calibration-induced argmax sensitivity. Comparison 2 is the authoritative preprocessing measurement.",
+    "verdict": "PASS",
+    "within_expected_band": true,
+    "within_hard_gate": true
+  },
+  "environment": {
+    "keras": "3.15.1",
+    "numpy": "2.4.6",
+    "pillow": "12.3.0",
+    "pillow_jpeg_library_version": "6.2",
+    "pillow_libjpeg_turbo": true,
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "python": "3.11.15 (main, Jun 11 2026, 15:20:16) [GCC 14.3.0]",
+    "sys_executable": "/home/yasinduslpredetor/miniconda3/envs/maternalink-fer-gpu/bin/python",
+    "tensorflow": "2.21.0",
+    "tflite_runtime": "tensorflow.lite",
+    "timestamp_utc": "2026-08-28T22:37:29.708534+00:00"
+  },
+  "exit_code": 0,
+  "hashes": {
+    "image_list_count": 3589,
+    "image_list_sha256": "6e61b53150944543f1dfa9346ff59faff959f1597727d89082183b12dcb0606e",
+    "manifest": "a75d460f35d14c14cba6830923e5e5483f6d5611e779a9252d0b57fd49325496",
+    "model": "47b3adcc0ce769afa469ec6dd272e2561263863ab73621a449fcc1340e958c8c",
+    "model_contract_pinned": "47b3adcc0ce769afa469ec6dd272e2561263863ab73621a449fcc1340e958c8c",
+    "notebook_07": "9b3a20ed5d1c36857a04f3742d649c670e45ef182e800e6ea625053797183f31",
+    "reference_csv": "a5bd9b733f000f8c02cd7b1872b96056f09b58d982099f6110663d2b4ab99102"
+  },
+  "inputs": {
+    "images_root": "/home/yasinduslpredetor/fer/data/raw",
+    "limit": 0,
+    "manifest": "/mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/splits_cleaned.csv",
+    "model": "/mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/dev/fer-service/models/fer_mobilenetv2_96_float32.tflite",
+    "reference": "/mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/nb04_val_probabilities.csv"
+  },
+  "model_sha256_matches_contract": true,
+  "n_images_compared": 3589,
+  "n_images_skipped": 0,
+  "n_images_target": 3589,
+  "per_class_argmax_agreement": {
+    "angry": {
+      "argmax_agree_pil_nb04": 1.0,
+      "argmax_agree_pil_tf": 1.0,
+      "n": 467
+    },
+    "disgust": {
+      "argmax_agree_pil_nb04": 1.0,
+      "argmax_agree_pil_tf": 1.0,
+      "n": 56
+    },
+    "fear": {
+      "argmax_agree_pil_nb04": 0.9939516129032258,
+      "argmax_agree_pil_tf": 1.0,
+      "n": 496
+    },
+    "happy": {
+      "argmax_agree_pil_nb04": 0.9988826815642458,
+      "argmax_agree_pil_tf": 1.0,
+      "n": 895
+    },
+    "neutral": {
+      "argmax_agree_pil_nb04": 0.9983525535420099,
+      "argmax_agree_pil_tf": 1.0,
+      "n": 607
+    },
+    "sad": {
+      "argmax_agree_pil_nb04": 0.998468606431853,
+      "argmax_agree_pil_tf": 1.0,
+      "n": 653
+    },
+    "surprise": {
+      "argmax_agree_pil_nb04": 0.9975903614457832,
+      "argmax_agree_pil_tf": 1.0,
+      "n": 415
+    }
+  },
+  "per_step_localisation": [
+    {
+      "checkpoint": "after_decode_grayscale_48_uint8",
+      "expected_max_abs_diff": 1e-06,
+      "max_abs_diff": 0.0,
+      "within_expectation": true
+    },
+    {
+      "checkpoint": "after_step2_resize48_uint8",
+      "expected_max_abs_diff": 1e-06,
+      "max_abs_diff": 0.0,
+      "within_expectation": true
+    },
+    {
+      "checkpoint": "after_step3_replicate_48x3",
+      "expected_max_abs_diff": 1e-06,
+      "max_abs_diff": 0.0,
+      "within_expectation": true
+    },
+    {
+      "checkpoint": "after_step4_resize96",
+      "expected_max_abs_diff": 0.75,
+      "max_abs_diff": 0.0,
+      "within_expectation": true
+    },
+    {
+      "checkpoint": "after_step5_scaling_pm1",
+      "expected_max_abs_diff": 0.004,
+      "max_abs_diff": 0.0,
+      "within_expectation": true
+    }
+  ],
+  "predicted_uint8_bound_pm1": 0.00392156862745098,
+  "skip_reasons": [],
+  "timestamp_utc": "2026-08-28T22:38:30.377644+00:00",
+  "tolerances_as_applied": {
+    "comparison1_tensor": {
+      "frac_elems_gt_0.01": {
+        "expected_band": 0.0001,
+        "hard_gate": 0.01
+      },
+      "max_abs_diff": {
+        "expected_band": 0.004,
+        "hard_gate": 0.02
+      },
+      "mean_abs_diff": {
+        "expected_band": 0.002,
+        "hard_gate": 0.01
+      },
+      "p99_abs_diff": {
+        "expected_band": 0.004,
+        "hard_gate": 0.02
+      }
+    },
+    "comparison2_probability": {
+      "argmax_agreement": {
+        "expected_band": 0.995,
+        "hard_gate": 0.99
+      },
+      "max_abs_diff": {
+        "expected_band": 0.01,
+        "hard_gate": 0.02
+      },
+      "mean_abs_diff": {
+        "expected_band": 0.002,
+        "hard_gate": 0.01
+      }
+    },
+    "comparison3_vs_nb04": {
+      "argmax_agreement": {
+        "expected_band": 0.98,
+        "hard_gate": 0.97
+      }
+    },
+    "per_step_expected_max_abs_diff": {
+      "after_decode_grayscale_48_uint8": 1e-06,
+      "after_step2_resize48_uint8": 1e-06,
+      "after_step3_replicate_48x3": 1e-06,
+      "after_step4_resize96": 0.75,
+      "after_step5_scaling_pm1": 0.004
+    }
+  },
+  "verdict": "PASS",
+  "worst_10_by_max_tensor_diff": [
+    {
+      "basename": "PublicTest_10116449.jpg",
+      "max_tensor_diff": 0.0
+    },
+    {
+      "basename": "PublicTest_10813312.jpg",
+      "max_tensor_diff": 0.0
+    },
+    {
+      "basename": "PublicTest_11521746.jpg",
+      "max_tensor_diff": 0.0
+    },
+    {
+      "basename": "PublicTest_11832974.jpg",
+      "max_tensor_diff": 0.0
+    },
+    {
+      "basename": "PublicTest_12296139.jpg",
+      "max_tensor_diff": 0.0
+    },
+    {
+      "basename": "PublicTest_12326319.jpg",
+      "max_tensor_diff": 0.0
+    },
+    {
+      "basename": "PublicTest_12693575.jpg",
+      "max_tensor_diff": 0.0
+    },
+    {
+      "basename": "PublicTest_12700974.jpg",
+      "max_tensor_diff": 0.0
+    },
+    {
+      "basename": "PublicTest_12751829.jpg",
+      "max_tensor_diff": 0.0
+    },
+    {
+      "basename": "PublicTest_12871755.jpg",
+      "max_tensor_diff": 0.0
+    }
+  ]
+}

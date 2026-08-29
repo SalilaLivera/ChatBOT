@@ -1,0 +1,5 @@
+variant,input_dtype,output_dtype,max_abs_diff,mean_abs_diff,argmax_agreement_rate
+float32,<class 'numpy.float32'>,<class 'numpy.float32'>,0.0033999085426330566,0.0002950518729630858,0.995
+float16,<class 'numpy.float32'>,<class 'numpy.float32'>,0.05384010076522827,0.005345050250673142,0.99
+dynint8,<class 'numpy.float32'>,<class 'numpy.float32'>,0.31308513879776,0.01574228050054184,0.915
+fullint8,<class 'numpy.float32'>,<class 'numpy.float32'>,0.89993891492486,0.0871297035610769,0.745

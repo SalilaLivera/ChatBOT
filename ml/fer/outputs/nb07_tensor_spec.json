@@ -1,0 +1,45 @@
+{
+  "reference_variant_for_io_contract": "float32 / float16 (both share the same float32 I/O contract)",
+  "input_tensor": {
+    "shape": [
+      1,
+      96,
+      96,
+      3
+    ],
+    "dtype": "float32",
+    "preprocessing_contract": "1) decode source JPEG as single-channel grayscale (channels=1, dct_method='INTEGER_ACCURATE' for bit-exact-with-PIL decoding); 2) resize to the FER-2013 native 48x48 with bilinear interpolation, round, cast to uint8; 3) replicate grayscale -> 3 channels; 4) bilinear resize to the model input size 96x96; 5) apply tf.keras.applications.mobilenet_v2.preprocess_input, mapping pixel values from [0, 255] to [-1, 1].",
+    "int8_variant_note": "dynint8 and fullint8 variants share this same float32 input dtype in this notebook (inference_input_type left as float32 by explicit choice, see Part B section 3 markdown) - they do NOT require a separate quantized input contract for the comparisons run here. A true int8 I/O contract (with its own scale/zero-point) is a valid follow-on for a device-embedded harness in notebook 08, not fixed here."
+  },
+  "output_tensor": {
+    "shape": [
+      1,
+      7
+    ],
+    "dtype": "float32",
+    "class_order": [
+      "angry",
+      "disgust",
+      "fear",
+      "happy",
+      "neutral",
+      "sad",
+      "surprise"
+    ],
+    "semantics": "softmax probabilities, calibrated (temperature-scaled)"
+  },
+  "temperature": 5.7271046975851005,
+  "calibration_method": "log-softmax approximation of logits (see Part A markdown); argmax-invariance verified for all VAL samples",
+  "n_classes": 7,
+  "class_label_space_tension": "This tensor spec is 7-CLASS (angry, disgust, fear, happy, neutral, sad, surprise). docs/system/MOOD_STATE_SPEC.md section A4 fixes a SEPARATE 3-state calm/neutral/distressed contract for the deployed evidence vector's label space; A4.1 explicitly defers tensor-level detail (this deliverable) to Phase 3 exit. The 7-class -> 3-state mapping is a separate, not-yet-decided downstream concern that must reconcile with this spec later. No such mapping is invented or implemented here.",
+  "source_model": {
+    "calibrated_keras_model": "fer_mobilenetv2_finetuned_96_calibrated.keras",
+    "original_finetuned_keras_model": "fer_mobilenetv2_finetuned_96.keras",
+    "tflite_variants": {
+      "float32": "fer_mobilenetv2_96_float32.tflite",
+      "float16": "fer_mobilenetv2_96_float16.tflite",
+      "dynint8": "fer_mobilenetv2_96_dynint8.tflite",
+      "fullint8": "fer_mobilenetv2_96_fullint8.tflite"
+    }
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "run_id": "run_20260828_025009",
+  "timestamp": "2026-08-28 02:50:09",
+  "notebook": "05_model_evaluation",
+  "dataset": "FER-2013",
+  "dataset_path": "/home/yasinduslpredetor/fer/data/raw",
+  "dataset_root_source": "wsl-native",
+  "dataset_version": "splits_cleaned.csv@sha256:a75d460f35d14c14cba6830923e5e5483f6d5611e779a9252d0b57fd49325496",
+  "model_version": [
+    "fer_mobilenetv2_finetuned_96.keras",
+    "fer_mobilenetv2_frozen_96.keras"
+  ],
+  "environment": "wsl2-gpu",
+  "gpu_device": "/physical_device:GPU:0",
+  "gpu_description": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+  "package_versions": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "Pillow": "12.3.0",
+    "matplotlib": "3.11.1",
+    "seaborn": "0.13.2",
+    "scikit-learn": "1.9.0",
+    "tensorflow": "2.21.0",
+    "keras": "3.15.1"
+  },
+  "hyperparameters": {
+    "input_size": 96,
+    "channels": 3,
+    "preprocessing": "grayscale replicated to 3 channels, bilinear resize to 96x96, mobilenet_v2.preprocess_input",
+    "batch_size": 64,
+    "class_names": [
+      "angry",
+      "disgust",
+      "fear",
+      "happy",
+      "neutral",
+      "sad",
+      "surprise"
+    ],
+    "models_evaluated": [
+      "finetuned",
+      "frozen"
+    ],
+    "threshold_applied": false,
+    "resampling": "none",
+    "test_set_touch_count": 1,
+    "quality_anomaly_exclusion_source": "image_flags.csv (is_anomaly == True), joined on file_path"
+  },
+  "random_seed": 42,
+  "metrics": {
+    "n_test": 3589,
+    "canonical": {
+      "finetuned": {
+        "accuracy": 0.6288659793814433,
+        "macro_f1": 0.6036268087571929,
+        "weighted_f1": 0.6262421033834887
+      },
+      "frozen": {
+        "accuracy": 0.4797993870158819,
+        "macro_f1": 0.4142413573890158,
+        "weighted_f1": 0.47080102286197006
+      }
+    },
+    "sensitivity_filtered": {
+      "finetuned": {
+        "accuracy": 0.6297123708461324,
+        "macro_f1": 0.6043949529083361,
+        "n_excluded": 8,
+        "n_kept": 3581
+      },
+      "frozen": {
+        "accuracy": 0.4805920134040771,
+        "macro_f1": 0.4150757980830372,
+        "n_excluded": 8,
+        "n_kept": 3581
+      }
+    },
+    "generalisation_gap": {
+      "finetuned": {
+        "macro_f1_gap": -0.008471883733582208,
+        "accuracy_gap": -0.0030649205906938537
+      },
+      "frozen": {
+        "macro_f1_gap": -0.02605403185470273,
+        "accuracy_gap": 0.00195040401225971
+      }
+    },
+    "validation_baseline": {
+      "finetuned": {
+        "source_run_id": "run_20260823_163030",
+        "val_accuracy": 0.6319308999721371,
+        "val_macro_f1": 0.6120986924907751
+      },
+      "frozen": {
+        "source_run_id": "run_20260822_175944",
+        "val_accuracy": 0.47784898300362216,
+        "val_macro_f1": 0.4402953892437185
+      }
+    },
+    "model_info": {
+      "finetuned": {
+        "file_size_mb": 24.464001,
+        "total_params": 2266951,
+        "trainable_params": 1848583
+      },
+      "frozen": {
+        "file_size_mb": 9.730709,
+        "total_params": 2266951,
+        "trainable_params": 8967
+      }
+    },
+    "confidence_summary_finetuned": {
+      "mean": 0.9293678998947144,
+      "median": 0.9981358051300049,
+      "std": 0.13295873999595642,
+      "min": 0.30421558022499084,
+      "max": 1.0
+    },
+    "test_split_used": true
+  },
+  "notes": "Notebook 05 evaluates both saved models (fer_mobilenetv2_finetuned_96.keras from notebook 04, and fer_mobilenetv2_frozen_96.keras from notebook 03) on the held-out FER-2013 TEST split (PrivateTest_, 3589 rows), touched exactly once, verified by a hard gate before any image was decoded. Fine-tuned: TEST accuracy=0.6289, macro_f1=0.6036, versus its own VALIDATION baseline macro_f1=0.6121 (run run_20260823_163030) - generalisation gap -0.0085 macro-F1. Frozen: TEST accuracy=0.4798, macro_f1=0.4142, versus its own VALIDATION baseline macro_f1=0.4403 (run run_20260822_175944) - generalisation gap -0.0261 macro-F1. Sensitivity analysis excluded 8 TEST images flagged is_anomaly==True in image_flags.csv (secondary table only; the canonical full-TEST numbers above are the headline result): fine-tuned macro-F1 changed by +0.0008, frozen macro-F1 changed by +0.0008 when those images were removed. No confidence threshold (tau_face_min) was applied anywhere in this notebook - that decision belongs to a later notebook. No resampling, no reweighting. CP-1 (calm/neutral confusion) is inspected via the top-5 off-diagonal confusion cells and the saved confusion-matrix heatmaps/CSV; FER-2013 has no 'calm' class, so this reads as neutral/sad/fear cross-confusion, visible in nb05_confusion_matrix.csv and the plots in plots/nb05/."
+}

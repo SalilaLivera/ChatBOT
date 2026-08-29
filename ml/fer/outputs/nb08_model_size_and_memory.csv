@@ -1,0 +1,5 @@
+variant,file_size_bytes,size_mb,compression_ratio_vs_float32,interpreter_tensor_buffer_bytes,param_count,input_shape,output_shape,input_dtype,output_dtype,rejected
+float32,8956864,8.5419,1.0,14044404,2266951,"[1, 96, 96, 3]","[1, 7]",float32,float32,False
+float16,4578244,4.3662,1.9564,18475976,2266951,"[1, 96, 96, 3]","[1, 7]",float32,float32,False
+dynint8,2572184,2.453,3.4822,7848204,2266951,"[1, 96, 96, 3]","[1, 7]",float32,float32,False
+fullint8,2776016,2.6474,3.2265,3672923,2266951,"[1, 96, 96, 3]","[1, 7]",float32,float32,True

@@ -1,0 +1,25 @@
+{
+  "tag": "gpu",
+  "environment": {
+    "sys_executable": "/home/yasinduslpredetor/miniconda3/envs/maternalink-fer-gpu/bin/python",
+    "python": "3.11.15 (main, Jun 11 2026, 15:20:16) [GCC 14.3.0]",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "numpy": "2.4.6",
+    "pillow": "12.3.0",
+    "preprocess_source": "fer_service.preprocessing",
+    "timestamp_utc": "2026-08-29T10:43:26.437631+00:00",
+    "pillow_jpeg_library_version": "6.2",
+    "pillow_zlib_version": "1.3.2",
+    "pillow_libtiff_version": "4.7.1",
+    "pillow_libjpeg_turbo": true
+  },
+  "n_hashed": 3589,
+  "first_n_npy": 200,
+  "csv": "/mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/a2_service/pillow_equiv_gpu.csv",
+  "npy": "/mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/ml/fer/outputs/a2_service/pillow_equiv_gpu_first200.npy",
+  "manifest_sha256": "a75d460f35d14c14cba6830923e5e5483f6d5611e779a9252d0b57fd49325496",
+  "images_root": "/home/yasinduslpredetor/fer/data/raw",
+  "sorted_order": true,
+  "first_basename": "PublicTest_10014592.jpg",
+  "last_basename": "PublicTest_99862107.jpg"
+}

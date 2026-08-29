@@ -1,0 +1,173 @@
+{
+  "run_id": "run_20260828_142821",
+  "timestamp": "2026-08-28 14:28:21",
+  "notebook": "07_tflite_conversion",
+  "dataset": "FER-2013",
+  "dataset_path": "/home/yasinduslpredetor/fer/data/raw",
+  "dataset_root_source": "wsl-native",
+  "dataset_version": "splits_cleaned.csv@sha256:a75d460f35d14c14cba6830923e5e5483f6d5611e779a9252d0b57fd49325496",
+  "model_version": "fer_mobilenetv2_finetuned_96.keras",
+  "environment": "wsl2-gpu",
+  "gpu_device": "/physical_device:GPU:0",
+  "gpu_description": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+  "package_versions": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "Pillow": "12.3.0",
+    "matplotlib": "3.11.1",
+    "seaborn": "0.13.2",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.17.1",
+    "tensorflow": "2.21.0",
+    "keras": "3.15.1"
+  },
+  "hyperparameters": {
+    "input_size": 96,
+    "channels": 3,
+    "preprocessing": "grayscale replicated to 3 channels, bilinear resize to 96x96, mobilenet_v2.preprocess_input",
+    "class_names": [
+      "angry",
+      "disgust",
+      "fear",
+      "happy",
+      "neutral",
+      "sad",
+      "surprise"
+    ],
+    "n_calibration_bins": 10,
+    "temperature_search_bounds": [
+      0.05,
+      10.0
+    ],
+    "n_representative_samples_requested": 400,
+    "n_parity_samples": 200,
+    "n_latency_warmup": 20,
+    "n_latency_runs": 200,
+    "converter_settings": {
+      "float32": {
+        "optimizations": [],
+        "supported_types": null,
+        "representative_dataset": false,
+        "supported_ops": "default",
+        "inference_input_type": "float32",
+        "inference_output_type": "float32"
+      },
+      "float16": {
+        "optimizations": [
+          "DEFAULT"
+        ],
+        "supported_types": [
+          "float16"
+        ],
+        "representative_dataset": false,
+        "supported_ops": "default",
+        "inference_input_type": "float32",
+        "inference_output_type": "float32"
+      },
+      "dynint8": {
+        "optimizations": [
+          "DEFAULT"
+        ],
+        "supported_types": null,
+        "representative_dataset": false,
+        "supported_ops": "default",
+        "inference_input_type": "float32",
+        "inference_output_type": "float32"
+      },
+      "fullint8": {
+        "optimizations": [
+          "DEFAULT"
+        ],
+        "supported_types": null,
+        "representative_dataset": "TRAIN, n=400, seed=42",
+        "supported_ops": [
+          "TFLITE_BUILTINS_INT8"
+        ],
+        "inference_input_type": "float32",
+        "inference_output_type": "float32"
+      }
+    },
+    "test_set_touch_count": 0,
+    "val_set_used_for": [
+      "calibration_fitting",
+      "accuracy/ece_comparison",
+      "parity_check_sample"
+    ],
+    "train_set_used_for": "int8 representative dataset only (never used for accuracy metrics)"
+  },
+  "random_seed": 42,
+  "metrics": {
+    "fitted_temperature": 5.7271046975851005,
+    "ece_before_calibration_val": 0.30102895069467756,
+    "ece_after_calibration_val": 0.012614141359242383,
+    "argmax_unchanged_confirmed": true,
+    "n_argmax_mismatches": 0,
+    "baseline_val_accuracy_uncalibrated": 0.6316522708275285,
+    "tflite_comparison": {
+      "keras_calibrated": {
+        "accuracy": 0.6316522708275285,
+        "macro_f1": 0.6116932686691829,
+        "weighted_f1": 0.6296945990347405,
+        "ece": 0.012614141359242383,
+        "macro_f1_delta_vs_keras": 0.0,
+        "escalation_flag": false
+      },
+      "float32": {
+        "accuracy": 0.6319308999721371,
+        "macro_f1": 0.6121791078324027,
+        "weighted_f1": 0.63010198381699,
+        "ece": 0.009903764867556732,
+        "macro_f1_delta_vs_keras": 0.00048583916321975895,
+        "escalation_flag": false
+      },
+      "float16": {
+        "accuracy": 0.6322095291167457,
+        "macro_f1": 0.6090215358855209,
+        "weighted_f1": 0.6304629210235636,
+        "ece": 0.013467651509282051,
+        "macro_f1_delta_vs_keras": -0.002671732783662062,
+        "escalation_flag": false
+      },
+      "dynint8": {
+        "accuracy": 0.6283087210922262,
+        "macro_f1": 0.6070908432101879,
+        "weighted_f1": 0.6259391921224722,
+        "ece": 0.010300378886296167,
+        "macro_f1_delta_vs_keras": -0.00460242545899503,
+        "escalation_flag": false
+      },
+      "fullint8": {
+        "accuracy": 0.5583728057954862,
+        "macro_f1": 0.4928602185027806,
+        "weighted_f1": 0.5583982059045303,
+        "ece": 0.14430812900529394,
+        "macro_f1_delta_vs_keras": -0.11883305016640233,
+        "escalation_flag": true
+      }
+    },
+    "parity_check": {
+      "float32": {
+        "max_abs_diff": 0.0033999085426330566,
+        "mean_abs_diff": 0.0002950518729630858,
+        "argmax_agreement_rate": 0.995
+      },
+      "float16": {
+        "max_abs_diff": 0.05384010076522827,
+        "mean_abs_diff": 0.005345050250673142,
+        "argmax_agreement_rate": 0.99
+      },
+      "dynint8": {
+        "max_abs_diff": 0.31308513879776,
+        "mean_abs_diff": 0.01574228050054184,
+        "argmax_agreement_rate": 0.915
+      },
+      "fullint8": {
+        "max_abs_diff": 0.89993891492486,
+        "mean_abs_diff": 0.0871297035610769,
+        "argmax_agreement_rate": 0.745
+      }
+    }
+  },
+  "notes": "Notebook 07 recalibrates the fine-tuned model (temperature scaling, fitted on VALIDATION logits reconstructed via a log-softmax approximation, argmax-invariance verified for all 3589 VAL samples), bakes T into a saved calibrated .keras model, converts it to four TFLite variants (float32/float16/dynint8/fullint8), and compares size/accuracy/ECE/latency across all variants plus the Keras baseline on the FULL VAL split (3,589 images, TEST never touched anywhere in this notebook). Exports a 7-class tensor specification as the Phase-3-exit deliverable per MOOD_STATE_SPEC.md A4.1; the 7-class vs A4's 3-state calm/neutral/distressed contract is recorded as an explicit, unresolved downstream tension, not resolved here. Latency figures are development-machine indicative only, not a device benchmark (see notebook 08)."
+}

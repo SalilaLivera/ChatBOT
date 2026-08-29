@@ -1,0 +1,397 @@
+{
+  "d6_standalone_tflite_runtime": {
+    "note": "1.2.0 (old pin) fails: 'cannot enable executable stack as shared object requires' on glibc 2.43. tflite-runtime not tried once 2.2.0 worked. requirements.txt updated to pin 2.2.0.",
+    "resolved": true,
+    "runtime": "ai-edge-litert==2.2.0",
+    "runtime_equivalence_vs_a1_tflite": {
+      "argmax_agreement": "60/60",
+      "compared": "ai_edge_litert 2.2.0 vs tf.lite (the runtime A1 used)",
+      "conclusion": "float32 epsilon noise only; the runtime swap does not disturb A1's certification.",
+      "max_abs_prob_diff": 2.9802322387695312e-08,
+      "mean_abs_prob_diff": 8.40407743396554e-10,
+      "n_val_images": 60
+    }
+  },
+  "environment": {
+    "ai_edge_litert": "2.2.0",
+    "conda_env": "maternalink-fer-service",
+    "fastapi": "0.141.1",
+    "fer_debug_set": false,
+    "gradio": "5.50.0",
+    "numpy": "2.4.6",
+    "pillow": "11.3.0",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "python": "3.11.16 (main, Aug 27 2026, 14:44:21) [GCC 14.3.0]",
+    "starlette": "0.52.1",
+    "sys_executable": "/home/yasinduslpredetor/miniconda3/envs/maternalink-fer-service/bin/python",
+    "tensorflow_importable": null,
+    "tflite_runtime_used": "ai_edge_litert",
+    "timestamp_utc": "2026-08-29T09:17:56.797658+00:00"
+  },
+  "generated_utc": "2026-08-29T09:17:56.795463+00:00",
+  "model_sha256": "47b3adcc0ce769afa469ec6dd272e2561263863ab73621a449fcc1340e958c8c",
+  "model_sha256_expected": "47b3adcc0ce769afa469ec6dd272e2561263863ab73621a449fcc1340e958c8c",
+  "overall_verdict": "PASS",
+  "phase": "A2 - local service verification",
+  "pytest_exitstatus": 0,
+  "t5_consistency": {
+    "argmax_agreement": 100,
+    "max_deviation": 4.990652799595485e-07,
+    "mean_deviation": 2.440541524967267e-07,
+    "n": 100,
+    "tolerance": 5e-07
+  },
+  "t7_full_frame_observation": {
+    "confidence": 0.300372,
+    "has_any_warning_field": false,
+    "note": "Full frame accepted silently; response is structurally identical to a real crop. Nothing signals that the probabilities are meaningless.",
+    "predicted_class": "neutral",
+    "probabilities": {
+      "angry": 0.054694,
+      "disgust": 0.002728,
+      "fear": 0.087893,
+      "happy": 0.218199,
+      "neutral": 0.300372,
+      "sad": 0.043356,
+      "surprise": 0.292758
+    },
+    "response_fields": [
+      "calibrated",
+      "class_order",
+      "confidence",
+      "label_space",
+      "model_sha256",
+      "model_version",
+      "predicted_class",
+      "probabilities"
+    ],
+    "status_code": 200
+  },
+  "tests": {
+    "T1": {
+      "evidence": {
+        "error_handler_formats_envelope": true,
+        "raw_predict_body": {
+          "error": {
+            "code": "missing_image",
+            "message": "No image was provided in the request."
+          }
+        },
+        "status_codes": {
+          "/": 200,
+          "/contract": 200,
+          "/health": 200,
+          "/predict(no-body)": 400
+        }
+      },
+      "verdict": "PASS"
+    },
+    "T2": {
+      "evidence": {
+        "body": {
+          "calibrated": true,
+          "class_order": [
+            "angry",
+            "disgust",
+            "fear",
+            "happy",
+            "neutral",
+            "sad",
+            "surprise"
+          ],
+          "input_dtype": "float32",
+          "input_shape": [
+            1,
+            96,
+            96,
+            3
+          ],
+          "label_space": "fer7",
+          "model_sha256": "47b3adcc0ce769afa469ec6dd272e2561263863ab73621a449fcc1340e958c8c",
+          "model_version": "fer-mobilenetv2-96-float32/1.0.0",
+          "output_dtype": "float32",
+          "output_shape": [
+            1,
+            7
+          ],
+          "performs_face_detection": false,
+          "performs_mood_mapping": false,
+          "runtime": "ai_edge_litert",
+          "status": "ok"
+        },
+        "checks": {
+          "class_order_in_order": true,
+          "label_space": true,
+          "model_sha256": true,
+          "no_path_leak": true,
+          "no_training_metadata": true,
+          "performs_face_detection_false": true,
+          "performs_mood_mapping_false": true,
+          "status_ok": true
+        },
+        "path_markers_found": [],
+        "training_meta_found": []
+      },
+      "verdict": "PASS"
+    },
+    "T3": {
+      "evidence": {
+        "body": {
+          "calibration": {
+            "argmax_changes": 0,
+            "baked_into_graph": true,
+            "ece_after": 0.0126,
+            "ece_before": 0.301,
+            "fitted_on": "validation split (PublicTest, 3,589 images)",
+            "method": "temperature scaling",
+            "temperature": 5.7271046975851005
+          },
+          "class_order": [
+            "angry",
+            "disgust",
+            "fear",
+            "happy",
+            "neutral",
+            "sad",
+            "surprise"
+          ],
+          "input": {
+            "accepted_formats": [
+              "JPEG",
+              "PNG",
+              "BMP",
+              "WEBP"
+            ],
+            "encoding": "multipart/form-data",
+            "endpoint": "POST /predict",
+            "expects": "a cropped face region; this service does NOT detect faces",
+            "field": "image",
+            "max_bytes": 8388608
+          },
+          "label_space": "fer7",
+          "limitations": [
+            "Trained on FER-2013, which is predominantly Western/Caucasian. External validity for Sri Lankan users is UNVALIDATED.",
+            "Negative expressions (angry, disgust, fear, sad) are poorly discriminated from one another; per-class F1 is roughly 0.47-0.57.",
+            "Source images are 48x48 grayscale; fine facial detail is not available to the model.",
+            "Output is a facial-expression estimate. It is NOT an emotion measurement, NOT a mental-health assessment, and NOT a medical diagnosis."
+          ],
+          "model_version": "fer-mobilenetv2-96-float32/1.0.0",
+          "out_of_scope": [
+            "face detection (the CALLER supplies a face crop; BlazeFace runs upstream)",
+            "the 7-class -> 3-state calm/neutral/distressed mapping (OD-4, undecided)",
+            "temporal smoothing across frames (N_smooth, undecided)",
+            "confidence gating (tau_face_min, undecided)",
+            "text-sentiment fusion",
+            "any storage of images or predictions"
+          ],
+          "output": {
+            "confidence": "probability of predicted_class",
+            "predicted_class": "argmax over class_order",
+            "probabilities": "7 calibrated softmax probabilities, sums to 1.0"
+          },
+          "service_version": "1.0.0"
+        },
+        "checks": {
+          "accepted_formats": true,
+          "calibration_baked": true,
+          "calibration_temperature": true,
+          "class_order_in_order": true,
+          "input_endpoint": true,
+          "input_field_image": true,
+          "label_space": true,
+          "limitations_nonempty": true,
+          "max_bytes": true,
+          "model_version": true,
+          "no_path_leak": true,
+          "out_of_scope_nonempty": true
+        },
+        "path_markers_found": []
+      },
+      "verdict": "PASS"
+    },
+    "T4": {
+      "evidence": {
+        "body": {
+          "calibrated": true,
+          "class_order": [
+            "angry",
+            "disgust",
+            "fear",
+            "happy",
+            "neutral",
+            "sad",
+            "surprise"
+          ],
+          "confidence": 0.51764,
+          "label_space": "fer7",
+          "model_sha256": "47b3adcc0ce769afa469ec6dd272e2561263863ab73621a449fcc1340e958c8c",
+          "model_version": "fer-mobilenetv2-96-float32/1.0.0",
+          "predicted_class": "angry",
+          "probabilities": {
+            "angry": 0.51764,
+            "disgust": 0.005032,
+            "fear": 0.031359,
+            "happy": 0.005874,
+            "neutral": 0.355096,
+            "sad": 0.063529,
+            "surprise": 0.02147
+          }
+        },
+        "checks": {
+          "all_doc_fields_present": true,
+          "calibrated_true": true,
+          "confidence_matches": "True",
+          "http_200": true,
+          "label_space_fer7": true,
+          "no_undocumented_fields": true,
+          "predicted_is_argmax": true,
+          "seven_probs": true,
+          "sum_to_one": "True"
+        },
+        "image": "PublicTest_10116449.jpg",
+        "undocumented_fields": []
+      },
+      "verdict": "PASS"
+    },
+    "T5": {
+      "evidence": {
+        "argmax_agreement": 100,
+        "max_deviation": 4.990652799595485e-07,
+        "mean_deviation": 2.440541524967267e-07,
+        "n": 100,
+        "tolerance": 5e-07
+      },
+      "verdict": "PASS"
+    },
+    "T6": {
+      "evidence": {
+        "cases": {
+          "8x8": {
+            "body": {
+              "error": {
+                "code": "image_too_small",
+                "message": "The image is too small to be a usable face crop."
+              }
+            },
+            "envelope_ok": true,
+            "match": true,
+            "path_leak": []
+          },
+          "gif": {
+            "body": {
+              "error": {
+                "code": "unsupported_format",
+                "message": "Unsupported image format. Accepted: JPEG, PNG, BMP, WEBP."
+              }
+            },
+            "envelope_ok": true,
+            "match": true,
+            "path_leak": []
+          },
+          "missing_image": {
+            "body": {
+              "error": {
+                "code": "missing_image",
+                "message": "No image was provided in the request."
+              }
+            },
+            "envelope_ok": true,
+            "match": true,
+            "path_leak": []
+          },
+          "over_8mb": {
+            "body": {
+              "error": {
+                "code": "image_too_large",
+                "message": "The image exceeds the maximum accepted upload size."
+              }
+            },
+            "envelope_ok": true,
+            "match": true,
+            "path_leak": []
+          },
+          "random_bytes": {
+            "body": {
+              "error": {
+                "code": "unsupported_format",
+                "message": "Unsupported image format. Accepted: JPEG, PNG, BMP, WEBP."
+              }
+            },
+            "envelope_ok": true,
+            "match": true,
+            "path_leak": []
+          },
+          "truncated_jpeg": {
+            "body": {
+              "error": {
+                "code": "invalid_image",
+                "message": "The image could not be decoded. It may be corrupt or truncated."
+              }
+            },
+            "envelope_ok": true,
+            "match": true,
+            "path_leak": []
+          }
+        },
+        "untested_at_runtime": [
+          "model_load_failed",
+          "inference_failed",
+          "preprocessing_failed",
+          "contract_violation"
+        ],
+        "untested_reason": "cannot trigger without breaking the install; verified by code inspection in errors.py / inference.py / preprocessing.py"
+      },
+      "verdict": "PASS"
+    },
+    "T7": {
+      "evidence": {
+        "confidence": 0.300372,
+        "has_any_warning_field": false,
+        "note": "Full frame accepted silently; response is structurally identical to a real crop. Nothing signals that the probabilities are meaningless.",
+        "predicted_class": "neutral",
+        "probabilities": {
+          "angry": 0.054694,
+          "disgust": 0.002728,
+          "fear": 0.087893,
+          "happy": 0.218199,
+          "neutral": 0.300372,
+          "sad": 0.043356,
+          "surprise": 0.292758
+        },
+        "response_fields": [
+          "calibrated",
+          "class_order",
+          "confidence",
+          "label_space",
+          "model_sha256",
+          "model_version",
+          "predicted_class",
+          "probabilities"
+        ],
+        "status_code": 200
+      },
+      "verdict": "OBSERVED"
+    },
+    "T8": {
+      "evidence": {
+        "new_files_any": [],
+        "new_image_files": [],
+        "requests": 20,
+        "watched": [
+          "/mnt/c/Users/Yasindu/Desktop/Chat_Research/IT22638168/dev/fer-service",
+          "/tmp"
+        ]
+      },
+      "verdict": "PASS"
+    },
+    "T9": {
+      "evidence": {
+        "content_length": 22401,
+        "looks_like_gradio": true,
+        "status_code": 200
+      },
+      "verdict": "PASS"
+    }
+  },
+  "tflite_runtime_used": "ai_edge_litert"
+}

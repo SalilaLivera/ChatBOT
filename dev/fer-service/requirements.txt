@@ -1,0 +1,22 @@
+# MaternaLink FER inference service — runtime dependencies only.
+# NO TensorFlow: the service uses a standalone TFLite runtime. Full TF is a
+# ~600 MB dependency needed only for training, which does not happen here.
+
+# A2 (2026-08-29): 1.2.0's .so requires an executable stack and fails to import on
+# glibc >= 2.41 ("cannot enable executable stack as shared object requires").
+# 2.2.0 imports and runs standalone (no TensorFlow) on glibc 2.43. Verified in the
+# maternalink-fer-service env: loads the pinned model, SHA matches, inference OK.
+ai-edge-litert==2.2.0
+numpy>=1.26,<3
+# PINNED EXACTLY — do not relax to a range.
+# Pillow sits on the numerically certified path: A1 (2026-08-29) certified preprocess()
+# bit-identical to the TensorFlow reference on Pillow 12.3.0, and a dedicated equivalence
+# check proved 11.3.0 produces BIT-IDENTICAL tensors on all 3,589 VAL images (both builds
+# bundle libjpeg 6.2 / libjpeg-turbo). That covers TWO versions, not a range — a range
+# ships whatever pip resolved on the day, which is untested. 11.3.0 is the version A2's
+# full test suite ran against.
+Pillow==11.3.0
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+python-multipart>=0.0.9
+gradio>=5.0,<6

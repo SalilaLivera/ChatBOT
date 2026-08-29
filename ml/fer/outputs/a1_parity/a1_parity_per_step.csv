@@ -1,0 +1,6 @@
+checkpoint,max_abs_diff,expected_max_abs_diff,within_expectation
+after_decode_grayscale_48_uint8,0.0,1e-06,True
+after_step2_resize48_uint8,0.0,1e-06,True
+after_step3_replicate_48x3,0.0,1e-06,True
+after_step4_resize96,0.0,0.75,True
+after_step5_scaling_pm1,0.0,0.004,True

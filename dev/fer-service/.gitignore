@@ -1,0 +1,6 @@
+# The .tflite model is delivered via the Hugging Face model repository,
+# not via git. See README.md > Obtaining the model.
+models/*.tflite
+__pycache__/
+*.py[cod]
+.venv/
