@@ -1,0 +1,206 @@
+{
+  "analysis": "FER B3 final one-shot 3-state test scoring",
+  "timestamp": "2026-08-29T22:05:53.088654",
+  "input_file": "ml/fer/outputs/nb05_test_probabilities_finetuned.csv",
+  "input_sha256": "4e207996350d969b2178ee318ceb28e0ec3e18bae0a5f74af9393694e547e597",
+  "model": "finetuned (fer_mobilenetv2_finetuned_96.keras)",
+  "mapping": {
+    "happy": "CALM",
+    "neutral": "NEUTRAL",
+    "surprise": "NEUTRAL",
+    "angry": "DISTRESSED",
+    "disgust": "DISTRESSED",
+    "fear": "DISTRESSED",
+    "sad": "DISTRESSED"
+  },
+  "aggregation_rule": "Rule A \u2014 take the 7-class argmax, map that class to its 3-state label; same mapping applied to true and predicted label",
+  "mapping_frozen_by": "docs/decisions/FER_7TO3_MAPPING_DECISION.md (M1 . Rule A, FROZEN 2026-08-29)",
+  "mapping_basis": "supervisory expert judgement, consistent with the canonical affective circumplex (Russell 1980); NOT AffectNet-derived \u2014 the AffectNet per-class valence/arousal statistics required by MOOD_STATE_SPEC B2.1 are not published (docs/decisions/AFFECTNET_VALENCE_AROUSAL_BASIS.md)",
+  "guards": {
+    "G1_authorized_path_denylist_clear": {
+      "pass": true,
+      "detail": "path=c:/Users/Yasindu/Desktop/Chat_Research/IT22638168\\ml/fer/outputs/nb05_test_probabilities_finetuned.csv deny_hits=[]"
+    },
+    "G2_row_count_3589": {
+      "pass": true,
+      "detail": "rows=3589"
+    },
+    "G3_basename_PrivateTest_prefix": {
+      "pass": true,
+      "detail": "non-conforming=0"
+    },
+    "G4_model_all_finetuned": {
+      "pass": true,
+      "detail": "model values=['finetuned']"
+    },
+    "G5_classes_subset_of_7": {
+      "pass": true,
+      "detail": "true_class=['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise'] predicted_class=['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']"
+    },
+    "G6_predicted_class_is_argmax": {
+      "pass": true,
+      "detail": "3589/3589"
+    },
+    "G7_mapping_partitions_and_all_states_covered": {
+      "pass": true,
+      "detail": "states covered=['CALM', 'DISTRESSED', 'NEUTRAL']"
+    },
+    "G8_input_sha256": "4e207996350d969b2178ee318ceb28e0ec3e18bae0a5f74af9393694e547e597",
+    "G8_sha256_recorded": {
+      "pass": true,
+      "detail": "4e207996350d969b2178ee318ceb28e0ec3e18bae0a5f74af9393694e547e597"
+    }
+  },
+  "g6_argmax_agreement": "3589/3589",
+  "primary_canonical_3589": {
+    "n": 3589,
+    "confusion_matrix_rows_true_cols_pred": [
+      [
+        772,
+        39,
+        68
+      ],
+      [
+        79,
+        717,
+        246
+      ],
+      [
+        97,
+        308,
+        1263
+      ]
+    ],
+    "per_state": {
+      "CALM": {
+        "precision": 0.8143459915611815,
+        "recall": 0.8782707622298066,
+        "f1": 0.8451012588943624,
+        "support": 879
+      },
+      "NEUTRAL": {
+        "precision": 0.6738721804511278,
+        "recall": 0.6880998080614203,
+        "f1": 0.6809116809116809,
+        "support": 1042
+      },
+      "DISTRESSED": {
+        "precision": 0.8008877615726062,
+        "recall": 0.7571942446043165,
+        "f1": 0.7784283513097072,
+        "support": 1668
+      }
+    },
+    "macro_f1": 0.7681470970385836,
+    "accuracy": 0.7667874059626637,
+    "balanced_accuracy": 0.7745216049651811,
+    "weighted_f1": 0.7664453797889964,
+    "true_state_distribution_counts": {
+      "CALM": 879,
+      "NEUTRAL": 1042,
+      "DISTRESSED": 1668
+    },
+    "true_state_distribution_frac": {
+      "CALM": 0.2449150181108944,
+      "NEUTRAL": 0.29033156868208415,
+      "DISTRESSED": 0.46475341320702146
+    },
+    "predicted_state_distribution_counts": {
+      "CALM": 948,
+      "NEUTRAL": 1064,
+      "DISTRESSED": 1577
+    },
+    "predicted_state_distribution_frac": {
+      "CALM": 0.2641404290888827,
+      "NEUTRAL": 0.2964614098634717,
+      "DISTRESSED": 0.43939816104764556
+    }
+  },
+  "secondary_sensitivity_3581": {
+    "n": 3581,
+    "confusion_matrix_rows_true_cols_pred": [
+      [
+        771,
+        39,
+        68
+      ],
+      [
+        78,
+        717,
+        245
+      ],
+      [
+        95,
+        307,
+        1261
+      ]
+    ],
+    "per_state": {
+      "CALM": {
+        "precision": 0.8167372881355932,
+        "recall": 0.878132118451025,
+        "f1": 0.8463227222832053,
+        "support": 878
+      },
+      "NEUTRAL": {
+        "precision": 0.6745061147695203,
+        "recall": 0.6894230769230769,
+        "f1": 0.68188302425107,
+        "support": 1040
+      },
+      "DISTRESSED": {
+        "precision": 0.8011435832274459,
+        "recall": 0.7582681900180397,
+        "f1": 0.7791164658634538,
+        "support": 1663
+      }
+    },
+    "macro_f1": 0.7691074041325763,
+    "accuracy": 0.7676626640603184,
+    "balanced_accuracy": 0.7752744617973805,
+    "weighted_f1": 0.767355592883745,
+    "true_state_distribution_counts": {
+      "CALM": 878,
+      "NEUTRAL": 1040,
+      "DISTRESSED": 1663
+    },
+    "true_state_distribution_frac": {
+      "CALM": 0.24518290980173135,
+      "NEUTRAL": 0.29042166992460205,
+      "DISTRESSED": 0.4643954202736666
+    },
+    "predicted_state_distribution_counts": {
+      "CALM": 944,
+      "NEUTRAL": 1063,
+      "DISTRESSED": 1574
+    },
+    "predicted_state_distribution_frac": {
+      "CALM": 0.26361351577771575,
+      "NEUTRAL": 0.29684445685562694,
+      "DISTRESSED": 0.4395420273666574
+    }
+  },
+  "sensitivity_exclusion_list": [
+    "PrivateTest_13548922.jpg",
+    "PrivateTest_15353271.jpg",
+    "PrivateTest_26784100.jpg",
+    "PrivateTest_4871052.jpg",
+    "PrivateTest_57200649.jpg",
+    "PrivateTest_65872116.jpg",
+    "PrivateTest_82792706.jpg",
+    "PrivateTest_94692871.jpg"
+  ],
+  "sensitivity_exclusion_source": "ml/fer/outputs/image_flags.csv (is_anomaly==True, prefix PrivateTest_); n matches nb05_test_metrics.json n_excluded=8",
+  "seven_class_test_comparison": {
+    "macro_f1": 0.603557951083015,
+    "accuracy": 0.6288659793814433,
+    "weighted_f1": 0.6262253505809533,
+    "framing": "The task got easier; the model did not get better. Four heavily-confusable classes (angry/disgust/fear/sad) were merged into one DISTRESSED state, so a 7-class error inside that group becomes a 3-state success."
+  },
+  "limitations": [
+    "MOOD_STATE_SPEC B2.2 categorical-transfer limitation applies in full: the mapping is a categorical transfer of a rule, not a measurement on FER-2013.",
+    "MOOD_STATE_SPEC B2.1 AffectNet valence/arousal derivation could not be performed (statistics not published); mapping rests on supervisory judgement consistent with the affective circumplex. Do NOT describe as AffectNet-derived.",
+    "FER-2013 demographic skew (predominantly Western/Caucasian) means external validity for Sri Lankan users is UNVALIDATED \u2014 the most serious limitation for this deployment.",
+    "Probabilities in the input CSV are uncalibrated (predate notebook 07 temperature fitting). Temperature scaling is argmax-invariant (nb07: 0/3589 predictions changed at T=5.727); Rule A depends only on argmax, so this does not affect these results. Confidence values not reported."
+  ]
+}

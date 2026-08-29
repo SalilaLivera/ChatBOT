@@ -2,9 +2,9 @@
 
 **Project:** IT22638168 · MaternaLink
 **Date recorded:** 2026-08-29
-**Decided by:** Project owner (Tech Lead role)
-**Status:** **PROVISIONAL — conditional on R1 confirmation. NOT frozen.**
-**Closes:** OD-4 (provisionally). **Unblocks:** B4 (fusion), once frozen.
+**Decided by:** Project owner (Tech Lead role); D-1/D-2/D-3 confirmed by academic supervisor
+**Status:** **FROZEN** (2026-08-29, after R1 execution — see §5)
+**Closes:** OD-4. **Unblocks:** the single test scoring, then B4 (fusion).
 
 **Evidence base:** `ml/fer/outputs/b3_mapping/B3A_SUPERVISOR_FINDINGS.md`
 **Governing spec:** `docs/system/MOOD_STATE_SPEC.md` §B2
@@ -15,10 +15,10 @@
 
 | # | decision | value | status |
 |---|---|---|---|
-| **D-1** | Derivation basis | **R1** — published AffectNet valence/arousal statistics (Mollahosseini et al., *IEEE TAC* 2019), in place of the raw corpus | taken |
-| **D-2** | `surprise` placement | **NEUTRAL** | **provisional**, subject to R1 |
-| **D-3** | `disgust` placement | **DISTRESSED** | **provisional**, subject to R1 |
-| **D-4** | Aggregation rule | **Rule A — argmax-then-map** | taken |
+| **D-1** | Derivation basis | **R1 attempted and found not executable** (§2). Basis is academic-supervisor direction, consistent with the canonical affective circumplex. | **resolved** |
+| **D-2** | `surprise` placement | **NEUTRAL** | **FROZEN** |
+| **D-3** | `disgust` placement | **DISTRESSED** | **FROZEN** |
+| **D-4** | Aggregation rule | **Rule A — argmax-then-map** | **FROZEN** |
 
 ### Resulting mapping
 
@@ -36,12 +36,45 @@ This corresponds to candidate **M1** in B3-A, evaluated under **Rule A**.
 
 ---
 
-## 2. D-1 — why R1
+## 2. D-1 — R1 was attempted, and the required evidence does not exist
 
 `MOOD_STATE_SPEC.md` §B2.1 requires the mapping be grounded in AffectNet valence/arousal space.
-No AffectNet data exists in this project. R1 uses the **published per-class valence/arousal
-table** rather than the raw corpus: citable, no licence required, and it satisfies §B2.1 step 1
-in substance — the step asks for per-class distributions, and the paper reports them.
+No AffectNet data exists in this project, so D-1 initially chose **R1**: use the *published*
+per-class valence/arousal table instead of the raw corpus.
+
+**R1 was executed on 2026-08-29 and established that no such table is published.**
+Full record: `docs/decisions/AFFECTNET_VALENCE_AROUSAL_BASIS.md`.
+
+Mollahosseini, Hasani & Mahoor (*IEEE TAC* 10(1):18–31, 2019; DOI 10.1109/TAFFC.2017.2740923;
+arXiv:1708.03985) reports valence/arousal per category **only as a circumplex scatter** (Figs. 1
+and 8) and a **category-blind** 2D histogram (Fig. 4 / Table 14). No mean, SD, or median is
+published per class. The secondary source checked (CAGE, arXiv:2404.14975) presents per-category
+values as plots only, with prose covering `neutral` and `happy` and **silent on `surprise` and
+`disgust`** — the two classes the derivation exists to resolve. This absence was confirmed by an
+independent search.
+
+**Crucially, R1 did not estimate coordinates off a scatter plot.** Doing so would have produced
+numbers that looked like measurements, propagated into the dissertation, and been effectively
+unfalsifiable. The absence was reported instead.
+
+### Resolution
+
+The **academic supervisor** directed that `disgust` → DISTRESSED and `surprise` → NEUTRAL be
+adopted without further derivation work.
+
+**This record must therefore NOT claim AffectNet grounding.** The basis is:
+
+1. **Supervisory expert judgement** — the operative authority for this decision.
+2. **Consistency with the canonical affective circumplex** (Russell, 1980), on which AffectNet's
+   own annotation scheme was built: `disgust` is negative-valence; `surprise` is high-arousal,
+   neutral-valence.
+3. **Weak empirical corroboration for D-3 only**, from B3-A (§3).
+
+**This is a weaker evidential standing than §B2.1 specifies, and that must be stated wherever
+the mapping is reported** (see §6). The honest framing is: *the specified derivation was
+attempted, the required published statistics were shown not to exist, and the mapping was
+settled by supervisory judgement consistent with the standard circumplex.* That is defensible.
+Claiming an AffectNet-derived mapping would not be.
 
 **§B2.2's stated limitation still applies in full and must be reproduced in the dissertation:**
 the transfer to FER-2013 is a *categorical* transfer of a rule derived on AffectNet, not a
@@ -127,19 +160,20 @@ one-line change, not a redesign.
 
 ---
 
-## 5. Conditions before this becomes FROZEN
+## 5. Freeze conditions — status
 
-1. **R1 must actually be executed.** Obtain the published AffectNet per-class valence/arousal
-   table, record the citation and the numbers, and confirm they support `surprise` → NEUTRAL and
-   `disgust` → DISTRESSED. **If they do not, D-2 and/or D-3 change — the published table wins,
-   not this record.**
-2. **§B2.3 acceptance checks** — already satisfied by B3-A for M1: every class assigned, no state
-   starved, induced distribution reported (CALM 0.263 / NEUTRAL 0.299 / DISTRESSED 0.438,
-   Rule A), `surprise` and `disgust` justified explicitly.
-3. **Then, and only then:** the saved test probabilities may be scored **exactly once** for this
-   single frozen configuration (M1 · Rule A), per B3-A plan §6 step 3.
+1. **R1 executed.** ✅ Completed 2026-08-29. Outcome: the required published statistics **do not
+   exist** (§2). Resolved by supervisory direction rather than by the specified derivation, with
+   the reduced evidential standing recorded.
+2. **§B2.3 acceptance checks.** ✅ Satisfied by B3-A for M1: every class assigned; no state
+   starved; induced distribution reported (CALM 0.263 / NEUTRAL 0.299 / DISTRESSED 0.438 under
+   Rule A); `surprise` and `disgust` treated explicitly.
+3. **Single test scoring.** ⏳ **NOW AUTHORIZED** — the saved test probabilities may be scored
+   **exactly once**, for this single frozen configuration (**M1 · Rule A**), per B3-A plan §6
+   step 3. One shot. No candidate comparison, no rule comparison, no re-scoring.
 
-**Until step 1 completes, this record is provisional and no test scoring is authorized.**
+**This record is FROZEN.** Any change to D-2, D-3 or D-4 after the test scoring invalidates that
+scoring, because the configuration it reports would no longer be the deployed one.
 
 ---
 
@@ -151,7 +185,11 @@ Any document, dissertation chapter, or presentation reproducing these results mu
    (0.7624) sits ~0.15 above the 7-class 0.6121 because four confusable classes were merged
    into one state. **The task got easier; the model did not get better.**
 2. **macro-F1 does not rank the candidates** (§3).
-3. **§B2.2's categorical-transfer limitation**, in full.
+3. **§B2.2's categorical-transfer limitation**, in full — **and** that §B2.1's AffectNet
+   valence/arousal derivation **could not be performed**, because the required per-class
+   statistics are not published (§2). The mapping rests on supervisory judgement consistent with
+   the standard affective circumplex, not on an AffectNet measurement. **Do not describe the
+   mapping as AffectNet-derived.**
 4. **All B3-A numbers are validation-only.** No 3-state figure is a test-set result until step 3
    above is executed.
 
