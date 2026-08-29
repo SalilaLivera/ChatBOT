@@ -1,0 +1,28 @@
+# MaternaLink sentiment service — dependency pins
+#
+# EVERY VERSION BELOW IS LOAD-BEARING BECAUSE OF A MEASUREMENT, NOT PREFERENCE.
+#
+# B1 (2026-08-29) measured this exact stack reproducing Experiment 02's recorded
+# validation probabilities EXACTLY (max abs diff 1.11e-16) when using the
+# reference's own batching, and to 4.47e-07 batch-of-1, with 76/76 argmax
+# agreement in both modes. See ml/sentiment/outputs/b1_parity/.
+#
+# The historical training/evaluation environment was NEVER RECORDED
+# (ml/sentiment/ENVIRONMENT.md says "package versions: UNKNOWN"). B1's exact
+# match is the ONLY evidence tying a known stack to the recorded numbers.
+# Changing any pin below discards that evidence and voids the verification.
+#
+# NOTE ON PLATFORM: B1 ran on Windows AMD64, the platform that produced the
+# reference. Linux equivalence is UNMEASURED (B2). Do not assume it.
+
+torch==2.13.0            # measured; on Linux install the CPU build:
+                         #   pip install torch==2.13.0 --index-url https://download.pytorch.org/whl/cpu
+transformers==5.15.1     # measured
+tokenizers==0.22.2       # measured; pulled by transformers, pinned explicitly
+numpy==2.4.6             # measured
+
+# --- service layer (B2) -------------------------------------------------
+# Not part of the B1 numerical contract; ranges are acceptable here.
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+python-multipart>=0.0.9
