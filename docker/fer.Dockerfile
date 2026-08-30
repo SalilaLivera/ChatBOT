@@ -29,11 +29,24 @@ print('pin assertion OK:', ai_edge_litert.__version__, PIL.__version__)"
 COPY dev/fer-service/app.py ./app.py
 COPY dev/fer-service/fer_service ./fer_service
 
-# The model. A local copy already exists on the host at dev/fer-service/models/ —
-# copied in preference to a network fetch, but verified by SHA-256 either way.
-# ARG lets a scratch build pass a deliberately wrong hash to prove the check fails.
+# The model. NOT committed to git (*.tflite is gitignored project-wide,
+# see .gitignore's "Model artifacts — weights and exports are rebuildable")
+# and NOT baked into this image from the host — fetched from the PUBLIC
+# Hugging Face model repo at build time instead, so a fresh clone (Railway
+# or otherwise) can build this image without a pre-placed local file.
+#
+# ⛔ The SHA-256 verification below is UNCHANGED from before this fetch
+# existed — it is the actual safety net, not the download. A wrong or
+# tampered file fails this check exactly as it always did; the download
+# mechanism is not trusted on its own. ARG still lets a scratch build pass
+# a deliberately wrong hash to prove the check fails.
+#
+# No HF_TOKEN needed — mykkularathne/maternalink-fer-mobilenetv2 is public.
 ARG EXPECTED_TFLITE_SHA256=47b3adcc0ce769afa469ec6dd272e2561263863ab73621a449fcc1340e958c8c
-COPY dev/fer-service/models/fer_mobilenetv2_96_float32.tflite ./models/fer_mobilenetv2_96_float32.tflite
+RUN mkdir -p ./models && \
+    curl -fsSL \
+        -o ./models/fer_mobilenetv2_96_float32.tflite \
+        https://huggingface.co/mykkularathne/maternalink-fer-mobilenetv2/resolve/main/fer_mobilenetv2_96_float32.tflite
 RUN echo "${EXPECTED_TFLITE_SHA256}  ./models/fer_mobilenetv2_96_float32.tflite" | sha256sum -c -
 
 # The service's own startup SHA check stays enabled (fer_service/inference.py) —
