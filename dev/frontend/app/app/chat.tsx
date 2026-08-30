@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, Animated, findNodeHandle, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Animated, findNodeHandle, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons";
 import { Screen } from "@/components/Screen";
@@ -29,6 +29,7 @@ export default function Chat() {
   const [showDev, setShowDev] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [showConsent, setShowConsent] = useState(consent === "1" && !consentSeen);
+  const scrollRef = useRef<ScrollView>(null);
   const api = useMemo(() => createChatApi(() => useAppStore.getState().scenario), []);
   // When camera sensing is enabled, actually acquire the browser webcam on web (permission prompt +
   // in-use indicator). Detection runs in the background from here; the panel is just a viewport.
@@ -88,6 +89,8 @@ export default function Chat() {
   useEffect(() => { Animated.timing(dock, { toValue: raised ? 1 : 0, duration: 240, useNativeDriver: true }).start(); }, [raised]);
   const translateY = dock.interpolate({ inputRange: [0, 1], outputRange: [0, -230] });
   i18n.locale = language;
+  // Keep the newest message in view -- scrolls only the message list, never the page.
+  useEffect(() => { scrollRef.current?.scrollToEnd({ animated: true }); }, [messages, sending, error]);
   async function send() {
     const text = draft.trim();
     if (!text || sending) return;
@@ -133,19 +136,19 @@ export default function Chat() {
     } catch { /* leave state unchanged on failure */ }
   }
   return <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === "ios" ? "padding" : undefined}>
-    <Screen>
-      <View style={styles.headerBar}>
-        <Pressable accessibilityRole="button" accessibilityLabel="New chat" onPress={newChat} style={({ pressed }) => [styles.newChatButton, pressed && styles.newChatButtonPressed]}><Ionicons name="add" size={26} color={colors.deepPink} /></Pressable>
-        <View style={styles.headerActions}>
-          {Platform.OS === "web" && cameraEnabled && (
-            <Pressable accessibilityRole="button" accessibilityLabel={showPreview ? "Hide camera preview" : "Show camera preview"} onPress={() => setShowPreview(v => !v)} style={[styles.cameraButton, styles.cameraButtonOff]}><Ionicons name={showPreview ? "eye" : "eye-outline"} size={20} color={colors.muted} /></Pressable>
-          )}
-          {Platform.OS === "web" && cameraEnabled && (
-            <Pressable accessibilityRole="button" accessibilityLabel={cameraPaused ? "Resume camera sensing" : "Pause camera sensing"} onPress={togglePause} style={[styles.cameraButton, styles.cameraButtonOff]}><Ionicons name={cameraPaused ? "play" : "pause"} size={20} color={colors.muted} /></Pressable>
-          )}
-          <Pressable accessibilityRole="button" accessibilityLabel={cameraEnabled ? i18n.t("disableCamera") : i18n.t("enableCamera")} onPress={toggleCamera} style={[styles.cameraButton, !cameraEnabled && styles.cameraButtonOff]}><Ionicons name={cameraEnabled ? "videocam" : "videocam-off"} size={20} color={cameraEnabled ? colors.white : colors.muted} /></Pressable>
-        </View>
+    <View style={styles.headerBar}>
+      <Pressable accessibilityRole="button" accessibilityLabel="New chat" onPress={newChat} style={({ pressed }) => [styles.newChatButton, pressed && styles.newChatButtonPressed]}><Ionicons name="add" size={26} color={colors.deepPink} /></Pressable>
+      <View style={styles.headerActions}>
+        {Platform.OS === "web" && cameraEnabled && (
+          <Pressable accessibilityRole="button" accessibilityLabel={showPreview ? "Hide camera preview" : "Show camera preview"} onPress={() => setShowPreview(v => !v)} style={[styles.cameraButton, styles.cameraButtonOff]}><Ionicons name={showPreview ? "eye" : "eye-outline"} size={20} color={colors.muted} /></Pressable>
+        )}
+        {Platform.OS === "web" && cameraEnabled && (
+          <Pressable accessibilityRole="button" accessibilityLabel={cameraPaused ? "Resume camera sensing" : "Pause camera sensing"} onPress={togglePause} style={[styles.cameraButton, styles.cameraButtonOff]}><Ionicons name={cameraPaused ? "play" : "pause"} size={20} color={colors.muted} /></Pressable>
+        )}
+        <Pressable accessibilityRole="button" accessibilityLabel={cameraEnabled ? i18n.t("disableCamera") : i18n.t("enableCamera")} onPress={toggleCamera} style={[styles.cameraButton, !cameraEnabled && styles.cameraButtonOff]}><Ionicons name={cameraEnabled ? "videocam" : "videocam-off"} size={20} color={cameraEnabled ? colors.white : colors.muted} /></Pressable>
       </View>
+    </View>
+    <Screen scrollRef={scrollRef} onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
       {showDev && <DevPanel />}
       {messages.length === 0
         ? <Animated.View style={[styles.empty, { opacity: fade }]} pointerEvents="none"><Text style={styles.sun}>✦</Text><Text style={styles.emptyTitle}>{i18n.t("emptyTitle")}</Text><Text style={styles.emptyBody}>{i18n.t("emptyBody")}</Text></Animated.View>
@@ -189,7 +192,7 @@ export default function Chat() {
 }
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.paper },
-  headerBar: { height: 72, marginTop: -spacing.xl, marginHorizontal: -spacing.lg, paddingHorizontal: spacing.lg, flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: colors.card, shadowColor: colors.primary, shadowOpacity: 0.08, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 2, zIndex: 2, boxShadow: "0 3px 8px rgba(217,108,138,.08)" as any },
+  headerBar: { width: "100%", maxWidth: 860, alignSelf: "center", height: 72, paddingHorizontal: spacing.lg, flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: colors.card, shadowColor: colors.primary, shadowOpacity: 0.08, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 2, zIndex: 2, boxShadow: "0 3px 8px rgba(217,108,138,.08)" as any },
   newChatButton: { width: 44, height: 44, borderRadius: 22, backgroundColor: "transparent", alignItems: "center", justifyContent: "center", borderWidth: 2.5, borderColor: colors.deepPink, outlineStyle: "none" as any },
   newChatButtonPressed: { backgroundColor: colors.lightPink },
   headerActions: { flexDirection: "row", alignItems: "center", gap: 10 },
