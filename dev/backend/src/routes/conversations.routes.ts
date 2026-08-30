@@ -16,7 +16,7 @@ import { requireAuth } from '../auth/authMiddleware.js';
 import { createSupabaseJwks, type TokenVerificationKey } from '../auth/tokens.js';
 import { env } from '../config/env.js';
 import { createConversation, findOwnedConversation } from '../persistence/conversations.js';
-import { insertMessage, listMessages } from '../persistence/messages.js';
+import { insertMessage, listMessages, listRecentMessages } from '../persistence/messages.js';
 import { ensureUser } from '../persistence/users.js';
 import { logger } from '../logging/logger.js';
 import { sessionStore } from '../capture/sessionStore.js';
@@ -140,6 +140,29 @@ export function createConversationsRouter(
         res.status(400).json({ error: { code: 'content_required', message: 'content is required and must be a non-empty string.' } });
         return;
       }
+
+      // ── D-9 (conversation history) — fetched BEFORE the current user
+      // message is inserted, so the just-inserted row never needs to be
+      // filtered back out of its own history (D7_HISTORY_PLAN.md §1/§4).
+      //
+      // ⛔ FAIL LOUDLY, DO NOT SILENTLY DEGRADE. A history-read failure must
+      // NOT be treated the same as "this conversation genuinely has no prior
+      // messages" — that would make a conversation the model has forgotten
+      // look identical to a brand-new one, the same failure mode this
+      // feature exists to fix, just now invisible. See plan §9. This mirrors
+      // `analyseMood`'s own `upstream_unavailable` → 503 precedent below.
+      let history;
+      try {
+        history = await listRecentMessages(id, env.LLM_HISTORY_TURNS * 2);
+      } catch (err) {
+        logger.error(
+          { conversationId: id, errorClass: err instanceof Error ? err.name : 'unknown' },
+          'conversation history retrieval failed — refusing to answer with amnesia (D-9)',
+        );
+        res.status(503).json({ error: { code: 'history_unavailable', message: 'Could not load conversation history.' } });
+        return;
+      }
+
       // ⛔ `content` is never passed to `logger` anywhere in this handler.
       const message = await insertMessage(id, 'user', content);
       logger.info({ conversationId: id, messageId: message.id }, 'message persisted');
@@ -176,11 +199,20 @@ export function createConversationsRouter(
       const confidence = moodOutcome.body.confidence;
       const language = toLlmLanguage(moodOutcome.body.language_detected);
 
+      // D-9 — narrow each persisted row to exactly the two fields the prompt
+      // is allowed to see (role, content). `id`/`conversation_id`/
+      // `created_at` are structurally discarded here, matching the same
+      // "choke point" pattern `promptVisibleContentType` uses for content
+      // suggestions (prompt.ts) — this is the one place a DB row shape is
+      // narrowed to a `HistoryTurn`.
+      const historyTurns = history.map((m) => ({ role: m.role, content: m.content }));
+
       const llmOutcome = await getLlmService().generate({
         moodState,
         language,
         userText: content,
         contentType: null,
+        history: historyTurns,
       });
       const replyText = llmOutcome.ok ? llmOutcome.content!.message : llmOutcome.fallbackText!;
       const assistantMessage = await insertMessage(id, 'assistant', replyText);

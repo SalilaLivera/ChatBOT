@@ -189,3 +189,106 @@ describe('system/user boundary', () => {
     }
   });
 });
+
+// ---------------------------------------------------------------------------
+// D-9 — conversation history (D7_HISTORY_PLAN.md)
+// ---------------------------------------------------------------------------
+
+describe('conversation history (D-9)', () => {
+  it('omitting history produces exactly today\'s [system, user] shape', () => {
+    const messages = buildMessages({ moodState: 'calm', language: 'en', userText: 'hello' });
+    expect(messages).toHaveLength(2);
+    expect(messages[0]!.role).toBe('system');
+    expect(messages[1]!.role).toBe('user');
+  });
+
+  it('an empty history array behaves identically to omitting it', () => {
+    const messages = buildMessages({ moodState: 'calm', language: 'en', userText: 'hello', history: [] });
+    expect(messages).toHaveLength(2);
+  });
+
+  it('previous user messages reach the assembled request', () => {
+    const messages = buildMessages({
+      moodState: 'calm',
+      language: 'en',
+      userText: 'What is my name?',
+      history: [{ role: 'user', content: 'My name is X.' }],
+    });
+    expect(messages.some((m) => m.role === 'user' && m.content === 'My name is X.')).toBe(true);
+  });
+
+  it('previous assistant replies reach the assembled request, unmodified', () => {
+    const messages = buildMessages({
+      moodState: 'calm',
+      language: 'en',
+      userText: 'go on',
+      history: [
+        { role: 'user', content: 'My name is X.' },
+        { role: 'assistant', content: 'Nice to meet you, X.' },
+      ],
+    });
+    const assistantTurn = messages.find((m) => m.role === 'assistant');
+    expect(assistantTurn?.content).toBe('Nice to meet you, X.');
+  });
+
+  it('messages remain chronologically ordered: system, history in input order, current user last', () => {
+    const history = [
+      { role: 'user' as const, content: 'turn 1 user' },
+      { role: 'assistant' as const, content: 'turn 1 assistant' },
+      { role: 'user' as const, content: 'turn 2 user' },
+      { role: 'assistant' as const, content: 'turn 2 assistant' },
+    ];
+    const messages = buildMessages({ moodState: 'calm', language: 'en', userText: 'turn 3 user', history });
+
+    expect(messages).toHaveLength(6);
+    expect(messages[0]!.role).toBe('system');
+    expect(messages[1]).toEqual({ role: 'user', content: 'turn 1 user' });
+    expect(messages[2]).toEqual({ role: 'assistant', content: 'turn 1 assistant' });
+    expect(messages[3]).toEqual({ role: 'user', content: 'turn 2 user' });
+    expect(messages[4]).toEqual({ role: 'assistant', content: 'turn 2 assistant' });
+    expect(messages[5]).toEqual({ role: 'user', content: 'turn 3 user' });
+  });
+
+  it('the current user message is always last, regardless of history length', () => {
+    for (const history of [
+      [],
+      [{ role: 'user' as const, content: 'a' }],
+      [
+        { role: 'user' as const, content: 'a' },
+        { role: 'assistant' as const, content: 'b' },
+        { role: 'user' as const, content: 'c' },
+      ],
+    ]) {
+      const messages = buildMessages({ moodState: 'calm', language: 'en', userText: 'current', history });
+      expect(messages[messages.length - 1]).toEqual({ role: 'user', content: 'current' });
+    }
+  });
+
+  it('tolerates a dangling user turn with no following assistant turn, without crashing or dropping it', () => {
+    const messages = buildMessages({
+      moodState: 'calm',
+      language: 'en',
+      userText: 'current',
+      history: [{ role: 'user', content: 'orphaned turn' }],
+    });
+    expect(messages.some((m) => m.role === 'user' && m.content === 'orphaned turn')).toBe(true);
+  });
+
+  it('⛔ a history turn carries only role and content — no DB row field can leak through', () => {
+    const messages = buildMessages({
+      moodState: 'calm',
+      language: 'en',
+      userText: 'current',
+      history: [{ role: 'user', content: 'hi' }],
+    });
+    for (const m of messages) {
+      expect(Object.keys(m).sort()).toEqual(['content', 'role']);
+    }
+  });
+
+  it('does not re-derive mood tone from history — only the current turn\'s mood state appears in system', () => {
+    const system = buildSystemMessage({ moodState: 'calm', language: 'en' });
+    expect(system).toContain(MOOD_TONE.calm);
+    expect(system).not.toContain(MOOD_TONE.distressed);
+  });
+});

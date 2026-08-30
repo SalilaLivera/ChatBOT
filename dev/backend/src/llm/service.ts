@@ -34,7 +34,7 @@ import type {
 import { LlmError, isRetryable } from './errors.js';
 import { checkOutboundResponse, type OutboundViolation } from './outboundFilterPartial.js';
 import { parseGeneratedContent, type RepairAction } from './parse.js';
-import { PROMPT_VERSION, buildMessages } from './prompt.js';
+import { PROMPT_VERSION, buildMessages, type HistoryTurn } from './prompt.js';
 import type { LlmProvider } from './provider.js';
 import { sanitiseMessage, sanitiseSectionContent, sanitiseSectionTitle } from './sanitise.js';
 
@@ -115,6 +115,11 @@ export interface GenerateInputs {
   readonly userText: string;
   /** Type enum only — never a ContentSuggestion. See prompt.ts. */
   readonly contentType?: ContentSuggestionType | null;
+  /**
+   * D-9 — prior turns, oldest first, already bounded by the caller. Forwarded
+   * to `buildMessages()` unchanged; this service does not interpret it.
+   */
+  readonly history?: readonly HistoryTurn[];
 }
 
 const defaultSleep = (ms: number): Promise<void> =>

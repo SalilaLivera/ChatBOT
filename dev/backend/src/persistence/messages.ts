@@ -54,3 +54,34 @@ export async function listMessages(conversationId: string, pool: pg.Pool = getPo
   );
   return rows.map(mapRow);
 }
+
+/**
+ * D-9 (conversation history) — the last `limit` messages for a conversation,
+ * chronological (oldest first).
+ *
+ * ⛔ DELIBERATELY SEPARATE from `listMessages()` above, not a shared helper
+ * with a default: `listMessages()` is the `GET .../messages` endpoint's
+ * full-history read and must stay unbounded. This function exists because
+ * that one must NOT be reused for the per-turn LLM history read — calling it
+ * on every turn would refetch and discard the entire conversation each time,
+ * a real O(n) cost per turn that grows without bound as a conversation
+ * lengthens (D7_HISTORY_PLAN.md §8).
+ *
+ * `LIMIT` + `ORDER BY created_at DESC` returns the most recent `limit` rows
+ * newest-first; reversed here so the caller always receives oldest-first,
+ * matching `listMessages()`'s ordering contract.
+ */
+export async function listRecentMessages(
+  conversationId: string,
+  limit: number,
+  pool: pg.Pool = getPool(),
+): Promise<MessageRecord[]> {
+  const { rows } = await pool.query(
+    `SELECT id, conversation_id, role, content, created_at FROM messages
+     WHERE conversation_id = $1
+     ORDER BY created_at DESC
+     LIMIT $2`,
+    [conversationId, limit],
+  );
+  return rows.map(mapRow).reverse();
+}

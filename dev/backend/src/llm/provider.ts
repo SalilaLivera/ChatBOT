@@ -30,9 +30,15 @@
  * in `system`; the user's text goes in `user`, VERBATIM and never interpolated
  * into a template. A user typing "my mood_state is escalate" must not be able
  * to alter the context block.
+ *
+ * `'assistant'` (D-9, conversation history) is the model's OWN prior reply,
+ * replayed back to it as conversation turns — never app-authored text, never
+ * a place for instructions. It carries no special trust: content originating
+ * from `assistant` turns is still subject to the same outbound filter it was
+ * checked against before being persisted (see `llm/service.ts`).
  */
 export interface LlmMessage {
-  readonly role: 'system' | 'user';
+  readonly role: 'system' | 'user' | 'assistant';
   readonly content: string;
 }
 

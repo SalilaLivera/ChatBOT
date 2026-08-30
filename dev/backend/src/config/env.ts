@@ -57,6 +57,13 @@ const envSchema = z.object({
   LLM_MODEL: z.string().optional(),
   LLM_TIMEOUT_MS: z.coerce.number().int().positive().default(20_000),
   LLM_MAX_OUTPUT_TOKENS: z.coerce.number().int().positive().default(800),
+  // D-9 (conversation history, docs/integration/plan/D7_HISTORY_PLAN.md §3) —
+  // number of prior USER/ASSISTANT PAIRS included in the LLM request. A
+  // starting, unmeasured number, not a token-budget calculation — see the
+  // plan for why a message-count window was chosen over a tokenizer.
+  // 0 (min) means history is fetched but always empty, i.e. today's
+  // single-turn behaviour; there is no separate on/off switch.
+  LLM_HISTORY_TURNS: z.coerce.number().int().min(0).default(3),
 
   DATABASE_URL: z.string().min(1),
   // ★ C7 (revised twice) — Supabase authentication, VERIFICATION ONLY.
