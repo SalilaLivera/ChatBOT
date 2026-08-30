@@ -5,6 +5,7 @@ import { logger } from './logging/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { requestId } from './middleware/requestId.js';
 import { healthRouter } from './routes/health.routes.js';
+import { sessionRouter } from './routes/session.routes.js';
 
 export function buildApp(): express.Express {
   const app = express();
@@ -14,6 +15,7 @@ export function buildApp(): express.Express {
   app.use(express.json({ limit: '1mb' }));
 
   app.use(healthRouter);
+  app.use(sessionRouter);
 
   app.use(errorHandler);
 
