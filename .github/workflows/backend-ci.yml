@@ -110,13 +110,34 @@ jobs:
       - name: Wait for the stack to report healthy
         working-directory: .
         run: |
+          # ⛔ RESOLVE THE CONTAINER BY ID, NEVER BY GUESSED NAME.
+          # Compose derives its project name from the DIRECTORY, so the
+          # container is `it22638168-fusion-1` locally but `chatbot-fusion-1`
+          # on the runner (the repo checks out to .../ChatBOT). Hardcoding the
+          # local prefix made `docker inspect` fail, `|| echo starting` hid the
+          # error, and a perfectly healthy service was reported as
+          # "never became healthy" after a full 5-minute timeout.
           for svc in fusion postgres; do
+            cid="$(docker compose ps -q "$svc")"
+            if [ -z "$cid" ]; then
+              echo "::error::no container found for compose service '$svc' - it did not start"
+              docker compose ps
+              exit 1
+            fi
+            status=""
             for i in $(seq 1 60); do
-              status="$(docker inspect --format '{{.State.Health.Status}}' "it22638168-${svc}-1" 2>/dev/null || echo starting)"
+              # ⛔ No `|| echo starting` fallback: an inspect FAILURE is an
+              # environment fault and must not be indistinguishable from a
+              # service that is merely still warming up.
+              status="$(docker inspect --format '{{.State.Health.Status}}' "$cid")"
               [ "$status" = "healthy" ] && break
               sleep 5
             done
-            [ "$status" = "healthy" ] || { echo "$svc never became healthy"; docker compose logs "$svc"; exit 1; }
+            if [ "$status" != "healthy" ]; then
+              echo "::error::$svc never became healthy (last status: '$status')"
+              docker compose logs "$svc"
+              exit 1
+            fi
           done
       - name: Run migrations against the CI postgres
         env:
