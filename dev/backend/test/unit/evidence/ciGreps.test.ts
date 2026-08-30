@@ -47,14 +47,24 @@ function grepProductionSource(): string[] {
         '--exclude-dir=test',
         REPO_ROOT,
       ],
-      { encoding: 'utf8' },
+      // O-23 — `grep -P` fails with "supports only unibyte and UTF-8 locales"
+      // when LANG/LC_ALL are unset in the shell environment. Force a UTF-8
+      // locale explicitly rather than relying on whatever the CI/local shell
+      // happens to have. Fixed here after resurfacing (first flagged as D-24
+      // in C3 and wrongly left as "environment-specific").
+      { encoding: 'utf8', env: { ...process.env, LC_ALL: 'C.UTF-8' } },
     );
     return out.split('\n').filter(Boolean);
   } catch (err) {
-    // grep exits 1 with empty stdout when there are no matches at all.
-    const asExecError = err as { status?: number; stdout?: string };
+    // grep exit 1 = normal "no match" (empty stdout) — a legitimate pass.
+    // Any other status (2 = usage/execution error, e.g. locale failure or a
+    // missing grep binary) must NOT be swallowed as "no match": that would
+    // let an inability to *run* grep masquerade as a satisfied invariant.
+    const asExecError = err as { status?: number; stdout?: string; stderr?: string };
     if (asExecError.status === 1) return [];
-    throw err;
+    throw new Error(
+      `grep execution failed (status ${String(asExecError.status)}), not a normal no-match: ${asExecError.stderr ?? String(err)}`,
+    );
   }
 }
 
@@ -68,11 +78,17 @@ describe('Part D — the FER class->state mapping table appears exactly once in 
   it('does NOT false-positive on clients/types.ts (a flat ordering constant, not a mapping table)', () => {
     let matched = false;
     try {
-      execFileSync('grep', ['-P', MAPPING_ASSOCIATION_PATTERN, join(BACKEND_SRC, 'clients', 'types.ts')]);
+      execFileSync('grep', ['-P', MAPPING_ASSOCIATION_PATTERN, join(BACKEND_SRC, 'clients', 'types.ts')], {
+        env: { ...process.env, LC_ALL: 'C.UTF-8' },
+      });
       matched = true;
     } catch (err) {
-      const asExecError = err as { status?: number };
-      if (asExecError.status !== 1) throw err;
+      // status 1 = no match (expected here); anything else is a grep failure,
+      // not a passing assertion (O-23).
+      const asExecError = err as { status?: number; stderr?: Buffer | string };
+      if (asExecError.status !== 1) {
+        throw new Error(`grep execution failed (status ${String(asExecError.status)}): ${String(asExecError.stderr)}`);
+      }
     }
     expect(matched).toBe(false);
   });

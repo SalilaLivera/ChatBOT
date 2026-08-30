@@ -38,7 +38,7 @@
  * ⛔ Message text is never logged (§9.5) — this file logs session ids, frame
  * counts, language classifications, and error codes only.
  */
-import type { SessionStore } from '../capture/sessionStore.js';
+import type { CameraSession, SessionStore } from '../capture/sessionStore.js';
 import { computeTurnFaceEvidence } from '../capture/turnFaceEvidence.js';
 import type { SentimentClient } from '../clients/sentiment.client.js';
 import type { FusionClient } from '../clients/fusion.client.js';
@@ -74,7 +74,7 @@ export type AnalyseMoodOutcome =
   | { kind: 'upstream_unavailable'; httpStatus: 503; code: string; message: string };
 
 export interface MoodServiceDeps {
-  sessionStore: Pick<SessionStore, 'get'>;
+  sessionStore: Pick<SessionStore, 'get'> & Partial<Pick<SessionStore, 'getForOwner'>>;
   sentimentClient: Pick<SentimentClient, 'predict'>;
   fusionClient: Pick<FusionClient, 'fuse' | 'health'>;
   languageBounds: LanguageBounds;
@@ -89,6 +89,11 @@ export interface AnalyseMoodInput {
    *  normal operation (consent never granted) and degrades to text-only,
    *  exactly like zero accumulated frames. */
   sessionId: string | undefined;
+  /** Verified `sub` of the caller, when authenticated. When set, the
+   *  accumulator is read only from THIS owner's own session under
+   *  `sessionId` (C7 TRAP 2 / ★ O-?? fix) — never a same-id session
+   *  belonging to another owner. */
+  ownerId?: string | undefined;
   text: string;
   correlationId?: string | undefined;
 }
@@ -101,7 +106,23 @@ export async function analyseMood(
   now: number = Date.now(),
 ): Promise<AnalyseMoodOutcome> {
   // ── Part A step 1 — face evidence from the session accumulator, NEVER the request body ──
-  const session = input.sessionId ? deps.sessionStore.get(input.sessionId) : undefined;
+  //
+  // ⛔ An authenticated caller (`ownerId` present) MUST resolve through the
+  // owner-scoped lookup. If `getForOwner` were missing from `deps`, falling
+  // back to the unscoped `get` would silently read whichever session happens
+  // to hold that id string - the exact cross-owner read C7 exists to close.
+  // That is a wiring fault, so it fails CLOSED (no face evidence) rather than
+  // quietly downgrading to the shared namespace.
+  const session = ((): CameraSession | undefined => {
+    if (!input.sessionId) return undefined;
+    if (input.ownerId !== undefined) {
+      if (!deps.sessionStore.getForOwner) return undefined;
+      const lookup = deps.sessionStore.getForOwner(input.sessionId, input.ownerId);
+      return lookup.kind === 'ok' ? lookup.session : undefined;
+    }
+    // Legacy / unauthenticated path only (pre-C7 suites).
+    return deps.sessionStore.get(input.sessionId);
+  })();
   const turnFace = session
     ? computeTurnFaceEvidence(session.accumulator.snapshot(), now)
     : { evidence: null as FaceEvidence | null, frameCount: 0, sessionElapsedMs: 0 };

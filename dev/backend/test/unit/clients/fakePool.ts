@@ -18,7 +18,14 @@ export class FakePool {
 
   async request(opts: { method: string; path: string; body?: unknown; headers?: Record<string, string>; signal?: AbortSignal }) {
     this.callCount += 1;
-    this.calls.push({ method: opts.method, path: opts.path, body: opts.body, headers: opts.headers });
+    this.calls.push({
+      method: opts.method,
+      path: opts.path,
+      body: opts.body,
+      // exactOptionalPropertyTypes: omit the key entirely rather than setting
+      // it to `undefined` - the two are different types here.
+      ...(opts.headers === undefined ? {} : { headers: opts.headers }),
+    });
     const next = this.script[this.callCount - 1] ?? this.script[this.script.length - 1];
     if (!next) {
       throw new Error('FakePool: no scripted response');

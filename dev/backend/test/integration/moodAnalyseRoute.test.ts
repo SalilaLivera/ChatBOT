@@ -57,7 +57,8 @@ const SENTIMENT_OK_DISTRESSED = {
 let moodMod: typeof import('../../src/routes/mood.routes.js');
 let storeMod: typeof import('../../src/capture/sessionStore.js');
 let loggerMod: typeof import('../../src/logging/logger.js');
-let evidenceMod: typeof import('../../src/evidence/faceEvidence.js');
+// `!` - assigned in beforeAll below, which TypeScript cannot see.
+let evidenceMod!: typeof import('../../src/evidence/faceEvidence.js');
 
 beforeAll(async () => {
   process.env.FER_SERVICE_URL ??= 'http://fer:7860';

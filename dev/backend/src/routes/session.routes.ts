@@ -37,12 +37,22 @@ import { SessionStore, sessionStore as defaultStore } from '../capture/sessionSt
 import { BackpressureLimiter, backpressureLimiter as defaultLimiter } from '../capture/backpressure.js';
 import { extractImageField } from '../capture/multipart.js';
 import { logger } from '../logging/logger.js';
+import { recordConsentEvent } from '../persistence/consentEvents.js';
+import { ensureUser } from '../persistence/users.js';
 
 const SESSION_HEADER = 'x-session-id';
 
 function sessionIdOf(req: Request): string | undefined {
   const raw = req.header(SESSION_HEADER);
   return raw && raw.trim().length > 0 ? raw.trim() : undefined;
+}
+
+/** C7 TRAP 2 — a session id that does not exist and one owned by another
+ *  user must be externally indistinguishable. Every route below sends this
+ *  SAME response for both, and logs the diagnostic kind server-side only. */
+function sendSessionNotAccessible(res: Response, sessionId: string, userId: string, diagnostic: 'not_found' | 'wrong_owner'): void {
+  logger.warn({ sessionId, userId, diagnostic }, 'session lookup denied (TRAP 2 — externally uniform response)');
+  res.status(404).json({ error: { code: 'session_not_found', message: 'No camera session was found for this id.' } });
 }
 
 export interface SessionRouterDeps {
@@ -78,7 +88,21 @@ export function createSessionRouter(deps: SessionRouterDeps = {}): Router {
       res.status(400).json({ error: { code: 'consent_not_granted', message: 'granted must be true.' } });
       return;
     }
-    store.grantConsent(sessionId);
+    // C7 (§9.2, O-12): the real app requires auth (server.ts mounts
+    // requireAuth ahead of this router), so req.userId is set here in
+    // production. A test that constructs this router directly, bypassing
+    // that middleware, gets the pre-C7 unscoped behaviour unmodified.
+    if (req.userId) {
+      store.grantConsentForOwner(sessionId, req.userId);
+      const userId = req.userId;
+      void ensureUser(userId)
+        .then(() => recordConsentEvent(userId, sessionId, 'granted'))
+        .catch((err: unknown) => {
+        logger.error({ err: err instanceof Error ? err.message : 'unknown' }, 'failed to record consent-granted audit event');
+      });
+    } else {
+      store.grantConsent(sessionId);
+    }
     logger.info({ sessionId }, 'camera consent granted; accumulator created');
     res.status(201).json({ ok: true });
   });
@@ -95,9 +119,22 @@ export function createSessionRouter(deps: SessionRouterDeps = {}): Router {
       res.status(400).json({ error: { code: 'invalid_state', message: 'active must be a boolean.' } });
       return;
     }
+    // C7 TRAP 2 — ownership-checked when authenticated; a session owned by
+    // another user is externally indistinguishable from one that never
+    // existed.
+    if (req.userId) {
+      const lookup = store.getForOwner(sessionId, req.userId);
+      if (lookup.kind !== 'ok') {
+        sendSessionNotAccessible(res, sessionId, req.userId, lookup.kind);
+        return;
+      }
+    }
     // ⛔ Nothing before consent — a pause/resume with no prior consent is not
     // a way to create a session.
-    if (!store.setCameraActive(sessionId, active)) {
+    const activated = req.userId
+      ? store.setCameraActiveForOwner(sessionId, active, req.userId)
+      : store.setCameraActive(sessionId, active);
+    if (!activated) {
       res.status(409).json({ error: { code: 'no_consent', message: 'Camera consent has not been granted for this session.' } });
       return;
     }
@@ -115,7 +152,26 @@ export function createSessionRouter(deps: SessionRouterDeps = {}): Router {
       res.status(400).json({ error: { code: 'session_id_required', message: `${SESSION_HEADER} header is required.` } });
       return;
     }
-    store.revoke(sessionId);
+    // C7 TRAP 2 — a session that never existed and one owned by ANOTHER user
+    // must be externally IDENTICAL: both 404, same body. This does make
+    // revoke slightly less "idempotent-looking" for the rightful owner (a
+    // second revoke of the same session now 404s instead of replying
+    // 200 again) — that is the correct trade for closing the oracle: the
+    // route cannot tell "my own already-revoked id" from "someone else's
+    // real session" without the very ownership check TRAP 2 forbids
+    // exposing the result of.
+    if (req.userId) {
+      const lookup = store.getForOwner(sessionId, req.userId);
+      if (lookup.kind !== 'ok') {
+        sendSessionNotAccessible(res, sessionId, req.userId, lookup.kind);
+        return;
+      }
+      void recordConsentEvent(req.userId, sessionId, 'revoked').catch((err: unknown) => {
+        logger.error({ err: err instanceof Error ? err.message : 'unknown' }, 'failed to record consent-revoked audit event');
+      });
+    }
+    if (req.userId) store.revokeForOwner(sessionId, req.userId);
+    else store.revoke(sessionId);
     limiter.forget(sessionId);
     logger.info({ sessionId }, 'camera consent revoked; accumulator purged');
     res.status(200).json({ revoked: true });
@@ -146,7 +202,23 @@ async function handleFrame(
     return;
   }
 
-  const session = store.get(sessionId);
+  // C7 TRAP 2 — ownership-checked when authenticated (req.userId set by
+  // server.ts's requireAuth ahead of this router in the real app). The
+  // resolved owned session is used directly below rather than re-fetched by
+  // plain id, so this request can never read/write another owner's — or the
+  // legacy unscoped — session sharing the same id string.
+  let session;
+  if (req.userId) {
+    const lookup = store.getForOwner(sessionId, req.userId);
+    if (lookup.kind !== 'ok') {
+      logger.warn({ sessionId, userId: req.userId, diagnostic: lookup.kind }, 'frame ingest denied (TRAP 2)');
+      res.status(403).json({ accepted: false, reason: 'no_consent' });
+      return;
+    }
+    session = lookup.session;
+  } else {
+    session = store.get(sessionId);
+  }
   // ⛔ Nothing is captured or accepted before consent.
   if (!session) {
     res.status(403).json({ accepted: false, reason: 'no_consent' });
@@ -182,7 +254,9 @@ async function handleFrame(
       return;
     }
 
-    const recorded = store.recordFrame(sessionId, outcome.data.probabilities, outcome.data.model_version);
+    const recorded = req.userId
+      ? store.recordFrameForOwner(sessionId, outcome.data.probabilities, outcome.data.model_version, req.userId)
+      : store.recordFrame(sessionId, outcome.data.probabilities, outcome.data.model_version);
     if (!recorded.ok) {
       // Session was revoked/paused between the consent check and here.
       res.status(200).json({ accepted: false, reason: recorded.reason });

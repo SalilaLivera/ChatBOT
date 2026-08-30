@@ -1,0 +1,23 @@
+{
+  // ★ C7 (post-review) — TYPECHECK THE TESTS.
+  //
+  // ⛔ WHY THIS FILE EXISTS. `tsconfig.json` sets "exclude": ["test"], because
+  // it is the BUILD config and test files must never reach `dist/`. The side
+  // effect was that test code was never type-checked at all: a test calling
+  // `setCameraActive(id, false, 'user-a')` after that third parameter had been
+  // removed compiled clean, ran with the extra argument silently dropped, and
+  // took the legacy unscoped path. `npm run build` and `tsc --noEmit` both
+  // passed. Only executing the suite caught it.
+  //
+  // This config type-checks src AND test together with the same strict
+  // options, emitting nothing. It is a CHECK, never a build input.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    // rootDir is dropped deliberately: the program now spans src/ and test/,
+    // and no output is produced, so a single root is meaningless here.
+    "rootDir": "."
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

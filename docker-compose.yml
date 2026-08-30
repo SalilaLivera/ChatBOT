@@ -80,8 +80,12 @@ services:
       timeout: 3s
       retries: 5
       start_period: 5s
-    # No volume — C1 defines no persistence yet (migrations land in C7). No
-    # bind mount or tmpfs anywhere a face image could be written (§7A.8).
+    # D-39 (C7): a named volume for Postgres DATA ONLY, so migrations survive
+    # `docker compose down`. Scoped strictly to Postgres — no volume, bind
+    # mount or tmpfs is added anywhere the backend could write an image; the
+    # §7A.8 invariant ("nowhere to put a face image") is unchanged.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   fusion:
     build:
@@ -104,3 +108,9 @@ services:
       start_period: 10s
     # No volume, bind mount or tmpfs anywhere (§7A.8) — nothing here ever
     # touches a face image or message text; it only sees derived evidence.
+
+volumes:
+  # Postgres data only (D-39). Nothing else in this compose file gets a
+  # volume, bind mount or tmpfs — the §7A.8 "nowhere to write a face image"
+  # invariant is unchanged.
+  postgres_data:

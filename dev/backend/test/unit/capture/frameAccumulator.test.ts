@@ -3,7 +3,11 @@ import { FrameAccumulator, FER_SERVICE_CLASS_ORDER } from '../../../src/capture/
 
 const V = (o: Partial<Record<string, number>>): Record<string, number> => {
   const base: Record<string, number> = { angry: 0, disgust: 0, fear: 0, happy: 0, neutral: 0, sad: 0, surprise: 0 };
-  return { ...base, ...o };
+  // Drop explicitly-undefined keys rather than widening the result type:
+  // `Partial<...>` makes each value `number | undefined`, which a plain
+  // spread would leak into `Record<string, number>`.
+  for (const [k, v] of Object.entries(o)) if (v !== undefined) base[k] = v;
+  return base;
 };
 
 describe('FrameAccumulator — keyed by class NAME, O(1), never fabricates', () => {

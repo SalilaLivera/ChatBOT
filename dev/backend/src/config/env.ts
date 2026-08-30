@@ -59,13 +59,57 @@ const envSchema = z.object({
   LLM_MAX_OUTPUT_TOKENS: z.coerce.number().int().positive().default(800),
 
   DATABASE_URL: z.string().min(1),
+  // ★ C7 (revised) — Supabase Anonymous Authentication. This is the
+  // Supabase project's JWT secret (Project Settings → API → JWT Secret),
+  // used ONLY to verify tokens Supabase itself issued — this backend is not
+  // a JWT issuer and owns no password or refresh-token state; Supabase owns
+  // token lifecycle entirely. Never defaulted, never logged. Missing
+  // configuration fails boot (see bootFailsFast.test.ts) rather than falling
+  // back to any shared/demo identity.
   JWT_SECRET: z.string().min(1),
 
+  // ✅ OWNER-DECIDED, C7_DECISIONS_AND_GAPS.md §5.1 — PROVISIONAL ENGINEERING
+  // LIMITS. NOT ML measurements, NOT calibrated values, NOT a production-
+  // capacity claim. The face figure is the minimum that permits §3A.6's
+  // specified 5 fps capture (300 frames/min/user) without throttling a
+  // correct client. Concurrent-user capacity remains UNKNOWN — C8.4 owns it.
+  // ⛔ No additional tiers.
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60_000),
-  RATE_LIMIT_MAX: z.coerce.number().int().positive().default(120),
+  RATE_LIMIT_FACE_PER_MIN: z.coerce.number().int().positive().default(300),
+  RATE_LIMIT_TEXT_PER_MIN: z.coerce.number().int().positive().default(60),
+  RATE_LIMIT_IP_PER_MIN: z.coerce.number().int().positive().default(600),
+
+  // ✅ OWNER-DECIDED, C7_DECISIONS_AND_GAPS.md §5.3 — an engineering/project
+  // retention decision, NOT a clinical or scientific claim. Historical
+  // face-derived mood observations age out under this policy; they are NOT
+  // retroactively deleted by consent revocation (prospective-only, §1).
+  // ⛔ No additional retention categories.
+  MOOD_OBSERVATION_RETENTION_DAYS: z.coerce.number().int().positive().default(30),
+
+  // --- follow-up packet 3, step 3 — CORS ---
+  // Explicit origin ALLOWLIST, comma-separated. ⛔ Never `*` — auth is a
+  // bearer token, not a cookie, so `credentials: true` is never enabled
+  // either (see src/server.ts). The two localhost origins are Expo web's
+  // default ports and are safe to default on — a real deployment adds its
+  // Vercel domain(s) on top via this same variable, it does not replace them.
+  CORS_ALLOWED_ORIGINS: z.string().min(1).default('http://localhost:8081,http://localhost:8082'),
+
+  // --- follow-up packet 3, step 4 (D-42) — /ready deployment posture ---
+  // ⛔ GOVERNANCE. Deliberately separate from NODE_ENV, which stays a pure
+  // Node runtime posture and continues to arm every other production guard
+  // (O-16 included) unconditionally. `checkFusionReadiness` reads THIS
+  // value, not NODE_ENV, to decide whether placeholder fusion parameters
+  // block readiness. Defaults to `strict` — an unset variable fails closed,
+  // preserving the original §8.2 behaviour exactly. Never named like a
+  // bypass (e.g. ALLOW_PLACEHOLDER_PARAMETERS) — see C7_DECISIONS_AND_GAPS.md
+  // D-42. An invalid value fails validation and boot refuses to start, the
+  // same as any other malformed required value here — it is never silently
+  // coerced to `strict`.
+  DEPLOYMENT_POSTURE: z.enum(['strict', 'research_demo']).default('strict'),
 });
 
 export type Env = z.infer<typeof envSchema>;
+export type DeploymentPosture = Env['DEPLOYMENT_POSTURE'];
 
 function loadEnv(): Env {
   const parsed = envSchema.safeParse(process.env);

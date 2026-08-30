@@ -17,14 +17,125 @@ jobs:
       run:
         working-directory: dev/backend
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
           cache: "npm"
           cache-dependency-path: dev/backend/package-lock.json
       - run: npm ci
       - run: npm run typecheck
+
+      # ⛔ TYPECHECK THE TESTS TOO. `npm run typecheck` uses tsconfig.json,
+      # which sets "exclude": ["test"] because it is the BUILD config. That
+      # left test code entirely unchecked: a test calling a function with a
+      # parameter that had since been REMOVED compiled clean, ran with the
+      # extra argument silently dropped, and took a different code path.
+      # Build, lint and typecheck all passed. Only running the suite caught
+      # it. This step closes that gap and must not be weakened by excluding
+      # test files.
+      - run: npm run typecheck:test
+
       - run: npm run lint
       - run: npm run build
-      - run: npm test
+
+      # O-21 — several C5/C6/C7 integration tests require a LIVE fusion +
+      # postgres stack (`npm test` is documented as non-hermetic). Direction
+      # taken: provision the real stack in CI rather than splitting the
+      # suite, so a stack-dependent test failing here is never mistaken for
+      # "the suite doesn't run in CI" — it runs against the same containers
+      # used everywhere else in this project.
+      #
+      # ⛔ fer / sentiment are deliberately NOT started here. Their model
+      # weights (.tflite / a 266 MB .safetensors) are not in the repo, and
+      # docker/fer.Dockerfile + docker/sentiment.Dockerfile COPY them from
+      # disk — the image build fails on a fresh CI clone. fusion's
+      # Dockerfile has zero model COPY lines and postgres is a pulled image,
+      # so both build clean in CI; fer/sentiment cannot.
+      #
+      # Proven safe by an explicit experiment (follow-up packet 3, step 1):
+      # with fer/sentiment stopped locally, the full suite (default
+      # settings) ran 283/283 passing. Every code path that would otherwise
+      # call FER/sentiment degrades gracefully (timeouts/connection errors
+      # are caught and logged as "call degraded", falling back to
+      # unavailable evidence) rather than requiring a real response — so
+      # FER_SERVICE_URL / SENTIMENT_SERVICE_URL below only need to be
+      # well-formed URLs for env validation at boot, not reachable services.
+      #
+      # Add fer/sentiment back to this job once their weights are fetched at
+      # build time (e.g. downloaded in the Dockerfile or a CI step) rather
+      # than copied from a local checkout.
+      - name: Write a minimal CI .env
+        working-directory: .
+        run: |
+          cat > .env <<'EOF'
+          NODE_ENV=development
+          LOG_LEVEL=info
+          FER_SERVICE_URL=http://localhost:9101
+          SENTIMENT_SERVICE_URL=http://localhost:9102
+          FUSION_SERVICE_URL=http://fusion:9000
+          LANGUAGE_POLICY=face_only
+          LANGUAGE_SI_RATIO_HIGH=0.6
+          LANGUAGE_SI_RATIO_LOW=0.1
+          LANGUAGE_BOUNDS_PROVENANCE=CI test fixture — not a real sign-off
+          DATABASE_URL=postgres://maternalink:changeme@postgres:5432/maternalink
+          JWT_SECRET=ci-test-secret-not-for-production
+          RATE_LIMIT_WINDOW_MS=60000
+          RATE_LIMIT_FACE_PER_MIN=300
+          RATE_LIMIT_TEXT_PER_MIN=60
+          RATE_LIMIT_IP_PER_MIN=600
+          MOOD_OBSERVATION_RETENTION_DAYS=30
+          CORS_ALLOWED_ORIGINS=http://localhost:8081,http://localhost:8082
+          DEPLOYMENT_POSTURE=strict
+          POSTGRES_USER=maternalink
+          POSTGRES_PASSWORD=changeme
+          POSTGRES_DB=maternalink
+          FER_DEBUG=0
+          SENTIMENT_DEBUG=0
+          FUSION_DEBUG=0
+          FUSION_W_FACE=0.35
+          FUSION_W_TEXT=0.65
+          FUSION_TAU_FACE_MIN=0.30
+          FUSION_TAU_TEXT_MIN=0.30
+          FUSION_TAU_FUSION_MIN=0.30
+          FUSION_TAU_DISTRESS=0.60
+          FUSION_PARAM_PROVENANCE=PLACEHOLDER FOR TESTING - NOT A MEASURED VALUE
+          LLM_PROVIDER=mock
+          GROQ_API_KEY=
+          LLM_MODEL=
+          EOF
+      - name: Start fusion / postgres
+        working-directory: .
+        run: docker compose up -d fusion postgres
+      - name: Wait for the stack to report healthy
+        working-directory: .
+        run: |
+          for svc in fusion postgres; do
+            for i in $(seq 1 60); do
+              status="$(docker inspect --format '{{.State.Health.Status}}' "it22638168-${svc}-1" 2>/dev/null || echo starting)"
+              [ "$status" = "healthy" ] && break
+              sleep 5
+            done
+            [ "$status" = "healthy" ] || { echo "$svc never became healthy"; docker compose logs "$svc"; exit 1; }
+          done
+      - name: Run migrations against the CI postgres
+        env:
+          DATABASE_URL: postgres://maternalink:changeme@localhost:5432/maternalink
+          FER_SERVICE_URL: http://localhost:9101
+          SENTIMENT_SERVICE_URL: http://localhost:9102
+          FUSION_SERVICE_URL: http://localhost:9000
+          JWT_SECRET: ci-test-secret-not-for-production
+        run: npm run migrate
+      - name: npx vitest run (default settings) against the live stack
+        env:
+          DATABASE_URL: postgres://maternalink:changeme@localhost:5432/maternalink
+          FER_SERVICE_URL: http://localhost:9101
+          SENTIMENT_SERVICE_URL: http://localhost:9102
+          FUSION_SERVICE_URL: http://localhost:9000
+          JWT_SECRET: ci-test-secret-not-for-production
+          NODE_ENV: test
+        run: npm test
+      - name: Tear down the stack
+        if: always()
+        working-directory: .
+        run: docker compose down -v
