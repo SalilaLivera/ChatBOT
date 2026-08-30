@@ -1,27 +1,38 @@
 /**
- * ★ C7 — auth, session ownership (TRAP 2), and durable persistence, driven
- * over HTTP against the REAL app assembly (`buildApp()`), a REAL Postgres
- * (migrated — see migrations/), and the REAL fer/sentiment/fusion containers
- * (matching the pre-existing O-21 pattern: several C5/C6 integration tests
- * already require the live stack; this file does too, for the same reason —
- * `npm test` is documented as non-hermetic, see O-21 in C7_DONE.md).
+ * ★ C7 (revised twice) — auth, session ownership (TRAP 2), and durable
+ * persistence, driven over HTTP against the REAL app assembly (`buildApp()`),
+ * a REAL Postgres (migrated — see migrations/), and the REAL
+ * fer/sentiment/fusion containers (matching the pre-existing O-21 pattern:
+ * several C5/C6 integration tests already require the live stack; this file
+ * does too, for the same reason — `npm test` is documented as non-hermetic,
+ * see O-21 in C7_DONE.md).
  *
- * Bearer tokens here are signed locally with `JWT_SECRET` exactly the way
- * Supabase itself would sign an HS256 access token — this backend only ever
- * VERIFIES a Supabase-issued token; it never issues one, so a test double
- * for "a token Supabase issued" is the correct fake, not a shortcut around
- * the real verification path (`auth/tokens.ts` is exercised unmodified).
+ * ⛔ ES256, NOT HS256. Current Supabase projects sign asymmetrically and
+ * publish only PUBLIC keys — there is no shared secret to fake a token with.
+ * This test generates its own EC keypair, signs tokens with the PRIVATE half
+ * locally (a correct stand-in for "a token Supabase issued"), and injects the
+ * PUBLIC half into `buildApp()` via its `authKey` parameter. NO NETWORK CALL
+ * happens — `auth/tokens.ts`'s real verification logic runs unmodified
+ * against a key this test controls, exactly as it would against Supabase's
+ * real JWKS in production.
  */
-import jwt from 'jsonwebtoken';
+import type { webcrypto } from 'node:crypto';
+import { SignJWT, generateKeyPair } from 'jose';
 import pg from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { AddressInfo } from 'node:net';
 import type { Server } from 'node:http';
 
-const JWT_SECRET = process.env.JWT_SECRET ?? 'test-secret';
+type CryptoKey = webcrypto.CryptoKey;
 
-function fakeSupabaseToken(sub: string): string {
-  return jwt.sign({ sub, aud: 'authenticated', role: 'authenticated' }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
+let signingKey: CryptoKey;
+
+function fakeSupabaseToken(sub: string): Promise<string> {
+  return new SignJWT({ sub, aud: 'authenticated', role: 'authenticated' })
+    .setProtectedHeader({ alg: 'ES256' })
+    .setIssuedAt()
+    .setExpirationTime('1h')
+    .sign(signingKey);
 }
 
 let server: Server;
@@ -31,13 +42,16 @@ let pool: pg.Pool;
 beforeAll(async () => {
   process.env.NODE_ENV = 'test';
   process.env.DATABASE_URL ??= 'postgres://maternalink:changeme@localhost:5432/maternalink';
-  process.env.JWT_SECRET ??= JWT_SECRET;
+  process.env.SUPABASE_URL ??= 'https://test-not-a-real-project.supabase.co';
   process.env.FER_SERVICE_URL ??= 'http://localhost:7860';
   process.env.SENTIMENT_SERVICE_URL ??= 'http://localhost:8001';
   process.env.FUSION_SERVICE_URL ??= 'http://localhost:9000';
 
+  const pair = await generateKeyPair('ES256', { extractable: true });
+  signingKey = pair.privateKey as CryptoKey;
+
   const { buildApp } = await import('../../src/server.js');
-  const app = buildApp();
+  const app = buildApp(pair.publicKey as CryptoKey);
   await new Promise<void>((resolve) => {
     server = app.listen(0, () => resolve());
   });
@@ -86,10 +100,16 @@ describe('C7 TRAP 2 — a session owned by another user is externally indistingu
   // events.user_id` are UUID columns, so the test doubles must be too.
   const userA = crypto.randomUUID();
   const userB = crypto.randomUUID();
-  const tokenA = fakeSupabaseToken(userA);
-  const tokenB = fakeSupabaseToken(userB);
   const sessionId = `trap2-${crypto.randomUUID()}`;
   const neverExistedId = `trap2-never-${crypto.randomUUID()}`;
+  // ⛔ signed in beforeAll, not at describe-body eval time: signing is
+  // async (jose), and a describe body cannot await.
+  let tokenA = '';
+  let tokenB = '';
+  beforeAll(async () => {
+    tokenA = await fakeSupabaseToken(userA);
+    tokenB = await fakeSupabaseToken(userB);
+  });
 
   it('user A can grant consent for their own session', async () => {
     const res = await fetch(`${base}/api/v1/session/camera/consent`, {
@@ -141,9 +161,13 @@ describe('C7 TRAP 2 — a session owned by another user is externally indistingu
 describe('★ O-?? fix — TRAP 2 CREATE path: consent no longer squats a shared session-id namespace', () => {
   const userA = crypto.randomUUID();
   const userB = crypto.randomUUID();
-  const tokenA = fakeSupabaseToken(userA);
-  const tokenB = fakeSupabaseToken(userB);
   const sessionId = `takeover-${crypto.randomUUID()}`;
+  let tokenA = '';
+  let tokenB = '';
+  beforeAll(async () => {
+    tokenA = await fakeSupabaseToken(userA);
+    tokenB = await fakeSupabaseToken(userB);
+  });
 
   it('A grants consent, B grants consent on the SAME id, A retains control of the session', async () => {
     const grantA = await fetch(`${base}/api/v1/session/camera/consent`, {
@@ -191,8 +215,8 @@ describe('★ O-?? fix — TRAP 2 CREATE path: consent no longer squats a shared
     const freshId = `oracle-fresh-${crypto.randomUUID()}`;
     const owner = crypto.randomUUID();
     const prober = crypto.randomUUID();
-    const ownerToken = fakeSupabaseToken(owner);
-    const proberToken = fakeSupabaseToken(prober);
+    const ownerToken = await fakeSupabaseToken(owner);
+    const proberToken = await fakeSupabaseToken(prober);
 
     await fetch(`${base}/api/v1/session/camera/consent`, {
       method: 'POST',
@@ -219,7 +243,7 @@ describe('★ O-?? fix — TRAP 2 CREATE path: consent no longer squats a shared
 describe('C7 Part B / TRAP 4 — a real turn persists a mood observation with NOT-NULL provenance', () => {
   it('POST /api/v1/mood/analyse (authenticated, live stack) → 200, and the row is readable back from Postgres', async () => {
     const userId = crypto.randomUUID();
-    const token = fakeSupabaseToken(userId);
+    const token = await fakeSupabaseToken(userId);
 
     const res = await fetch(`${base}/api/v1/mood/analyse`, {
       method: 'POST',
@@ -251,7 +275,7 @@ describe('C7 Part B / TRAP 4 — a real turn persists a mood observation with NO
 describe('C7 TRAP 1 — message text is persisted but never logged', () => {
   it('POST a message with a distinctive secret string: stored in Postgres verbatim; never appears in captured stdout', async () => {
     const userId = crypto.randomUUID();
-    const token = fakeSupabaseToken(userId);
+    const token = await fakeSupabaseToken(userId);
     const secretMarker = `TRAP1-SECRET-${crypto.randomUUID()}`;
 
     const createRes = await fetch(`${base}/api/v1/conversations`, {

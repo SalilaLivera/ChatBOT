@@ -20,7 +20,7 @@ function baseEnv(provenance: string, nodeEnv: string, port: string): NodeJS.Proc
     SENTIMENT_SERVICE_URL: 'http://sentiment:8000',
     FUSION_SERVICE_URL: 'http://fusion:9000',
     DATABASE_URL: 'postgres://user:pass@localhost:5432/db',
-    JWT_SECRET: 'test-secret',
+    SUPABASE_URL: 'https://test-not-a-real-project.supabase.co',
     LANGUAGE_BOUNDS_PROVENANCE: provenance,
     NODE_OPTIONS: CHILD_NODE_OPTIONS,
   };

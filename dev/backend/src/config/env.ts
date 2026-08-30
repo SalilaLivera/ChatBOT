@@ -59,14 +59,22 @@ const envSchema = z.object({
   LLM_MAX_OUTPUT_TOKENS: z.coerce.number().int().positive().default(800),
 
   DATABASE_URL: z.string().min(1),
-  // ★ C7 (revised) — Supabase Anonymous Authentication. This is the
-  // Supabase project's JWT secret (Project Settings → API → JWT Secret),
-  // used ONLY to verify tokens Supabase itself issued — this backend is not
-  // a JWT issuer and owns no password or refresh-token state; Supabase owns
-  // token lifecycle entirely. Never defaulted, never logged. Missing
-  // configuration fails boot (see bootFailsFast.test.ts) rather than falling
-  // back to any shared/demo identity.
-  JWT_SECRET: z.string().min(1),
+  // ★ C7 (revised twice) — Supabase authentication, VERIFICATION ONLY.
+  //
+  // The project's base URL, e.g. https://<ref>.supabase.co. Its JWKS endpoint
+  // (`/auth/v1/.well-known/jwks.json`) supplies the ES256 PUBLIC keys used to
+  // verify tokens Supabase issued. This backend is not a JWT issuer and owns
+  // no password or refresh-token state; Supabase owns token lifecycle.
+  //
+  // ⛔ THERE IS NO SHARED SECRET, DELIBERATELY. The previous `JWT_SECRET`
+  // (HS256) was Supabase's legacy scheme; current projects sign
+  // asymmetrically and publish only public keys, so every real token was
+  // rejected under the old code. Holding no signing material means this
+  // backend can verify a token but is structurally incapable of minting one.
+  //
+  // Never defaulted. Missing configuration fails boot (bootFailsFast.test.ts)
+  // rather than falling back to any shared or demo identity.
+  SUPABASE_URL: z.string().url(),
 
   // ✅ OWNER-DECIDED, C7_DECISIONS_AND_GAPS.md §5.1 — PROVISIONAL ENGINEERING
   // LIMITS. NOT ML measurements, NOT calibrated values, NOT a production-

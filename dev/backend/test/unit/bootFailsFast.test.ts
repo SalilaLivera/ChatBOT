@@ -8,7 +8,7 @@ const BACKEND_ROOT = join(__dirname, '..', '..');
 describe('boot with a required variable absent (§2.1, §9.6)', () => {
   it('fails fast, names the variable, and exits non-zero — not on first request', () => {
     const rest = { ...process.env };
-    delete rest.JWT_SECRET;
+    delete rest.SUPABASE_URL;
     const npxBin = process.platform === 'win32' ? 'npx.cmd' : 'npx';
     const result = spawnSync(npxBin, ['tsx', 'src/main.ts'], {
       cwd: BACKEND_ROOT,
@@ -19,7 +19,9 @@ describe('boot with a required variable absent (§2.1, §9.6)', () => {
         SENTIMENT_SERVICE_URL: 'http://sentiment:8000',
         FUSION_SERVICE_URL: 'http://fusion:9000',
         DATABASE_URL: 'postgres://user:pass@localhost:5432/db',
-        // JWT_SECRET deliberately absent
+        // SUPABASE_URL deliberately absent - without it there is no JWKS
+        // endpoint, so no token could be verified and every request would be
+        // unauthenticated. Boot must fail rather than serve in that state.
         // Modest, scoped heap ceiling (O-22): under file-parallelism this spawned
         // tsx process competes with several others for host memory; capping its
         // old-space keeps it from being the process that tips the host into an
@@ -34,6 +36,6 @@ describe('boot with a required variable absent (§2.1, §9.6)', () => {
 
     assertNotOom(result.stdout, result.stderr);
     expect(result.status).not.toBe(0);
-    expect(result.stderr).toMatch(/JWT_SECRET/);
+    expect(result.stderr).toMatch(/SUPABASE_URL/);
   });
 });

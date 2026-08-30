@@ -79,7 +79,7 @@ jobs:
           LANGUAGE_SI_RATIO_LOW=0.1
           LANGUAGE_BOUNDS_PROVENANCE=CI test fixture — not a real sign-off
           DATABASE_URL=postgres://maternalink:changeme@postgres:5432/maternalink
-          JWT_SECRET=ci-test-secret-not-for-production
+          SUPABASE_URL=https://ci-not-a-real-project.supabase.co
           RATE_LIMIT_WINDOW_MS=60000
           RATE_LIMIT_FACE_PER_MIN=300
           RATE_LIMIT_TEXT_PER_MIN=60
@@ -145,7 +145,7 @@ jobs:
           FER_SERVICE_URL: http://localhost:9101
           SENTIMENT_SERVICE_URL: http://localhost:9102
           FUSION_SERVICE_URL: http://localhost:9000
-          JWT_SECRET: ci-test-secret-not-for-production
+          SUPABASE_URL: https://ci-not-a-real-project.supabase.co
         run: npm run migrate
       - name: npx vitest run (default settings) against the live stack
         env:
@@ -153,7 +153,7 @@ jobs:
           FER_SERVICE_URL: http://localhost:9101
           SENTIMENT_SERVICE_URL: http://localhost:9102
           FUSION_SERVICE_URL: http://localhost:9000
-          JWT_SECRET: ci-test-secret-not-for-production
+          SUPABASE_URL: https://ci-not-a-real-project.supabase.co
           NODE_ENV: test
         run: npm test
       - name: Tear down the stack

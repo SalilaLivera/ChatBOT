@@ -17,7 +17,7 @@ let ensureUser: typeof import('../../src/persistence/users.js').ensureUser;
 beforeAll(async () => {
   process.env.DATABASE_URL ??= 'postgres://maternalink:changeme@localhost:5432/maternalink';
   process.env.NODE_ENV = 'test';
-  process.env.JWT_SECRET ??= 'test-secret';
+  process.env.SUPABASE_URL ??= 'https://test-not-a-real-project.supabase.co';
   process.env.FER_SERVICE_URL ??= 'http://localhost:7860';
   process.env.SENTIMENT_SERVICE_URL ??= 'http://localhost:8001';
   process.env.FUSION_SERVICE_URL ??= 'http://localhost:9000';

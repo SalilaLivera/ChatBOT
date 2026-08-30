@@ -13,6 +13,7 @@
  */
 import express, { Router, type Request, type Response } from 'express';
 import { requireAuth } from '../auth/authMiddleware.js';
+import { createSupabaseJwks, type TokenVerificationKey } from '../auth/tokens.js';
 import { env } from '../config/env.js';
 import { createConversation, findOwnedConversation } from '../persistence/conversations.js';
 import { insertMessage, listMessages } from '../persistence/messages.js';
@@ -24,10 +25,20 @@ function sendConversationNotAccessible(res: Response, conversationId: string, us
   res.status(404).json({ error: { code: 'conversation_not_found', message: 'No conversation was found for this id.' } });
 }
 
-export function createConversationsRouter(): Router {
+/**
+ * ⛔ `authKey` is INJECTABLE — see `buildApp()` in server.ts for why. The
+ * default builds a real JWKS resolver, but this router is not the one
+ * `server.ts` mounts in the live app (server.ts builds its own `jwks` once
+ * and calls `requireAuth(jwks)` directly on `conversationsRouter`); this
+ * factory exists so a test can construct an independent, injected instance
+ * without triggering a real network-backed resolver at import time.
+ */
+export function createConversationsRouter(
+  authKey: TokenVerificationKey = createSupabaseJwks(env.SUPABASE_URL),
+): Router {
   const router = Router();
   const jsonBody = express.json({ limit: '10kb' });
-  router.use(requireAuth(env.JWT_SECRET));
+  router.use(requireAuth(authKey));
 
   router.post('/api/v1/conversations', (req: Request, res: Response) => {
     void (async () => {
@@ -81,4 +92,11 @@ export function createConversationsRouter(): Router {
   return router;
 }
 
-export const conversationsRouter = createConversationsRouter();
+// ⛔ NOT constructed eagerly anymore. The old module-level
+// `export const conversationsRouter = createConversationsRouter()` built a
+// SECOND, independent JWKS resolver (a network-backed object) the instant
+// this file was imported — including by a test that merely imports this
+// module for its types — rather than sharing the one resolver `buildApp()`
+// already builds. `server.ts` now calls `createConversationsRouter(jwks)`
+// itself, passing the SAME resolver used for every other route, so the whole
+// process holds exactly one JWKS client.

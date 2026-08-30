@@ -8,8 +8,9 @@ import { requestId } from './middleware/requestId.js';
 import { healthRouter } from './routes/health.routes.js';
 import { sessionRouter } from './routes/session.routes.js';
 import { moodRouter } from './routes/mood.routes.js';
-import { conversationsRouter } from './routes/conversations.routes.js';
+import { createConversationsRouter } from './routes/conversations.routes.js';
 import { requireAuth } from './auth/authMiddleware.js';
+import { createSupabaseJwks, type TokenVerificationKey } from './auth/tokens.js';
 import { FixedWindowLimiter, rateLimitMiddleware } from './ratelimit/rateLimiter.js';
 
 /**
@@ -69,8 +70,19 @@ const corsOptions: cors.CorsOptions = {
   credentials: false,
 };
 
-export function buildApp(): express.Express {
+/**
+ * ⛔ `authKey` is INJECTABLE, defaulting to the real Supabase project's JWKS.
+ * Production and the CI stack use the default; tests that need to sign their
+ * own tokens (integration auth/ownership tests) pass a local public key here
+ * instead — they can then sign matching private-key tokens WITHOUT any
+ * network call or dependency on a real Supabase project existing. Never build
+ * a second `createSupabaseJwks` per request — this default is constructed
+ * once, at call time, and normal callers (main(), which calls this exactly
+ * once) get exactly one resolver for the process.
+ */
+export function buildApp(authKey: TokenVerificationKey = createSupabaseJwks(env.SUPABASE_URL)): express.Express {
   const app = express();
+  const jwks = authKey;
 
   app.use(cors(corsOptions));
   app.use(requestId);
@@ -82,7 +94,7 @@ export function buildApp(): express.Express {
   // (auth/authMiddleware.ts) — it is not a second JWT issuer.
   app.use(healthRouter);
 
-  app.use('/api/v1/session', requireAuth(env.JWT_SECRET));
+  app.use('/api/v1/session', requireAuth(jwks));
   app.use(
     '/api/v1/session/frame',
     rateLimitMiddleware(perUserFaceLimiter, env.RATE_LIMIT_FACE_PER_MIN, ipLimiter, env.RATE_LIMIT_IP_PER_MIN),
@@ -91,12 +103,12 @@ export function buildApp(): express.Express {
 
   app.use(
     '/api/v1/mood/analyse',
-    requireAuth(env.JWT_SECRET),
+    requireAuth(jwks),
     rateLimitMiddleware(perUserTextLimiter, env.RATE_LIMIT_TEXT_PER_MIN, ipLimiter, env.RATE_LIMIT_IP_PER_MIN),
   );
   app.use(moodRouter);
 
-  app.use(conversationsRouter);
+  app.use(createConversationsRouter(jwks));
 
   app.use(errorHandler);
 
