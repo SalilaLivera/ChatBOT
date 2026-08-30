@@ -169,4 +169,18 @@ export interface UpstreamErrorEnvelope {
 export type ClientOutcome<T> =
   | { kind: 'success'; data: T }
   | { kind: 'rejected'; httpStatus: number; code: string; message: string }
-  | { kind: 'unavailable'; reason: 'timeout' | 'connection_error' | 'upstream_5xx' | 'circuit_open'; code: string };
+  | {
+      kind: 'unavailable';
+      reason: 'timeout' | 'connection_error' | 'upstream_5xx' | 'circuit_open';
+      code: string;
+      /**
+       * C6 §3 — the raw upstream HTTP status, when known, so a caller can
+       * distinguish a 503 (deployment fault: NEVER degrade, propagate 503,
+       * circuit opens, no retry) from any other 5xx (degrade to 200). Absent
+       * for `timeout` / `connection_error` (no HTTP response was received) —
+       * present for `upstream_5xx`, and for `circuit_open` ONLY when the
+       * breaker most recently tripped on an observed 503, so the "no retry"
+       * guarantee persists for the duration the circuit stays open.
+       */
+      upstreamStatus?: number;
+    };

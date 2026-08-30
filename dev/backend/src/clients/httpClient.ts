@@ -24,7 +24,11 @@ export interface TransportResult {
 export type TransportFailure =
   | { failure: 'timeout' }
   | { failure: 'connection_error'; message: string }
-  | { failure: 'circuit_open' };
+  // `status` is set only when the breaker's most recent trip was caused by an
+  // observed 503 (C6 §3) — so a caller can keep treating "circuit open" as
+  // "still 503" for as long as the breaker stays open, rather than silently
+  // degrading once the very first 503 has already been reported.
+  | { failure: 'circuit_open'; status?: number };
 
 export type TransportOutcome = { ok: true; result: TransportResult } | ({ ok: false } & TransportFailure);
 
@@ -38,6 +42,7 @@ export class CircuitBreaker {
   private state: BreakerState = 'closed';
   private consecutiveFailures = 0;
   private openedAt = 0;
+  private lastTripStatus: number | undefined;
 
   constructor(
     private readonly failureThreshold = 3,
@@ -59,6 +64,7 @@ export class CircuitBreaker {
   recordSuccess(): void {
     this.state = 'closed';
     this.consecutiveFailures = 0;
+    this.lastTripStatus = undefined;
   }
 
   /** Call on connection failure/timeout. Opens after `failureThreshold` consecutive failures. */
@@ -69,14 +75,24 @@ export class CircuitBreaker {
     }
   }
 
-  /** Call immediately on a 503 — a single deployment-fault response opens the circuit. */
-  trip(): void {
+  /**
+   * Open the circuit. `status`, when supplied, records the HTTP status that
+   * caused this trip (C6 §3) — set only for an explicit 503 trip, so a
+   * `circuit_open` short-circuit can still be told apart from a
+   * connection-failure-threshold trip while the breaker stays open.
+   */
+  trip(status?: number): void {
     this.state = 'open';
     this.openedAt = Date.now();
+    this.lastTripStatus = status;
   }
 
   getState(): BreakerState {
     return this.state;
+  }
+
+  getLastTripStatus(): number | undefined {
+    return this.lastTripStatus;
   }
 }
 
@@ -125,7 +141,10 @@ export class UpstreamHttpClient {
 
   async request(opts: RequestOptions): Promise<TransportOutcome> {
     if (this.breaker.isOpen()) {
-      return { ok: false, failure: 'circuit_open' };
+      const status = this.breaker.getLastTripStatus();
+      return status === undefined
+        ? { ok: false, failure: 'circuit_open' }
+        : { ok: false, failure: 'circuit_open', status };
     }
 
     const first = await this.attempt(opts);
@@ -160,7 +179,7 @@ export class UpstreamHttpClient {
     const status = outcome.result.status;
     if (status === 503) {
       // Deployment fault, never a transient one — trip immediately, never retry.
-      this.breaker.trip();
+      this.breaker.trip(503);
       return;
     }
     if (status >= 500) {

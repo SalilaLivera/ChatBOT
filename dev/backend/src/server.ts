@@ -6,6 +6,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { requestId } from './middleware/requestId.js';
 import { healthRouter } from './routes/health.routes.js';
 import { sessionRouter } from './routes/session.routes.js';
+import { moodRouter } from './routes/mood.routes.js';
 
 export function buildApp(): express.Express {
   const app = express();
@@ -16,6 +17,7 @@ export function buildApp(): express.Express {
 
   app.use(healthRouter);
   app.use(sessionRouter);
+  app.use(moodRouter);
 
   app.use(errorHandler);
 

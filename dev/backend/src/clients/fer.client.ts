@@ -63,7 +63,12 @@ export class FerClient {
 
     if (!outcome.ok) {
       if (outcome.failure === 'circuit_open') {
-        return { kind: 'unavailable', reason: 'circuit_open', code: 'face_unavailable' };
+        return {
+          kind: 'unavailable',
+          reason: 'circuit_open',
+          code: 'face_unavailable',
+          ...(outcome.status !== undefined ? { upstreamStatus: outcome.status } : {}),
+        };
       }
       return {
         kind: 'unavailable',
@@ -134,13 +139,13 @@ function mapErrorResponse(status: number, text: string): ClientOutcome<never> {
   if (!envelope || typeof envelope.error?.code !== 'string') {
     // Not our envelope shape (e.g. a framework-level validation error) —
     // treat as an unavailable modality rather than guessing a code.
-    return { kind: 'unavailable', reason: 'upstream_5xx', code: 'face_unavailable' };
+    return { kind: 'unavailable', reason: 'upstream_5xx', code: 'face_unavailable', upstreamStatus: status };
   }
 
   const code = envelope.error.code;
   if (!FER_ALL_ERROR_CODES.has(code)) {
     // Unknown code — never fall through silently (§ exhaustiveness oracle).
-    return { kind: 'unavailable', reason: 'upstream_5xx', code: 'face_unavailable' };
+    return { kind: 'unavailable', reason: 'upstream_5xx', code: 'face_unavailable', upstreamStatus: status };
   }
 
   const mapped = mapFerError(code);
@@ -148,7 +153,7 @@ function mapErrorResponse(status: number, text: string): ClientOutcome<never> {
   if (mapped.category === 'rejected') {
     return { kind: 'rejected', httpStatus: mapped.httpStatus, code: mapped.appCode, message: envelope.error.message };
   }
-  return { kind: 'unavailable', reason: 'upstream_5xx', code: mapped.appCode };
+  return { kind: 'unavailable', reason: 'upstream_5xx', code: mapped.appCode, upstreamStatus: status };
 }
 
 function buildMultipartBody(boundary: string, imageBuffer: Buffer): Buffer {
