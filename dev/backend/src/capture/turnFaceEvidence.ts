@@ -27,9 +27,23 @@
  * label... Feeding it the mean 7-vector applies that function unchanged — the
  * rule governs the mapping, not the provenance of the vector it is given."
  *
- * ⚠ §3A.2 also calls this an INTERPRETATION the ML track should confirm — open
- * item C0.9, still UNANSWERED. Implemented as specified; the derivation site is
- * marked below as resting on C0.9. C3's single-frame semantics are untouched.
+ * ✅ C0.9 RULED (ML track, 2026-08-30): applying Rule A to a mean 7-vector is an
+ * APPLICATION of D-4, not an amendment to it. D-4 defines Rule A as a function
+ * from a 7-vector to a label; its scope is the mapping, not the provenance of
+ * the vector it is given — a mean vector is still a 7-vector, so the same
+ * function applies unchanged.
+ *
+ * It is also NOT Rule B by another route: Rule B was rejected because it
+ * collapses to three groups and then argmaxes the sums. Averaging FULL
+ * 7-vectors and then applying Rule A preserves the seven-way structure Rule A
+ * operates on — a different operation, so Rule B's rejection does not
+ * transfer here.
+ *
+ * The result is a SESSION-LEVEL state, not a frame-level one, and no measured
+ * figure characterises it: the 0.7681 three-state macro-F1 and the 24.3%
+ * distress miss rate both describe single still images, and the FER test
+ * split is spent, so that gap cannot be closed. C3's single-frame semantics
+ * are untouched. This is decided, not pending.
  *
  * The tie-break iterates `FER_SERVICE_CLASS_ORDER` (FER's own class order, the
  * order its numpy argmax used) so a derived argmax matches what the service
@@ -51,9 +65,9 @@ export interface TurnFaceEvidence {
 
 /**
  * argmax over the mean 7-vector. Ties break to the FIRST maximum in FER's own
- * class order — see TRAP 2 above. ⚠ REST-ON-C0.9: this derivation of a label
- * from a mean vector is the interpretation §3A.2 records and the ML track has
- * not yet confirmed (open item C0.9).
+ * class order — see TRAP 2 above. This derivation of a label from a mean
+ * vector is the D-4 application ruled by the ML track 2026-08-30 (see file
+ * header) — a session-level result with no measured figure behind it.
  */
 function argmaxMeanClass(mean: FerProbabilities): string {
   let bestClass: string = FER_SERVICE_CLASS_ORDER[0];
@@ -83,7 +97,7 @@ export function computeTurnFaceEvidence(snapshot: AccumulatorSnapshot, now: numb
   }
 
   const mean = snapshot.meanVector;
-  const predictedClass = argmaxMeanClass(mean); // ⚠ REST-ON-C0.9 — see file header / argmaxMeanClass
+  const predictedClass = argmaxMeanClass(mean); // C0.9 RULED — see file header / argmaxMeanClass
 
   const evidence = buildFaceEvidence({
     probabilities: mean,
