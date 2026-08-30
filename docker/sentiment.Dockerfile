@@ -39,6 +39,15 @@
 # (owner decision, 2026-08-30) because Railway leaves no alternative that
 # keeps HF_TOKEN out of Git, out of the repo, and out of the FINAL runtime
 # image — which this design still guarantees.
+#
+# ⛔ EXPERIMENT (2026-08-31, temporary): `${HF_TOKEN}` reached `curl` empty
+# on Railway despite the per-stage `ARG HF_TOKEN` below matching Railway's
+# own documented pattern. Testing whether Railway's builder only injects a
+# service variable into a GLOBAL arg (declared before any FROM) rather than
+# a stage-scoped one. This line has no effect on local `docker build`
+# (which already works) — it only changes what Railway's builder sees.
+ARG HF_TOKEN
+
 FROM python:3.11.15-slim@sha256:90744cff8f32887f075c47d747a173ff333e9e98801667af93c357fa9f5e28ff AS fetch-model
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
