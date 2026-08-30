@@ -85,3 +85,19 @@ export async function listRecentMessages(
   );
   return rows.map(mapRow).reverse();
 }
+
+/**
+ * Music-recommendation feature — the deterministic rotation index
+ * (`selectThreeSongs` in `content/musicCatalogue.ts`) needs the
+ * conversation's TOTAL prior message count, unbounded by
+ * `LLM_HISTORY_TURNS`. Deliberately NOT `listRecentMessages(...).length` or
+ * `listMessages(...).length` — either would mean fetching full row data
+ * (bounded or not) just to discard it for a count, and the bounded one
+ * would additionally plateau the rotation once a conversation outgrows the
+ * history window. `COUNT(*)` is index-only and O(1) in practice, no new
+ * persistence state, no new table or column.
+ */
+export async function countMessages(conversationId: string, pool: pg.Pool = getPool()): Promise<number> {
+  const { rows } = await pool.query('SELECT COUNT(*)::int AS count FROM messages WHERE conversation_id = $1', [conversationId]);
+  return rows[0]?.count ?? 0;
+}

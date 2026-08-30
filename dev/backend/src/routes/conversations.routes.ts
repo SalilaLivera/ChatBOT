@@ -16,7 +16,7 @@ import { requireAuth } from '../auth/authMiddleware.js';
 import { createSupabaseJwks, type TokenVerificationKey } from '../auth/tokens.js';
 import { env } from '../config/env.js';
 import { createConversation, findOwnedConversation } from '../persistence/conversations.js';
-import { insertMessage, listMessages, listRecentMessages } from '../persistence/messages.js';
+import { insertMessage, listMessages, listRecentMessages, countMessages } from '../persistence/messages.js';
 import { ensureUser } from '../persistence/users.js';
 import { logger } from '../logging/logger.js';
 import { sessionStore } from '../capture/sessionStore.js';
@@ -27,6 +27,7 @@ import { analyseMood, type MoodServiceDeps } from '../mood/moodService.js';
 import { createProvider } from '../llm/factory.js';
 import { LlmService } from '../llm/service.js';
 import type { Language, MoodState } from '../llm/contract.js';
+import { shouldOfferMusic, buildMusicOffer } from '../music/musicOffer.js';
 
 // ⛔ I1-B SCAFFOLDING ONLY — reuses the existing C6 mood pipeline and the
 // existing (mock-only, D-6-gated) LlmService so the owner can see real
@@ -207,6 +208,18 @@ export function createConversationsRouter(
       // narrowed to a `HistoryTurn`.
       const historyTurns = history.map((m) => ({ role: m.role, content: m.content }));
 
+      // ⛔ MUSIC RECOMMENDATION — APPLICATION LOGIC, NOT LLM LOGIC.
+      //
+      // Computed from the SAME fused `moodState`/`confidence` above — no
+      // second mood analysis, no FER/sentiment/LLM confidence, nothing
+      // recalculated. `contentType` passed to `generate()` below stays
+      // `null` regardless of this decision: music must not affect the LLM
+      // response, and `generate()`'s inputs are UNCHANGED by anything in
+      // this block. See src/music/musicOffer.ts.
+      const musicOffer = shouldOfferMusic(moodState, confidence)
+        ? buildMusicOffer(language, await countMessages(id))
+        : null;
+
       const llmOutcome = await getLlmService().generate({
         moodState,
         language,
@@ -242,6 +255,8 @@ export function createConversationsRouter(
           language_detected: moodOutcome.body.language_detected,
         },
         response_mode: null,
+        // Mirrors D-1 ChatResponse's music_offer: null unless triggered.
+        music_offer: musicOffer,
       });
     })();
   });

@@ -197,3 +197,44 @@ describe('D-9 — cross-conversation isolation over HTTP', () => {
     expect(typeof body.content).toBe('string');
   }, 20_000);
 });
+
+describe('music recommendation — response shape over HTTP (§F13)', () => {
+  const userA = crypto.randomUUID();
+  let tokenA = '';
+  beforeAll(async () => {
+    tokenA = await fakeSupabaseToken(userA);
+  });
+
+  it('a normal (non-distressing) turn returns music_offer: null and leaves every other field as before', async () => {
+    const createRes = await fetch(`${base}/api/v1/conversations`, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${tokenA}` },
+    });
+    const { id: conversationId } = (await createRes.json()) as { id: string };
+
+    const res = await fetch(`${base}/api/v1/conversations/${conversationId}/messages`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${tokenA}` },
+      body: JSON.stringify({ content: 'hello' }),
+    });
+    expect(res.status).toBe(201);
+    const body = (await res.json()) as { music_offer: unknown; content: string; mood_debug: unknown };
+    // ⛔ Present and explicitly null — not omitted. Matches D-1's own
+    // content_suggestion precedent (always present, never undefined).
+    expect('music_offer' in body).toBe(true);
+    expect(body.music_offer).toBeNull();
+    // Regression: every field this route already returned still does.
+    expect(typeof body.content).toBe('string');
+    expect(body.mood_debug).toBeDefined();
+  }, 20_000);
+
+  // ⛔ NOT TESTED HERE: forcing a real `distressed + confidence > 0.4` result
+  // through the live sentiment/fusion stack. Doing so would require either
+  // scripting a specific real-model output (not reliably controllable from
+  // outside) or making moodService injectable (explicitly out of scope —
+  // "do not modify mood pipeline internals"). The trigger and catalogue
+  // logic are fully covered in isolation by musicOffer.test.ts and
+  // musicCatalogue.test.ts; this test covers the one thing only an HTTP
+  // round-trip can prove — that the route wiring itself doesn't break or
+  // omit the field on the far more common non-triggering path.
+});
