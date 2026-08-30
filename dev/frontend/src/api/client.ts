@@ -58,7 +58,12 @@ export function createChatApi(getScenario: () => typeof defaultScenario): ChatAp
         language: request.ui_language,
         response_mode: reply.response_mode,
         content_suggestion: null,
-        mood: { state: reply.mood_debug.state, modalities_used: reply.mood_debug.modalities_used }
+        mood: { state: reply.mood_debug.state, modalities_used: reply.mood_debug.modalities_used },
+        // ⛔ Provisional passthrough -- `reply.music_offer` does not exist on
+        // the backend's I1-B payload yet (see contracts.ts). This is a
+        // straight passthrough, not a frontend-invented catalogue: once the
+        // backend adds the field, its value flows through unchanged.
+        music_offer: reply.music_offer ?? null
       } as unknown as ChatResponse;
       return adapted;
     }

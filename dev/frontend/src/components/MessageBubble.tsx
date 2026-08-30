@@ -1,7 +1,18 @@
+import { useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { Message } from "../store";
 import { AssistantResponseContent } from "./AssistantResponseContent";
+import { MusicCTA } from "./MusicCTA";
+import { MusicOfferModal } from "./MusicOfferModal";
 import { colors, fonts, spacing, type } from "../theme";
+
+// Assistant bubble background by mood.state (owner-approved 2026-08-30).
+// Unknown/absent mood falls back to the existing neutral appearance.
+const moodBackground: Record<string, string> = {
+  calm: colors.moodCalm,
+  neutral: colors.moodNeutral,
+  distressed: colors.moodDistressed,
+};
 
 // ---------------------------------------------------------------------------
 // MOCK/DEBUG UI REMOVED 2026-08-30 (owner request)
@@ -30,6 +41,14 @@ import { colors, fonts, spacing, type } from "../theme";
 export function MessageBubble({ message }: { message: Message }) {
   const safety = message.response?.response_mode === "safety";
   const suggestion = message.response?.content_suggestion;
+  const musicOffer = message.response?.music_offer ?? null;
+  const [musicOpen, setMusicOpen] = useState(false);
+
+  // Mood comes only from response data (mood.state), never computed from
+  // message text here. Absent/unrecognised state -> existing neutral bg.
+  const moodBg = message.role === "assistant"
+    ? moodBackground[message.response?.mood.state ?? "neutral"] ?? colors.moodNeutral
+    : undefined;
 
   return (
     <View style={[styles.wrap, message.role === "user" ? styles.userWrap : styles.assistantWrap]}>
@@ -37,6 +56,7 @@ export function MessageBubble({ message }: { message: Message }) {
         style={[
           styles.bubble,
           message.role === "user" ? styles.user : styles.assistant,
+          message.role === "assistant" && { backgroundColor: moodBg },
           safety && styles.safety,
         ]}
       >
@@ -54,7 +74,14 @@ export function MessageBubble({ message }: { message: Message }) {
             <Text style={styles.suggestionTitle}>♡ {suggestion.title}</Text>
           </View>
         )}
+
+        {/* Only rendered when the backend actually returned a music_offer --
+            no CTA, no placeholder, when it is null/absent. */}
+        {musicOffer && <MusicCTA onPress={() => setMusicOpen(true)} />}
       </View>
+      {musicOffer && (
+        <MusicOfferModal visible={musicOpen} offer={musicOffer} onClose={() => setMusicOpen(false)} />
+      )}
     </View>
   );
 }
