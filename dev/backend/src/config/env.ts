@@ -39,6 +39,25 @@ const envSchema = z.object({
   LANGUAGE_SI_RATIO_LOW: z.coerce.number().min(0).max(1).default(0.1),
   LANGUAGE_BOUNDS_PROVENANCE: z.string().min(1).default('UNSIGNED PLACEHOLDER — see LANGUAGE_BOUNDS_PROPOSAL.md'),
 
+  // ---------------------------------------------------------------------
+  // LLM (M7). ⛔ D-6 GATE — see src/llm/factory.ts.
+  //
+  // LLM_PROVIDER DEFAULTS TO 'mock' AND MUST REMAIN SO until D-6 (sending
+  // pregnancy-domain user messages to a third-party US inference provider) is
+  // explicitly resolved. Setting it to 'groq' additionally requires
+  // GROQ_API_KEY and LLM_MODEL — neither has a default that reaches a network.
+  //
+  // GROQ_API_KEY is SERVER-SIDE ONLY. It is never returned in a response, never
+  // logged, and /health has no field for it.
+  // ---------------------------------------------------------------------
+  LLM_PROVIDER: z.enum(['mock', 'groq']).default('mock'),
+  GROQ_API_KEY: z.string().optional(),
+  // Pinned explicitly: free-tier model IDs are deprecated with little notice,
+  // and /health reports the active one so a silent swap is visible.
+  LLM_MODEL: z.string().optional(),
+  LLM_TIMEOUT_MS: z.coerce.number().int().positive().default(20_000),
+  LLM_MAX_OUTPUT_TOKENS: z.coerce.number().int().positive().default(800),
+
   DATABASE_URL: z.string().min(1),
   JWT_SECRET: z.string().min(1),
 
