@@ -309,8 +309,13 @@ describe('C7 TRAP 1 — message text is persisted but never logged', () => {
     // Half 1 — never logged, at any level.
     expect(captured).not.toContain(secretMarker);
 
-    // Half 2 — IS persisted, verbatim, in Postgres.
-    const { rows } = await pool.query('SELECT content FROM messages WHERE conversation_id = $1', [conversationId]);
+    // Half 2 — IS persisted, verbatim, in Postgres. (I1-B: the turn now also
+    // persists an assistant reply row in the same conversation, so this
+    // scopes to the user's row specifically rather than asserting a total count.)
+    const { rows } = await pool.query(
+      "SELECT content FROM messages WHERE conversation_id = $1 AND role = 'user'",
+      [conversationId],
+    );
     expect(rows).toHaveLength(1);
     expect(rows[0].content).toBe(secretMarker);
   }, 20_000);

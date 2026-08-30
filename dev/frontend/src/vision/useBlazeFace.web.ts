@@ -51,7 +51,10 @@ export function useBlazeFace(videoRef: { current: any }, active: boolean): Blaze
           const preds: any[] = await model.estimateFaces(el, false);
           if (!stopped) {
             setVideo({ w: el.videoWidth, h: el.videoHeight });
-            if (preds.length) {
+            // Multiple detected faces -> skip (§4, settled): do not pick one.
+            // No BlazeFace-confidence selection policy either -- exactly one
+            // detection is required to produce a face box.
+            if (preds.length === 1) {
               const [x1, y1] = preds[0].topLeft as [number, number];
               const [x2, y2] = preds[0].bottomRight as [number, number];
               setFace({ x: x1, y: y1, w: x2 - x1, h: y2 - y1 });

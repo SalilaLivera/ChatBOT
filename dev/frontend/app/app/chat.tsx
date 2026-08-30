@@ -13,9 +13,11 @@ import { colors, fonts, spacing, type } from "@/theme";
 import { i18n } from "@/i18n";
 import { useAppStore } from "@/store";
 import { createChatApi } from "@/api/client";
+import { grantCameraConsent, revokeCamera, setCameraActive, analyseMood } from "@/api/sessionApi";
+import { sessionId } from "@/session";
 export default function Chat() {
   const { consent } = useLocalSearchParams<{ consent?: string }>();
-  const { language, messages, addMessage, newChat, cameraEnabled, consentSeen, setConsentSeen } = useAppStore();
+  const { language, messages, addMessage, newChat, cameraEnabled, cameraPaused, consentSeen, setConsentSeen, authenticated, authError } = useAppStore();
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(false);
@@ -93,13 +95,42 @@ export default function Chat() {
     addMessage({ id: `u-${Date.now()}`, role: "user", text });
     setSending(true);
     try {
-      const response = await api.sendMessage({ session_id: "demo-session", text, ui_language: language });
+      const response = await api.sendMessage({ session_id: sessionId, text, ui_language: language });
       addMessage({ id: response.message_id, role: "assistant", text: response.response, response });
     } catch { setError(true); } finally { setSending(false); }
+    // Real mood analysis, DevPanel-only (mood.state must never appear in
+    // user-facing UI). Fire-and-forget: it never affects the chat reply.
+    if (useAppStore.getState().authenticated) {
+      analyseMood(text)
+        .then(result => useAppStore.getState().setLastMoodAnalysis(result))
+        .catch(() => {});
+    }
   }
-  function closeConsent(enable: boolean) {
+  async function closeConsent(enable: boolean) {
     setConsentSeen(true); setShowConsent(false);
-    if (enable) useAppStore.getState().setCamera(true);
+    if (!enable) return;
+    try {
+      await grantCameraConsent();
+      useAppStore.getState().setCamera(true);
+    } catch {
+      // consent request failed -- camera stays off, no silent fallback.
+    }
+  }
+  async function toggleCamera() {
+    if (cameraEnabled) {
+      try { await revokeCamera(); } catch { /* best-effort; still turn preview off */ }
+      useAppStore.getState().setCamera(false);
+    } else {
+      // Never re-grant automatically -- always route through the consent modal.
+      setShowConsent(true);
+    }
+  }
+  async function togglePause() {
+    const next = !cameraPaused;
+    try {
+      await setCameraActive(!next);
+      useAppStore.getState().setCameraPaused(next);
+    } catch { /* leave state unchanged on failure */ }
   }
   return <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === "ios" ? "padding" : undefined}>
     <Screen>
@@ -109,7 +140,10 @@ export default function Chat() {
           {Platform.OS === "web" && cameraEnabled && (
             <Pressable accessibilityRole="button" accessibilityLabel={showPreview ? "Hide camera preview" : "Show camera preview"} onPress={() => setShowPreview(v => !v)} style={[styles.cameraButton, styles.cameraButtonOff]}><Ionicons name={showPreview ? "eye" : "eye-outline"} size={20} color={colors.muted} /></Pressable>
           )}
-          <Pressable accessibilityRole="button" accessibilityLabel={cameraEnabled ? i18n.t("disableCamera") : i18n.t("enableCamera")} onPress={() => useAppStore.getState().setCamera(!cameraEnabled)} style={[styles.cameraButton, !cameraEnabled && styles.cameraButtonOff]}><Ionicons name={cameraEnabled ? "videocam" : "videocam-off"} size={20} color={cameraEnabled ? colors.white : colors.muted} /></Pressable>
+          {Platform.OS === "web" && cameraEnabled && (
+            <Pressable accessibilityRole="button" accessibilityLabel={cameraPaused ? "Resume camera sensing" : "Pause camera sensing"} onPress={togglePause} style={[styles.cameraButton, styles.cameraButtonOff]}><Ionicons name={cameraPaused ? "play" : "pause"} size={20} color={colors.muted} /></Pressable>
+          )}
+          <Pressable accessibilityRole="button" accessibilityLabel={cameraEnabled ? i18n.t("disableCamera") : i18n.t("enableCamera")} onPress={toggleCamera} style={[styles.cameraButton, !cameraEnabled && styles.cameraButtonOff]}><Ionicons name={cameraEnabled ? "videocam" : "videocam-off"} size={20} color={cameraEnabled ? colors.white : colors.muted} /></Pressable>
         </View>
       </View>
       {showDev && <DevPanel />}
@@ -118,8 +152,9 @@ export default function Chat() {
         : <View style={styles.messages}>{messages.map(message => <MessageBubble key={message.id} message={message} />)}</View>}
       {sending && <View style={styles.loading}><ActivityIndicator color={colors.deepPink} /><Text style={styles.loadingText}>Listening…</Text></View>}
       {error && <View style={styles.error}><Text style={styles.errorText}>{i18n.t("error")}</Text><Pressable onPress={() => { setError(false); setDraft("Please try again"); }}><Text style={styles.retry}>{i18n.t("retry")}</Text></Pressable></View>}
+      {!authenticated && authError && <View style={styles.error}><Text style={styles.errorText}>{authError}</Text></View>}
     </Screen>
-    <CameraPreview state={camera.state} stream={camera.stream} visible={showPreview && cameraEnabled} />
+    <CameraPreview state={camera.state} stream={camera.stream} visible={showPreview && cameraEnabled} postingActive={cameraEnabled && !cameraPaused} />
     <Animated.View style={[styles.composerDock, { transform: [{ translateY }] }]}>
       <View ref={composerRef} style={[styles.composer, multiline && styles.composerMultiline]} onLayout={e => { const w = e.nativeEvent.layout.width; if (w > 150) setComposerW(w); }}>
         <TextInput
