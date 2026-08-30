@@ -420,6 +420,8 @@ The chatbot must:
 -   avoid diagnosis;
 -   avoid pretending to be a clinician;
 -   avoid unsafe medical advice;
+    *(Superseded 2026-08-28: the system provides **no** medical advice at all — see
+    `../decisions/MEDICAL_KNOWLEDGE_BASE_DECISION.md`. This rule now holds trivially.)*
 -   respond appropriately to distress;
 -   encourage professional/human support when required.
 
@@ -567,6 +569,10 @@ Mood may affect:
 -   supportive-content suggestions.
 
 Mood should not automatically change factual medical advice.
+
+> **Superseded 2026-08-28.** The system provides no factual medical advice, so this rule
+> holds trivially. Factual questions are acknowledged, supported and redirected to a
+> health professional. See `../decisions/MEDICAL_KNOWLEDGE_BASE_DECISION.md`.
 
 ## Safety testing
 

@@ -90,6 +90,10 @@ Reversing any of these requires a new memo in `../decisions/`.
     "first pregnancy chatbot", not "multimodal fusion is novel".
 11. Adaptive response quality must be **evaluated with users**.
 12. Experiment metadata is recorded **by the notebooks**, not by separate infrastructure.
+13. **No medical knowledge base.** The chatbot provides emotional support only; factual
+    pregnancy questions are acknowledged and redirected to a health professional.
+    Information provision belongs to the teammates' clinical/nutrition components.
+    See `../decisions/MEDICAL_KNOWLEDGE_BASE_DECISION.md`.
 
 ## 6. Open decisions
 

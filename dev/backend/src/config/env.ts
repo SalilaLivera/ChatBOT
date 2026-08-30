@@ -145,6 +145,34 @@ function loadEnv(): Env {
     process.exit(1);
   }
 
+  // ⛔ D-6 BOOT GUARD — same shape as the O-16 guard above and the §8.2
+  // fusion-readiness guard (fusionReadiness.ts): a marking without
+  // enforcement is how an unsigned/unapproved value reaches production
+  // unnoticed. D-6 (D6_APPROVAL_SCOPED.md) approves Groq for ONE scope only —
+  // real project-team test text, on a LOCAL DEVELOPMENT MACHINE.
+  //
+  // ⚠ Reads NODE_ENV, NOT DEPLOYMENT_POSTURE — deliberately, after an earlier
+  // draft of this guard got it wrong. DEPLOYMENT_POSTURE tracks a DIFFERENT
+  // axis (may placeholder-derived fusion results be shown) and defaults to
+  // 'strict' EVERYWHERE, including a production deploy that simply forgot to
+  // set `research_demo`. Reading DEPLOYMENT_POSTURE here would silently miss
+  // exactly that case — a Railway box in production, default posture, with
+  // LLM_PROVIDER=groq set by accident — which is precisely the leak D-6 was
+  // written to prevent. `NODE_ENV === 'development'` is the one value in this
+  // codebase that actually means "the local machine," which is what D-6's
+  // scope is written in terms of.
+  if (parsed.data.NODE_ENV !== 'development' && parsed.data.LLM_PROVIDER !== 'mock') {
+    // eslint-disable-next-line no-console -- logger is not constructed yet at boot time
+    console.error(
+      `LLM_PROVIDER=${parsed.data.LLM_PROVIDER} under NODE_ENV=${parsed.data.NODE_ENV} — ` +
+        'refusing to start (D-6). D-6 approves Groq for project-team test text on a local ' +
+        "development machine ONLY (NODE_ENV=development); see docs/backend build/" +
+        'D6_APPROVAL_SCOPED.md. Widening this scope is a new decision, not an extension of the ' +
+        'existing approval.',
+    );
+    process.exit(1);
+  }
+
   return parsed.data;
 }
 

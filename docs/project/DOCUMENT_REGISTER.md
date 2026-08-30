@@ -76,6 +76,7 @@ Decision memos are **never merged**. Each records an actual project decision.
 | `BEHAVIOURAL_SIGNAL_DECISION.md` | Markdown mirror of the above | MIRROR |
 | `Behavioural_Signal_Decision_Memo_DETAILED.docx` | Same decision with full evidence review (Epp 2011, Lee 2015, Ghosh 2019, Eisele 2021, Kołakowska 2016, Lau 2018) | **AUTHORITATIVE** companion |
 | `TEXT_MODEL_PLACEMENT_DECISION.md` | M4 on-device vs backend. Criteria and tie-break pre-registered | **UNRESOLVED** — due Phase 4 exit |
+| `MEDICAL_KNOWLEDGE_BASE_DECISION.md` | No medical knowledge base, no RAG. The chatbot is emotional support only; factual questions are redirected to a health professional. Information provision belongs to teammates' clinical/nutrition components. | **AUTHORITATIVE** — DECIDED (rejected) |
 | `LOCAL_STORAGE_DECISION.md` | Entity tiering T0–T3; reconciles the AsyncStorage contradiction | Tiering **PROPOSED**; technology **UNRESOLVED** — due before Phase 5 |
 
 ## docs/archive/ — retained, not active

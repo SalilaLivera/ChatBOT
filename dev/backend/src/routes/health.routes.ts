@@ -5,6 +5,27 @@ import { FerClient } from '../clients/fer.client.js';
 import { SentimentClient } from '../clients/sentiment.client.js';
 import { FusionClient } from '../clients/fusion.client.js';
 import { checkReadiness, type ReadinessResult } from '../readiness/readiness.js';
+import { createProvider, describeProvider } from '../llm/factory.js';
+
+// ⛔ CORRECTION (2026-08-30) — `describeProvider().d6Gate` was designed and
+// built so an operator could see whether user text is capable of leaving the
+// system without reading configuration, but it was never actually wired into
+// `/health`. The D-6 planning docs claimed it already was; they were wrong.
+// Fixed here, not worked around — this is exactly the "marking without
+// visibility" gap D-6's own reasoning is about.
+//
+// Constructed lazily, same pattern as the upstream clients below — reading
+// the provider identity must never itself perform a network call (the mock
+// provider never does; Groq's constructor doesn't either).
+let defaultProvider: ReturnType<typeof createProvider> | undefined;
+function getDefaultProvider(): ReturnType<typeof createProvider> {
+  defaultProvider ??= createProvider({
+    providerName: env.LLM_PROVIDER,
+    apiKey: env.GROQ_API_KEY,
+    model: env.LLM_MODEL,
+  });
+  return defaultProvider;
+}
 
 export type ReadinessChecker = () => Promise<ReadinessResult>;
 
@@ -65,9 +86,16 @@ const RESEARCH_DEMO_LIMITATIONS = [
 export function createHealthRouter(checkReady: ReadinessChecker = defaultChecker): Router {
   const router = Router();
 
-  /** Liveness — process is up and serving. No upstream calls. */
+  /**
+   * Liveness — process is up and serving. No upstream calls.
+   *
+   * ⛔ D-6 — `d6Gate` is included so an operator can see whether real user
+   * text is CAPABLE of leaving the system without reading configuration.
+   * `describeProvider()` never performs a network call and never includes
+   * the API key — see `llm/factory.ts`.
+   */
   router.get('/health', (_req, res) => {
-    res.status(200).json({ status: 'ok' });
+    res.status(200).json({ status: 'ok', llm: describeProvider(getDefaultProvider()) });
   });
 
   /**

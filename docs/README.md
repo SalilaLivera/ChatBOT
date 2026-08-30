@@ -2,6 +2,14 @@
 
 All project documentation lives here. Nothing outside `docs/` is documentation.
 
+> ## Start here if you are an AI agent
+>
+> **[`AGENT_HANDOVER.md`](AGENT_HANDOVER.md)** — read it completely and you can act as
+> Technical Lead. Architecture, decisions and why they were made, current measured state,
+> what is deliberately unresolved, and the working rules. Written for a cold start with no
+> prior conversation history.
+
+
 ## Purpose
 
 This folder holds the authoritative record of **what is being built, why, and what has been
@@ -15,6 +23,7 @@ decided**. Code lives in `ml/` and `dev/`; results live in `experiments/`.
 | `research/` | Literature review, research gaps, existing-systems comparison |
 | `system/` | Architecture, mood states, safety policy, performance protocol |
 | `decisions/` | Formal decision memos — why a choice was made |
+| `ml/` | ML findings records — what each notebook measured and what it means |
 | `archive/` | Superseded, duplicate and historical material. **Nothing is ever deleted.** |
 
 ## The documents that matter most
@@ -39,6 +48,8 @@ Read these four and you understand the project:
 | `project/DOCUMENT_REGISTER.md` | Every document, its location, status and authority |
 | `research/LITERATURE_REVIEW.md` | The 49-paper synthesis |
 | `research/RESEARCH_GAPS.md` | The gap matrix with claim boundaries |
+| `ml/ML_STATE.md` | Every measured number from notebooks 01-04, both tracks |
+| `ml/0*_findings.md` | Per-notebook findings records, written for the research report |
 
 ## What belongs here
 
@@ -80,9 +91,13 @@ If you edit a mirror, update its source too — or the two will disagree.
 
 ## Current status
 
-Phase 1 design documentation is complete. Gate 1A closed 2026-08-19. Gate 1B items
+Phase 1 design documentation is complete; Gate 1A closed 2026-08-19. Gate 1B items
 (safety sign-off, storage spike, benchmark device, mock E2E) remain open and are tracked in
 `project/PHASE_1_CLOSURE.md`.
+
+**FER model development is advanced.** Notebooks 01-04 are complete: dataset explored and
+cleaned, MobileNetV2 fine-tuned to validation macro-F1 **0.6063 +/- 0.0054**. The held-out
+test split has never been loaded. See `ml/ML_STATE.md`. Next: notebook 05, evaluation.
 
 ## Continue reading
 

@@ -594,7 +594,13 @@ Includes:
 
 - licensed/royalty-free music;
 - calming content;
-- informational/supportive resources.
+- static, pre-authored supportive material (breathing guidance, grounding exercises,
+  reassurance scripts).
+
+> **Clarified 2026-08-28.** This is **not** a queryable information library and **not** a
+> medical knowledge base. All material is authored in advance and emotional/regulatory in
+> nature — it never answers factual or clinical questions. See
+> `../decisions/MEDICAL_KNOWLEDGE_BASE_DECISION.md`.
 
 Music is an adjunct, not a treatment claim. The literature review supports cautious inclusion based on antenatal music-intervention evidence while noting heterogeneity and risk of bias. (Literature Review §9; [T1]–[T3].)
 
