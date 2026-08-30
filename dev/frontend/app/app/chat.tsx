@@ -6,6 +6,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { Screen } from "@/components/Screen";
 import { MessageBubble } from "@/components/MessageBubble";
 import { DevPanel } from "@/components/DevPanel";
+import { CameraPreview } from "@/components/CameraPreview";
+import { useWebCamera } from "@/vision/useWebCamera";
+import { preloadBlazeFace } from "@/vision/useBlazeFace";
 import { colors, fonts, spacing, type } from "@/theme";
 import { i18n } from "@/i18n";
 import { useAppStore } from "@/store";
@@ -22,8 +25,13 @@ export default function Chat() {
   const [autoH, setAutoH] = useState(0);
   const [dynamicMode, setDynamicMode] = useState(false);
   const [showDev, setShowDev] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [showConsent, setShowConsent] = useState(consent === "1" && !consentSeen);
   const api = useMemo(() => createChatApi(() => useAppStore.getState().scenario), []);
+  // When camera sensing is enabled, actually acquire the browser webcam on web (permission prompt +
+  // in-use indicator). Detection runs in the background from here; the panel is just a viewport.
+  const camera = useWebCamera(cameraEnabled);
+  useEffect(() => { if (cameraEnabled) preloadBlazeFace(); }, [cameraEnabled]);
   // Raised = the resting mid-screen position shown before the user engages the composer.
   const raised = messages.length === 0 && !focused;
   // The idle line reserves room on the right for the send button; the moment the text fills it, the
@@ -97,7 +105,12 @@ export default function Chat() {
     <Screen>
       <View style={styles.headerBar}>
         <Pressable accessibilityRole="button" accessibilityLabel="New chat" onPress={newChat} style={({ pressed }) => [styles.newChatButton, pressed && styles.newChatButtonPressed]}><Ionicons name="add" size={26} color={colors.deepPink} /></Pressable>
-        <Pressable accessibilityRole="button" accessibilityLabel={cameraEnabled ? i18n.t("disableCamera") : i18n.t("enableCamera")} onPress={() => useAppStore.getState().setCamera(!cameraEnabled)} style={[styles.cameraButton, !cameraEnabled && styles.cameraButtonOff]}><Ionicons name={cameraEnabled ? "videocam" : "videocam-off"} size={20} color={cameraEnabled ? colors.white : colors.muted} /></Pressable>
+        <View style={styles.headerActions}>
+          {Platform.OS === "web" && cameraEnabled && (
+            <Pressable accessibilityRole="button" accessibilityLabel={showPreview ? "Hide camera preview" : "Show camera preview"} onPress={() => setShowPreview(v => !v)} style={[styles.cameraButton, styles.cameraButtonOff]}><Ionicons name={showPreview ? "eye" : "eye-outline"} size={20} color={colors.muted} /></Pressable>
+          )}
+          <Pressable accessibilityRole="button" accessibilityLabel={cameraEnabled ? i18n.t("disableCamera") : i18n.t("enableCamera")} onPress={() => useAppStore.getState().setCamera(!cameraEnabled)} style={[styles.cameraButton, !cameraEnabled && styles.cameraButtonOff]}><Ionicons name={cameraEnabled ? "videocam" : "videocam-off"} size={20} color={cameraEnabled ? colors.white : colors.muted} /></Pressable>
+        </View>
       </View>
       {showDev && <DevPanel />}
       {messages.length === 0
@@ -106,6 +119,7 @@ export default function Chat() {
       {sending && <View style={styles.loading}><ActivityIndicator color={colors.deepPink} /><Text style={styles.loadingText}>Listening…</Text></View>}
       {error && <View style={styles.error}><Text style={styles.errorText}>{i18n.t("error")}</Text><Pressable onPress={() => { setError(false); setDraft("Please try again"); }}><Text style={styles.retry}>{i18n.t("retry")}</Text></Pressable></View>}
     </Screen>
+    <CameraPreview state={camera.state} stream={camera.stream} visible={showPreview && cameraEnabled} />
     <Animated.View style={[styles.composerDock, { transform: [{ translateY }] }]}>
       <View ref={composerRef} style={[styles.composer, multiline && styles.composerMultiline]} onLayout={e => { const w = e.nativeEvent.layout.width; if (w > 150) setComposerW(w); }}>
         <TextInput
@@ -143,6 +157,7 @@ const styles = StyleSheet.create({
   headerBar: { height: 72, marginTop: -spacing.xl, marginHorizontal: -spacing.lg, paddingHorizontal: spacing.lg, flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: colors.card, shadowColor: colors.primary, shadowOpacity: 0.08, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 2, zIndex: 2, boxShadow: "0 3px 8px rgba(217,108,138,.08)" as any },
   newChatButton: { width: 44, height: 44, borderRadius: 22, backgroundColor: "transparent", alignItems: "center", justifyContent: "center", borderWidth: 2.5, borderColor: colors.deepPink, outlineStyle: "none" as any },
   newChatButtonPressed: { backgroundColor: colors.lightPink },
+  headerActions: { flexDirection: "row", alignItems: "center", gap: 10 },
   cameraButton: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.deepPink, alignItems: "center", justifyContent: "center", borderWidth: 0, shadowOpacity: 0, elevation: 0, outlineStyle: "none" as any },
   cameraButtonOff: { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
   empty: { alignItems: "center", paddingVertical: 70, paddingHorizontal: spacing.lg },
