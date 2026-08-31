@@ -121,6 +121,28 @@ const envSchema = z.object({
   // same as any other malformed required value here — it is never silently
   // coerced to `strict`.
   DEPLOYMENT_POSTURE: z.enum(['strict', 'research_demo']).default('strict'),
+
+  // --- D-6 approval scope ---
+  // ⛔ GOVERNANCE, not configuration. Names the scope the project owner has
+  // actually approved for sending pregnancy-domain user text to a third-party
+  // US inference provider. Defaults to the ORIGINAL, narrower approval, so an
+  // unset variable behaves exactly as before this field existed: groq is
+  // permitted on a local development machine only.
+  //
+  // `team_demo_deployment` widens that scope to a deployed instance shown to
+  // the project team (owner decision, 2026-08-31). It is deliberately a named
+  // scope rather than a boolean, and never named like a bypass (e.g.
+  // ALLOW_GROQ_IN_PRODUCTION) — same posture as DEPLOYMENT_POSTURE above and
+  // C7_DECISIONS_AND_GAPS.md D-42. Setting it is an explicit statement about
+  // WHO the deployment is for, which is the axis D-6 is written in terms of.
+  //
+  // ⚠ It does NOT make the deployment private. The Vercel frontend is publicly
+  // reachable with anonymous sign-in, so anyone who finds the URL can submit
+  // text that reaches the provider. That residual exposure is the accepted
+  // cost of this scope, recorded here rather than left implicit.
+  D6_APPROVAL_SCOPE: z
+    .enum(['local_development_only', 'team_demo_deployment'])
+    .default('local_development_only'),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -168,14 +190,27 @@ function loadEnv(): Env {
   // written to prevent. `NODE_ENV === 'development'` is the one value in this
   // codebase that actually means "the local machine," which is what D-6's
   // scope is written in terms of.
-  if (parsed.data.NODE_ENV !== 'development' && parsed.data.LLM_PROVIDER !== 'mock') {
+  //
+  // D6_APPROVAL_SCOPE widens the approved scope EXPLICITLY (owner decision,
+  // 2026-08-31 — a deployed instance demonstrated to the project team). The
+  // default is the original narrow scope, so the accidental-Railway-box case
+  // this guard was written for still fails closed: reaching a real provider in
+  // production now requires LLM_PROVIDER=groq AND a key AND a stated scope,
+  // none of which has a default that reaches the network.
+  if (
+    parsed.data.NODE_ENV !== 'development' &&
+    parsed.data.LLM_PROVIDER !== 'mock' &&
+    parsed.data.D6_APPROVAL_SCOPE !== 'team_demo_deployment'
+  ) {
     // eslint-disable-next-line no-console -- logger is not constructed yet at boot time
     console.error(
       `LLM_PROVIDER=${parsed.data.LLM_PROVIDER} under NODE_ENV=${parsed.data.NODE_ENV} — ` +
-        'refusing to start (D-6). D-6 approves Groq for project-team test text on a local ' +
-        "development machine ONLY (NODE_ENV=development); see docs/backend build/" +
-        'D6_APPROVAL_SCOPED.md. Widening this scope is a new decision, not an extension of the ' +
-        'existing approval.',
+        `D6_APPROVAL_SCOPE=${parsed.data.D6_APPROVAL_SCOPE} — refusing to start (D-6). ` +
+        'D-6 approves Groq for project-team test text on a local development machine ' +
+        '(NODE_ENV=development), or on a deployment explicitly scoped to the project team ' +
+        '(D6_APPROVAL_SCOPE=team_demo_deployment). Neither is set. See docs/backend build/' +
+        'D6_APPROVAL_SCOPED.md. Widening this scope further is a new decision, not an ' +
+        'extension of the existing approval.',
     );
     process.exit(1);
   }

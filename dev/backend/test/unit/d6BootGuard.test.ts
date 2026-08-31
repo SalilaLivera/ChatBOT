@@ -12,12 +12,21 @@ const CHILD_NODE_OPTIONS = '--max-old-space-size=192';
 const SIGNED_PROVENANCE =
   'SIGNED by the project owner, 2026-08-30 — judgement not measurement; mixed is pending the ML track\'s ratio-sweep diagnostic';
 
-function baseEnv(nodeEnv: string, port: string, llmProvider: string): NodeJS.ProcessEnv {
+function baseEnv(
+  nodeEnv: string,
+  port: string,
+  llmProvider: string,
+  d6ApprovalScope?: string,
+): NodeJS.ProcessEnv {
   const rest = { ...process.env };
   delete rest.LLM_PROVIDER;
   delete rest.GROQ_API_KEY;
   delete rest.LLM_MODEL;
+  delete rest.D6_APPROVAL_SCOPE;
   return {
+    // Unset unless a test states one — the default must stay the ORIGINAL
+    // narrow scope, so every pre-existing case below still fails closed.
+    ...(d6ApprovalScope === undefined ? {} : { D6_APPROVAL_SCOPE: d6ApprovalScope }),
     ...rest,
     PORT: port,
     NODE_ENV: nodeEnv,
@@ -56,11 +65,15 @@ function getFreePort(): Promise<number> {
   });
 }
 
-async function expectStarts(nodeEnv: string, llmProvider: string): Promise<void> {
+async function expectStarts(
+  nodeEnv: string,
+  llmProvider: string,
+  d6ApprovalScope?: string,
+): Promise<void> {
   const port = await getFreePort();
   const child = spawn(npxBin, ['tsx', 'src/main.ts'], {
     cwd: BACKEND_ROOT,
-    env: baseEnv(nodeEnv, String(port), llmProvider),
+    env: baseEnv(nodeEnv, String(port), llmProvider, d6ApprovalScope),
     shell: process.platform === 'win32',
     windowsVerbatimArguments: false,
   });
@@ -151,5 +164,47 @@ describe('D-6 — boot refuses LLM_PROVIDER=groq outside NODE_ENV=development', 
 
   it('development + groq → starts normally (the one scope D-6 actually approves)', async () => {
     await expectStarts('development', 'groq');
+  }, 25_000);
+
+  // --- D6_APPROVAL_SCOPE (owner decision, 2026-08-31) ---
+
+  it('production + groq + team_demo_deployment → starts (the explicitly widened scope)', async () => {
+    await expectStarts('production', 'groq', 'team_demo_deployment');
+  }, 25_000);
+
+  it('production + groq + local_development_only → still refuses (default is unchanged)', async () => {
+    const port = await getFreePort();
+    const result = spawnSync(npxBin, ['tsx', 'src/main.ts'], {
+      cwd: BACKEND_ROOT,
+      env: baseEnv('production', String(port), 'groq', 'local_development_only'),
+      encoding: 'utf8',
+      timeout: 20_000,
+      shell: process.platform === 'win32',
+      windowsVerbatimArguments: false,
+    });
+
+    assertNotOom(result.stdout, result.stderr);
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toMatch(/D-6/);
+  }, 25_000);
+
+  it('production + mock + team_demo_deployment → starts on mock (scope alone never selects a provider)', async () => {
+    await expectStarts('production', 'mock', 'team_demo_deployment');
+  }, 25_000);
+
+  it('an unrecognised D6_APPROVAL_SCOPE fails validation rather than coercing to the wide scope', async () => {
+    const port = await getFreePort();
+    const result = spawnSync(npxBin, ['tsx', 'src/main.ts'], {
+      cwd: BACKEND_ROOT,
+      env: baseEnv('production', String(port), 'groq', 'team_demo'),
+      encoding: 'utf8',
+      timeout: 20_000,
+      shell: process.platform === 'win32',
+      windowsVerbatimArguments: false,
+    });
+
+    assertNotOom(result.stdout, result.stderr);
+    expect(result.status).not.toBe(0);
+    expect(result.stdout).not.toMatch(/server listening/);
   }, 25_000);
 });
