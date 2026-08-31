@@ -18,6 +18,15 @@ RUN npm install --omit=dev
 
 COPY --from=build /app/dist ./dist
 
+# The migration runner (dist/db/migrate.js) resolves its SQL files at
+# ../../migrations relative to itself, i.e. /app/migrations. Without this the
+# runner starts, finds no *.sql, and applies nothing — silently. Copied into
+# the runtime stage so migrations can be applied from inside Railway's private
+# network (`node dist/db/migrate.js`), which is the only place the database is
+# reachable. Plain .sql text; no build step, no dev dependency (tsx is
+# devDependencies-only and absent from this stage by design).
+COPY migrations ./migrations
+
 RUN groupadd --system app && useradd --system --gid app --no-create-home app \
     && chown -R app:app /app
 USER app
