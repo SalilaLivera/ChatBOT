@@ -110,3 +110,5 @@ Desktop.ini
 .idea/
 *.swp
 .claude/settings.local.json
+
+.vercel
